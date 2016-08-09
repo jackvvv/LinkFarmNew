@@ -1,6 +1,7 @@
 package sinia.com.linkfarmnew.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.AddressManagerActivity;
 import sinia.com.linkfarmnew.activity.MyCollectActivity;
@@ -21,6 +23,8 @@ import sinia.com.linkfarmnew.activity.MyExpandActivity;
 import sinia.com.linkfarmnew.activity.MyFootPrintActivity;
 import sinia.com.linkfarmnew.activity.MyOrderActivity;
 import sinia.com.linkfarmnew.activity.PersonalCenterActivty;
+import sinia.com.linkfarmnew.activity.ServiceActivity;
+import sinia.com.linkfarmnew.activity.SettingsActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.view.CircleImageView;
 
@@ -86,6 +90,7 @@ public class MineFragment extends BaseFragment {
     @Bind(R.id.rl_tuiguang)
     RelativeLayout rlTuiguang;
     private View rootView;
+    private MaterialDialog materialDialog;
 
     @Nullable
     @Override
@@ -107,8 +112,11 @@ public class MineFragment extends BaseFragment {
         Intent intent;
         switch (view.getId()) {
             case R.id.img_kefu:
+                callService();
                 break;
             case R.id.img_settings:
+                intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.iv_head:
                 break;
@@ -159,5 +167,23 @@ public class MineFragment extends BaseFragment {
                 startActivity(intent);
                 break;
         }
+    }
+
+    private void callService() {
+        materialDialog = new MaterialDialog(getActivity());
+        materialDialog.setTitle("联系客服").setMessage("400-888-666")
+                .setPositiveButton("呼叫", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "400-888-666"));
+                        startActivity(intent);
+                        materialDialog.dismiss();
+                    }
+                }).setNegativeButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDialog.dismiss();
+            }
+        }).show();
     }
 }

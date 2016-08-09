@@ -1,8 +1,11 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.widget.TextView;
 
@@ -39,22 +42,29 @@ public class ServiceActivity extends BaseActivity {
             case R.id.tv_online:
                 break;
             case R.id.tv_call:
-                materialDialog = new MaterialDialog(ServiceActivity.this);
-                materialDialog.setTitle("联系客服").setMessage("400-888-666")
-                        .setPositiveButton("呼叫", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "400-888-666"));
-                                startActivity(intent);
-                                materialDialog.dismiss();
-                            }
-                        }).setNegativeButton("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        materialDialog.dismiss();
-                    }
-                }).show();
+                callService();
                 break;
         }
+    }
+
+    private void callService() {
+        materialDialog = new MaterialDialog(ServiceActivity.this);
+        materialDialog.setTitle("联系客服").setMessage("400-888-666")
+                .setPositiveButton("呼叫", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "400-888-666"));
+                        if (ActivityCompat.checkSelfPermission(ServiceActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        startActivity(intent);
+                        materialDialog.dismiss();
+                    }
+                }).setNegativeButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDialog.dismiss();
+            }
+        }).show();
     }
 }
