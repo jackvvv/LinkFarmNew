@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/layout_selector"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:src="@drawable/class_grid_g" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/img"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/img"
+            android:maxLines="2"
+            android:text="新鲜西瓜 新鲜西瓜"
+            android:textColor="@color/textblackColor"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_buynum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/img"
+            android:maxLines="2"
+            android:text="152人已购买"
+            android:textColor="#999"
+            android:textSize="14sp" />
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img"
+            android:layout_alignParentRight="true"
+            android:maxLines="2"
+            android:text="0.5元/kg"
+            android:textColor="#DB2220"
+            android:textSize="15sp" />
+    </RelativeLayout>
+</LinearLayout>

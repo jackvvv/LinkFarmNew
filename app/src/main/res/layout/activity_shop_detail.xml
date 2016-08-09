@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/img"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:src="@drawable/class_grid_g" />
+
+                <TextView
+                    android:id="@+id/tv_shopname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/img"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/img"
+                    android:maxLines="2"
+                    android:text="诚信蔬菜店"
+                    android:textColor="@color/textblackColor"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_buynum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/img"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toRightOf="@+id/img"
+                    android:maxLines="2"
+                    android:text="152人已购买"
+                    android:textColor="#999"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_collectnum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/img"
+                    android:layout_marginRight="10dp"
+                    android:layout_toLeftOf="@+id/ll_collect"
+                    android:gravity="center"
+                    android:text="15人\n 收藏人数"
+                    android:textColor="@color/textblackColor"
+                    android:textSize="15sp" />
+
+                <LinearLayout
+                    android:id="@+id/ll_collect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/img"
+                    android:layout_alignParentRight="true"
+                    android:background="@drawable/bg_collect"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="8dp">
+
+                    <ImageView
+                        android:id="@+id/img_collect"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="6dp"
+                        android:src="@drawable/ic_not_collect" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="收藏"
+                        android:textColor="#fff"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="10dp"
+                android:background="@color/grayBgColor" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:padding="10dp"
+                android:text="商品推荐"
+                android:textColor="@color/textblackColor"
+                android:textSize="16sp" />
+
+            <sinia.com.linkfarmnew.view.MyGridView
+                android:id="@+id/gridView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#fff"
+                android:listSelector="#00000000"
+                android:numColumns="2"
+                android:scrollbars="none" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
