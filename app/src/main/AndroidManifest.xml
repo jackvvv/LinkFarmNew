@@ -63,6 +63,11 @@
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.FeedBackActivity" />
         <activity android:name=".activity.AboutUsActivity" />
+        <activity android:name=".activity.GoodsListActivity" />
+        <activity android:name=".activity.GoodsDetailActivity" />
+        <activity
+            android:name=".activity.StandardDialogActivity"
+            android:theme="@style/ActionSheetDialogStyle" />
         <activity
             android:name=".activity.PersonalCenterActivty"
             android:configChanges="orientation|keyboardHidden|screenSize"

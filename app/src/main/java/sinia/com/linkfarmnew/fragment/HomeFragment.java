@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
 import sinia.com.linkfarmnew.activity.LocationActivity;
 import sinia.com.linkfarmnew.activity.MessageActivity;
 import sinia.com.linkfarmnew.activity.SearchActivity;
@@ -69,7 +71,8 @@ public class HomeFragment extends BaseFragment {
     @Bind(R.id.rl_search)
     RelativeLayout rl_search;
     private MyGridView gridView;
-    private SlideShowView mySlideShowView;
+    @Bind(R.id.mySlideShowView)
+    SlideShowView mySlideShowView;
     private View rootView;
     private List<String> picList = new ArrayList<String>();
     private HomeRecommendAdapter adapter;
@@ -86,19 +89,26 @@ public class HomeFragment extends BaseFragment {
 
     private void initData() {
         int h = AppInfoUtil.getScreenWidth(getActivity()) * 320 / 750;
-        mySlideShowView = (SlideShowView) rootView.findViewById(R.id.mySlideShowView);
+//        mySlideShowView = (SlideShowView) rootView.findViewById(R.id.mySlideShowView);
         gridView = (MyGridView) rootView.findViewById(R.id.gridView);
         mySlideShowView.getLayoutParams().height = h;
-        picList.add("http://ms.bdimg.com/pacific/upload_7627579_1452595285589.jpg");
-        picList.add("http://s0.hao123img.com/res/r/image/2016-08-08/1f58389341fa9c8ad43a5dfd30c94dac.jpg");
-        picList.add("http://ms.bdimg.com/pacific/upload_7822730_1442385980400.jpg");
-        picList.add("http://s0.hao123img.com/res/r/image/2016-08-04/8b03028a8651b44d1e255d6724b43c61.jpg");
-        picList.add("https://img.alicdn.com/tps/i4/TB1IUeBLXXXXXX8XFXXSutbFXXX.jpg");
-        picList.add("https://img.alicdn.com/bao/uploaded/i3/TB1peVoMpXXXXccXVXXXXXXXXXX_!!0-item_pic.jpg_400x400q60.jpg");
+        picList.add("http://img2.imgtn.bdimg.com/it/u=436515947,1326912009&fm=21&gp=0.jpg");
+        picList.add("http://img5.imgtn.bdimg.com/it/u=1394043143,3012833488&fm=21&gp=0.jpg");
+        picList.add("http://img3.imgtn.bdimg.com/it/u=3555494465,3598698242&fm=21&gp=0.jpg");
+        picList.add("http://img2.imgtn.bdimg.com/it/u=1913986186,2860582952&fm=21&gp=0.jpg");
+        picList.add("http://img2.imgtn.bdimg.com/it/u=3927119590,239617978&fm=21&gp=0.jpg");
+        picList.add("http://img3.imgtn.bdimg.com/it/u=1190498942,1807679665&fm=21&gp=0.jpg");
         mySlideShowView.setImagePath(picList);
         mySlideShowView.startPlay();
         adapter = new HomeRecommendAdapter(getActivity());
         gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     @OnClick({R.id.tv_locate, R.id.tv_scan, R.id.tv_msg, R.id.rl_search})

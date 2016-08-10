@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sinia.com.linkfarmnew.view.CustScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/custScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grayBgColor"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <sinia.com.linkfarmnew.view.slideview.SlideShowView
+            android:id="@+id/mySlideShowView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/tv_goodsname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="2"
+                android:text="商品名称商品名称商品名称商品名称"
+                android:textColor="@color/textblackColor"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tv_buynum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="已有152人购买"
+                android:textColor="@color/themeColor"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#fff"
+            android:orientation="horizontal"
+            android:padding="10dp"
+            android:id="@+id/rl_standard">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="已选"
+                android:textColor="#999"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_select"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="红苹果 10Kg"
+                android:textColor="@color/textblackColor"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#fff"
+            android:orientation="horizontal"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="送至"
+                android:textColor="#999"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_send_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:drawableLeft="@drawable/ic_lo"
+                android:drawablePadding="5dp"
+                android:text="江苏省南京市鼓楼区古平岗"
+                android:textColor="@color/textblackColor"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#fff"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="评价(150)"
+                android:textColor="#999"
+                android:textSize="14sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#ccc" />
+
+            <ListView
+                android:id="@+id/lv_comment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="#ccc"
+                android:dividerHeight="0.5dp"
+                android:listSelector="#00000000" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1px"
+            android:background="#ddd" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="43dp"
+            android:background="@color/grayBgColor"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="继续拖动，查看图片"
+                android:textColor="#777"
+                android:textSize="15sp" />
+        </LinearLayout>
+    </LinearLayout>
+</sinia.com.linkfarmnew.view.CustScrollView>

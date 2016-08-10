@@ -14,17 +14,17 @@ import sinia.com.linkfarmnew.utils.ViewHolder;
 /**
  * Created by 忧郁的眼神 on 2016/8/5.
  */
-public class SearchGoodsAdapter extends BaseAdapter {
+public class CommentAdapter extends BaseAdapter {
 
     private Context context;
 
-    public SearchGoodsAdapter(Context context) {
+    public CommentAdapter(Context context) {
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return 9;
+        return 3;
     }
 
     @Override
@@ -40,12 +40,13 @@ public class SearchGoodsAdapter extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_goods_search, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_goods_comment, null);
         }
-        TextView tv_title = ViewHolder.get(view, R.id.tv_title);
-        TextView tv_buynum = ViewHolder.get(view, R.id.tv_buynum);
-        TextView tv_price = ViewHolder.get(view, R.id.tv_price);
-        ImageView img = ViewHolder.get(view, R.id.img);
+        TextView tv_name = ViewHolder.get(view, R.id.tv_name);
+        TextView tv_commenttime = ViewHolder.get(view, R.id.tv_commenttime);
+        TextView tv_buytime = ViewHolder.get(view, R.id.tv_buytime);
+        TextView tv_content = ViewHolder.get(view, R.id.tv_content);
+        ImageView img_head = ViewHolder.get(view, R.id.img_head);
         return view;
     }
 }

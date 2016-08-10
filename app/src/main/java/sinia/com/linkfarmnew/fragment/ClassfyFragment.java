@@ -1,5 +1,6 @@
 package sinia.com.linkfarmnew.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.ListView;
 
 import butterknife.ButterKnife;
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.GoodsListActivity;
 import sinia.com.linkfarmnew.adapter.ClassfyAdapter;
 import sinia.com.linkfarmnew.adapter.ClassfyGridAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
@@ -51,6 +53,14 @@ public class ClassfyFragment extends BaseFragment {
                 classfyAdapter.notifyDataSetChanged();
             }
         });
+        gvRight.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), GoodsListActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="出产地"
+        android:textColor="@color/textblackColor"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/et_place_s"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/gray_round_edit"
+        android:gravity="center"
+        android:hint="输入出产地"
+        android:padding="5dp"
+        android:textColor="@color/textblackColor"
+        android:textCursorDrawable="@null"
+        android:textSize="15sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="发货地"
+        android:textColor="@color/textblackColor"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/et_place_e"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/gray_round_edit"
+        android:gravity="center"
+        android:hint="输入发货地"
+        android:padding="5dp"
+        android:textColor="@color/textblackColor"
+        android:textCursorDrawable="@null"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_reset"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="重置"
+            android:textColor="@color/textblackColor"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/themeColor"
+            android:gravity="center"
+            android:text="确定"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

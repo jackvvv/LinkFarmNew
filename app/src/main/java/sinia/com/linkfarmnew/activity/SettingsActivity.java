@@ -56,7 +56,7 @@ public class SettingsActivity extends BaseActivity {
         getDoingView().setVisibility(View.GONE);
     }
 
-    @OnClick({R.id.rl_clear, R.id.rl_aboutus, R.id.rl_feedback, R.id.rl_pwd, R.id.rl_logout, R.id.img_switch})
+    @OnClick({R.id.rl_clear, R.id.rl_aboutus, R.id.rl_feedback, R.id.rl_logout, R.id.img_switch})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_clear:
@@ -67,8 +67,6 @@ public class SettingsActivity extends BaseActivity {
                 break;
             case R.id.rl_feedback:
                 startActivityForNoIntent(FeedBackActivity.class);
-                break;
-            case R.id.rl_pwd:
                 break;
             case R.id.rl_logout:
                 logout();
