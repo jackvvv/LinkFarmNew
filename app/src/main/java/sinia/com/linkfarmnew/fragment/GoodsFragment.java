@@ -17,6 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.SendAddressTypeActivity;
 import sinia.com.linkfarmnew.activity.StandardDialogActivity;
 import sinia.com.linkfarmnew.adapter.CommentAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
@@ -85,6 +86,8 @@ public class GoodsFragment extends BaseFragment {
                 startActivity(intent);
                 break;
             case R.id.tv_send_address:
+                intent = new Intent(getActivity(), SendAddressTypeActivity.class);
+                startActivity(intent);
                 break;
         }
     }

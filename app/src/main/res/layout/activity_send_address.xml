@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#fff"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="配送方式"
+                android:textColor="#888"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/img_colse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:src="@drawable/ic_close_d" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_a"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#fff">
+
+            <RelativeLayout
+                android:id="@+id/rl_order"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_send"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="10dip"
+                    android:layout_marginTop="10dip"
+                    android:text="配送地址"
+                    android:textColor="@color/themeColor"
+                    android:textSize="15sp" />
+
+                <View
+                    android:id="@+id/v1"
+                    android:layout_width="70dp"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/tv_send"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/themeColor" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_contract"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_self"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginBottom="10dip"
+                    android:layout_marginTop="10dip"
+                    android:text="自提地址"
+                    android:textColor="@color/textblackColor"
+                    android:textSize="15sp" />
+
+                <View
+                    android:id="@+id/v2"
+                    android:layout_width="70dp"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/tv_self"
+                    android:layout_centerHorizontal="true"
+                    android:background="@color/themeColor"
+                    android:visibility="invisible" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="fill_parent"
+            android:layout_height="320dp" />
+
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:layout_weight="1"
+            android:background="@color/themeColor"
+            android:gravity="center"
+            android:text="添加地址"
+            android:visibility="gone"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+</RelativeLayout>
