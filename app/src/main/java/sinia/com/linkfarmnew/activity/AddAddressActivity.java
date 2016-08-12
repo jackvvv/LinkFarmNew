@@ -59,7 +59,7 @@ public class AddAddressActivity extends BaseActivity {
                 DialogUtils.createAddressDialog(AddAddressActivity.this, tvAddress);
                 break;
             case R.id.tv_ok:
-                validator.validate();
+//                validator.validate();
                 break;
         }
     }

@@ -9,8 +9,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/l"
-        android:divider="#ccc"
         android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:divider="#ccc"
         android:dividerHeight="0.5dp"
         android:listSelector="#00000000"
         android:overScrollMode="never" />

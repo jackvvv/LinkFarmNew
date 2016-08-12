@@ -31,7 +31,7 @@ public class DeliveryAddressFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
     Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_delivery_address, null);
-        ButterKnife.bind(this.rootView);
+        ButterKnife.bind(this,rootView);
         initData();
         return rootView;
     }

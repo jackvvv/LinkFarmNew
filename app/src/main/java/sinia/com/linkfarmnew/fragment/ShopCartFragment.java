@@ -22,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.FillOrderActivity;
 import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
 import sinia.com.linkfarmnew.adapter.HomeRecommendAdapter;
 import sinia.com.linkfarmnew.adapter.MyExpandableListAdapter;
@@ -197,6 +198,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                     showToast("请选择要支付的商品");
                 } else {
                     showToast("选择了" + allSize() + "件商品，共" + "需要支付" + allPrice() + "元");
+                    Intent intent = new Intent(getActivity(), FillOrderActivity.class);
+                    startActivity(intent);
                 }
                 break;
             case R.id.ivDeleteAll:
@@ -281,7 +284,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     // 选中的价格
     private double allPrice() {
         double allPrice = 0;
-        if (null != adapter.childs &&0 != adapter.childs.size()) {
+        if (null != adapter.childs && 0 != adapter.childs.size()) {
             for (int i = 0; i < adapter.childs.size(); i++) {
                 String key = adapter.groups.get(i).getShopName();
                 List<GoodsBean> data = adapter.childs.get(key);

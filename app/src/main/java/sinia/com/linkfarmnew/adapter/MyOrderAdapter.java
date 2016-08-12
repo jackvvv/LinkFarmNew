@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,8 @@ import sinia.com.linkfarmnew.utils.ViewHolder;
 public class MyOrderAdapter extends BaseAdapter {
 
     private Context context;
+
+    private GoodImageAdapter adapter;
 
     public MyOrderAdapter(Context context) {
         this.context = context;
@@ -51,6 +54,9 @@ public class MyOrderAdapter extends BaseAdapter {
         TextView btn1 = ViewHolder.get(view, R.id.btn1);
         TextView btn2 = ViewHolder.get(view, R.id.btn2);
         LinearLayout ll_detail = ViewHolder.get(view, R.id.ll_detail);
+        GridView gv_goods = ViewHolder.get(view, R.id.gv_goods);
+        adapter = new GoodImageAdapter(context);
+        gv_goods.setAdapter(adapter);
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
