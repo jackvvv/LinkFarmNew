@@ -1,6 +1,7 @@
 package sinia.com.linkfarmnew.activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -10,11 +11,14 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.city.RegionInfo;
 import sinia.com.linkfarmnew.utils.DialogUtils;
 
 /**
@@ -50,6 +54,11 @@ public class EditAddressActivity extends BaseActivity {
         ButterKnife.bind(this);
         getDoingView().setText("删除");
         validator = new Validator(this);
+        init();
+    }
+
+    private void init() {
+
     }
 
     @OnClick({R.id.tv_address, R.id.tv_ok})

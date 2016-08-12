@@ -37,6 +37,7 @@ public class DialogUtils {
         Display display = windowManager.getDefaultDisplay();
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
         lp.width = (display.getWidth()); // 设置宽度
+        lp.height = display.getHeight() / 2;
         dialog.getWindow().setAttributes(lp);
         final CityPicker cityPicker = (CityPicker) v
                 .findViewById(R.id.citypicker);
@@ -79,4 +80,5 @@ public class DialogUtils {
     public interface OnCancelListener {
         public void onClick();
     }
+
 }

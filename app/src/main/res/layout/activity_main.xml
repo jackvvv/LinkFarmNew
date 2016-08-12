@@ -1,17 +1,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:clipToPadding="false"
-                android:fitsSystemWindows="true">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="true">
 
     <FrameLayout
         android:id="@+id/frame_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/frameMenu"
-        android:layout_alignParentTop="true">
-    </FrameLayout>
+        android:layout_alignParentTop="true"></FrameLayout>
 
     <FrameLayout
         android:id="@+id/frameMenu"
@@ -38,7 +37,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/skin_tabbar_icon_home_select"/>
+                    android:src="@drawable/skin_tabbar_icon_home_select" />
 
                 <TextView
                     android:id="@+id/tv_home"
@@ -49,7 +48,7 @@
                     android:layout_marginTop="1dp"
                     android:text="首页"
                     android:textColor="@drawable/home_tab_home_text_color"
-                    android:textSize="13sp"/>
+                    android:textSize="13sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -63,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/skin_tabbar_icon_manager_select"/>
+                    android:src="@drawable/skin_tabbar_icon_manager_select" />
 
                 <TextView
                     android:id="@+id/tv_manager"
@@ -75,7 +74,7 @@
                     android:layout_marginTop="1dp"
                     android:text="分类"
                     android:textColor="@drawable/home_tab_home_text_color"
-                    android:textSize="13sp"/>
+                    android:textSize="13sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -89,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/skin_tabbar_icon_youwo_select"/>
+                    android:src="@drawable/skin_tabbar_icon_youwo_select" />
 
                 <TextView
                     android:id="@+id/tv_yw"
@@ -101,7 +100,7 @@
                     android:layout_marginTop="1dp"
                     android:text="购物车"
                     android:textColor="@drawable/home_tab_home_text_color"
-                    android:textSize="13sp"/>
+                    android:textSize="13sp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -115,7 +114,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:src="@drawable/skin_tabbar_icon_helper_select"/>
+                    android:src="@drawable/skin_tabbar_icon_helper_select" />
 
                 <TextView
                     android:id="@+id/tv_helper"
@@ -127,15 +126,14 @@
                     android:layout_marginTop="1dp"
                     android:text="我的"
                     android:textColor="@drawable/home_tab_home_text_color"
-                    android:textSize="13sp"/>
+                    android:textSize="13sp" />
             </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="#ccc">
-        </LinearLayout>
+            android:background="#ccc"></LinearLayout>
     </FrameLayout>
 
 </RelativeLayout>

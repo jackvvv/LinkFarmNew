@@ -59,12 +59,19 @@
         <activity android:name=".activity.MessageActivity" />
         <activity android:name=".activity.ShopDetailActivity" />
         <activity android:name=".activity.LocationActivity" />
-        <activity android:name=".activity.ApplyReturnActivity" />
+        <activity
+            android:name=".activity.ApplyReturnActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.FeedBackActivity" />
         <activity android:name=".activity.AboutUsActivity" />
         <activity android:name=".activity.GoodsListActivity" />
         <activity android:name=".activity.GoodsDetailActivity" />
+        <activity
+            android:name=".activity.ServiceCommentActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.StandardDialogActivity"
             android:theme="@style/ActionSheetDialogStyle" />

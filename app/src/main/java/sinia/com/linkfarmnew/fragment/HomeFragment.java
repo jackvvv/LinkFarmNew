@@ -19,10 +19,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.ApplyReturnActivity;
 import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
 import sinia.com.linkfarmnew.activity.LocationActivity;
 import sinia.com.linkfarmnew.activity.MessageActivity;
 import sinia.com.linkfarmnew.activity.SearchActivity;
+import sinia.com.linkfarmnew.activity.ServiceCommentActivity;
 import sinia.com.linkfarmnew.adapter.HomeRecommendAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.utils.AppInfoUtil;
@@ -124,6 +126,8 @@ public class HomeFragment extends BaseFragment {
                 startActivity(intent);
                 break;
             case R.id.tv_scan:
+                intent = new Intent(getActivity(), ServiceCommentActivity.class);
+                startActivity(intent);
                 break;
             case R.id.tv_msg:
                 intent = new Intent(getActivity(), MessageActivity.class);

@@ -24,7 +24,7 @@ public class HomeRecommendAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 8;
+        return 4;
     }
 
     @Override
