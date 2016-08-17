@@ -43,6 +43,7 @@ public class MessageActivity extends BaseActivity {
     private List<Fragment> fragmentList;
     private AnnouncementFragment announcementFragment;
     private NoticeFragment noticeFragment;
+    private String city;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +54,20 @@ public class MessageActivity extends BaseActivity {
     }
 
     private void initViews() {
+        city = getIntent().getStringExtra("city");
         titleList = new ArrayList<>();
         titleList.add("公告");
         titleList.add("通知");
         fragmentList = new ArrayList<>();
+
+        Bundle args = new Bundle();
+        args.putString("city", city);
+
         announcementFragment = new AnnouncementFragment();
         noticeFragment = new NoticeFragment();
+        announcementFragment.setArguments(args);
+        noticeFragment.setArguments(args);
+
         fragmentList.add(announcementFragment);
         fragmentList.add(noticeFragment);
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);

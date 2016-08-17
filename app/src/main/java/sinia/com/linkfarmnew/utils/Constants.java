@@ -5,10 +5,10 @@ package sinia.com.linkfarmnew.utils;
  */
 public class Constants {
 
-//    public static String BASE_URL = "http://192.168.0.123:8080/education/xiNaiInterfaceController.do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
-    public static String BASE_URL = "http://115.29.185.1:8080/education/xiNaiInterfaceController.do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
+    public static String BASE_URL = "http://192.168.0.107:8080/farmer/xiNaiInterfaceController.do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
+//    public static String BASE_URL = "http://192.168.0.112:8080/farmer/xiNaiInterfaceController.do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
 
-    public static final String BMOB_KEY = "bd862d805c852f4838dafdb72db75094";
+    public static final String BMOB_KEY = "d4ecefd1ecdd89d41b182409cd68f2d4";
 
     /**
      * 支付宝支付

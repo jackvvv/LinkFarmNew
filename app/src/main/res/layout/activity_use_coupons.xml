@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grayBgColor"
+    android:orientation="vertical">
+
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/b"
+        android:layout_margin="10dp"
+        android:divider="@color/grayBgColor"
+        android:dividerHeight="10dp"
+        android:choiceMode="singleChoice"
+        android:listSelector="#00000000"
+        android:overScrollMode="never" />
+
+    <RelativeLayout
+        android:id="@+id/b"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#fff"
+        android:padding="8dp">
+
+        <CheckBox
+            android:id="@+id/ck_use"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:button="@drawable/shop_car_check"
+            android:checked="false"
+            android:padding="5dp"
+            android:text="不使用优惠券"
+            android:textColor="@color/textblackColor"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/btn_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/green_btn"
+            android:paddingBottom="6dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:paddingTop="6dp"
+            android:text="确定"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

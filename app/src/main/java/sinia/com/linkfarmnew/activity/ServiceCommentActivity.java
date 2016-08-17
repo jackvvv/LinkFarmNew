@@ -130,7 +130,7 @@ public class ServiceCommentActivity extends BaseActivity {
                                                 Intent intent = new Intent();
                                                 intent.setAction(Intent.ACTION_PICK);
                                                 intent.setType("image/*");
-                                                intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                                                 startActivityForResult(intent,
                                                         2);
                                             }

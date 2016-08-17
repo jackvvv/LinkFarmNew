@@ -12,12 +12,16 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.adapter.SearchGoodsAdapter;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.SearchBean;
 import sinia.com.linkfarmnew.utils.ActivityManager;
 
 /**
@@ -59,6 +63,7 @@ public class GoodsListActivity extends BaseActivity {
     ListView listView;
     public static DrawerLayout drawerLayout;
     private SearchGoodsAdapter goodsAdapter;
+    private List<SearchBean.ItemsBean> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +77,7 @@ public class GoodsListActivity extends BaseActivity {
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         tvZonghe.setSelected(true);
         ivZonghe.setImageDrawable(getResources().getDrawable(R.drawable.sj_select_xia));
-        goodsAdapter = new SearchGoodsAdapter(this);
+        goodsAdapter = new SearchGoodsAdapter(this, list);
         listView.setAdapter(goodsAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

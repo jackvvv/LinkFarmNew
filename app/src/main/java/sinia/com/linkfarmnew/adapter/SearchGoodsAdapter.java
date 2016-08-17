@@ -1,6 +1,7 @@
 package sinia.com.linkfarmnew.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
+import sinia.com.linkfarmnew.activity.LoginActivity;
+import sinia.com.linkfarmnew.activity.ShopDetailActivity;
+import sinia.com.linkfarmnew.bean.SearchBean;
+import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -18,13 +28,16 @@ public class SearchGoodsAdapter extends BaseAdapter {
 
     private Context context;
 
-    public SearchGoodsAdapter(Context context) {
+    private List<SearchBean.ItemsBean> list;
+
+    public SearchGoodsAdapter(Context context, List<SearchBean.ItemsBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 9;
+        return list.size();
     }
 
     @Override
@@ -46,6 +59,26 @@ public class SearchGoodsAdapter extends BaseAdapter {
         TextView tv_buynum = ViewHolder.get(view, R.id.tv_buynum);
         TextView tv_price = ViewHolder.get(view, R.id.tv_price);
         ImageView img = ViewHolder.get(view, R.id.img);
+
+        Glide.with(context).load(list.get(i).getGoodImage()).placeholder(R.drawable.ic_launcher).into(img);
+        tv_title.setText(list.get(i).getGoodName());
+        tv_buynum.setText(list.get(i).getBuyNum() + "人已购买");
+        tv_price.setText(list.get(i).getMinKilograme() + "元/kg");
+
+        final String goodId = list.get(i).getGoodId();
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    Intent intent = new Intent(context, GoodsDetailActivity.class);
+                    intent.putExtra("goodId", goodId);
+                    context.startActivity(intent);
+                } else {
+                    Intent intent = new Intent(context, LoginActivity.class);
+                    context.startActivity(intent);
+                }
+            }
+        });
         return view;
     }
 }

@@ -5,10 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.GoodsCommentBean;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -18,13 +25,18 @@ public class CommentAdapter extends BaseAdapter {
 
     private Context context;
 
-    public CommentAdapter(Context context) {
+    private List<GoodsCommentBean.CommentBean> list;
+    private List<GoodsCommentBean.CommentBean.CommentImage> imgList = new ArrayList<>();
+    private CommentImageAdapter adapter;
+
+    public CommentAdapter(Context context, List<GoodsCommentBean.CommentBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return list.size();
     }
 
     @Override
@@ -47,6 +59,17 @@ public class CommentAdapter extends BaseAdapter {
         TextView tv_buytime = ViewHolder.get(view, R.id.tv_buytime);
         TextView tv_content = ViewHolder.get(view, R.id.tv_content);
         ImageView img_head = ViewHolder.get(view, R.id.img_head);
+        GridView gv_img = ViewHolder.get(view, R.id.gv_img);
+        tv_name.setText(list.get(i).getUserName());
+        tv_commenttime.setText(list.get(i).getCreateTime());
+        tv_buytime.setText(list.get(i).getBuyTime());
+        tv_content.setText(list.get(i).getContent());
+        Glide.with(context).load(list.get(i).getUserImage()).placeholder(R.drawable.ic_launcher).into(img_head);
+
+        imgList.clear();
+        imgList.addAll(list.get(i).getComimageitems());
+        adapter = new CommentImageAdapter(context, imgList);
+        gv_img.setAdapter(adapter);
         return view;
     }
 }

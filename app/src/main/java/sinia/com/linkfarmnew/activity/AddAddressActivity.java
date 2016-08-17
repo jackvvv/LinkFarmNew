@@ -1,21 +1,35 @@
 package sinia.com.linkfarmnew.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.JsonBean;
+import sinia.com.linkfarmnew.bean.MyCollectBean;
+import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.DialogUtils;
+import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.ValidationUtils;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/8.
@@ -42,6 +56,7 @@ public class AddAddressActivity extends BaseActivity {
     TextView tvOk;
 
     private Validator validator;
+    private AsyncHttpClient client = new AsyncHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +65,54 @@ public class AddAddressActivity extends BaseActivity {
         ButterKnife.bind(this);
         getDoingView().setVisibility(View.GONE);
         validator = new Validator(this);
+        init();
+    }
+
+    private void init() {
+        validator.setValidationListener(new ValidationUtils.ValidationListener() {
+            @Override
+            public void onValidationSucceeded() {
+                super.onValidationSucceeded();
+                addAddress();
+            }
+        });
+    }
+
+    private void addAddress() {
+        showLoad("");
+        RequestParams params = new RequestParams();
+        try {
+            params.put("userId", MyApplication.getInstance().getStringValue("userId"));
+            params.put("otherId", "-1");
+            params.put("name", URLEncoder.encode(etName.getEditableText().toString().trim(), "UTF-8"));
+            params.put("telephone", etTel.getEditableText().toString().trim());
+            params.put("content", URLEncoder.encode(tvAddress.getText().toString().trim(), "UTF-8"));
+            params.put("address", URLEncoder.encode(etDetail.getEditableText().toString().trim(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.i("tag", Constants.BASE_URL + "addressAddOrUp&" + params);
+        client.post(Constants.BASE_URL + "addressAddOrUp", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Log.i("tag", s);
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    JsonBean bean = gson.fromJson(s, JsonBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("地址保存成功");
+                        ActivityManager.getInstance().finishCurrentActivity();
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
     }
 
     @OnClick({R.id.tv_address, R.id.tv_ok})
@@ -59,7 +122,7 @@ public class AddAddressActivity extends BaseActivity {
                 DialogUtils.createAddressDialog(AddAddressActivity.this, tvAddress);
                 break;
             case R.id.tv_ok:
-//                validator.validate();
+                validator.validate();
                 break;
         }
     }

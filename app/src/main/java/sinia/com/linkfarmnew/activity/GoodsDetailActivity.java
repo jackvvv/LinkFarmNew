@@ -1,11 +1,11 @@
 package sinia.com.linkfarmnew.activity;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +16,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,13 +30,16 @@ import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.adapter.MyFragmentPagerAdapter;
 import sinia.com.linkfarmnew.base.BaseActivity;
-import sinia.com.linkfarmnew.fragment.GoodsCollectFragment;
+import sinia.com.linkfarmnew.bean.GoodsDetailBean;
+import sinia.com.linkfarmnew.bean.ShopDetailBean;
 import sinia.com.linkfarmnew.fragment.GoodsCommentFragment;
 import sinia.com.linkfarmnew.fragment.GoodsDetailFragment;
-import sinia.com.linkfarmnew.fragment.ShopCollectFragment;
 import sinia.com.linkfarmnew.fragment.SourceFragment;
 import sinia.com.linkfarmnew.fragment.VideoFragment;
+import sinia.com.linkfarmnew.myinterface.GoodsDetailInterface;
 import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.MyApplication;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/10.
@@ -55,13 +63,46 @@ public class GoodsDetailActivity extends BaseActivity {
     private GoodsCommentFragment commentFragment;
     private VideoFragment videoFragment;
     private Dialog dialog;
+    private String goodId;
+    private AsyncHttpClient client = new AsyncHttpClient();
+    private GoodsDetailBean goodsBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods_detail);
         ButterKnife.bind(this);
-        initViews();
+        getGoodsDetail();
+    }
+
+    private void getGoodsDetail() {
+        goodId = getIntent().getStringExtra("goodId");
+        showLoad("");
+        RequestParams params = new RequestParams();
+        params.put("userId", MyApplication.getInstance().getStringValue("userId"));
+        params.put("goodId", goodId);
+        Log.i("tag", Constants.BASE_URL + "goodDetail&" + params);
+        client.post(Constants.BASE_URL + "goodDetail", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    goodsBean = gson.fromJson(s, GoodsDetailBean.class);
+                    int state = goodsBean.getState();
+                    int isSuccessful = goodsBean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        if (null != goodsBean) {
+                            initViews();
+                        }
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
     }
 
     private void initViews() {
@@ -71,10 +112,20 @@ public class GoodsDetailActivity extends BaseActivity {
         titleList.add("评论");
         titleList.add("视频");
         fragmentList = new ArrayList<>();
-        goodsFragment = new GoodsDetailFragment();
-        sourceFragment = new SourceFragment();
-        commentFragment = new GoodsCommentFragment();
-        videoFragment = new VideoFragment();
+
+        Bundle args = new Bundle();
+        goodsFragment = GoodsDetailFragment.newInstance();
+        sourceFragment = SourceFragment.newInstance();
+        commentFragment = GoodsCommentFragment.newInstance();
+        videoFragment = VideoFragment.newInstance();
+
+        args.putSerializable("goodsBean", goodsBean);
+
+        goodsFragment.setArguments(args);
+        sourceFragment.setArguments(args);
+        commentFragment.setArguments(args);
+        videoFragment.setArguments(args);
+
         fragmentList.add(goodsFragment);
         fragmentList.add(sourceFragment);
         fragmentList.add(commentFragment);

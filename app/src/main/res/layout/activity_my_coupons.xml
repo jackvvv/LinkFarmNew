@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grayBgColor"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:orientation="vertical">
 
     <ListView
         android:id="@+id/listView"
@@ -13,6 +12,7 @@
         android:divider="@color/grayBgColor"
         android:overScrollMode="never"
         android:dividerHeight="10dp"
-        android:listSelector="#00000000"></ListView>
+        android:layout_margin="10dp"
+        android:listSelector="#00000000"/>
 
 </LinearLayout>

@@ -3,12 +3,18 @@ package sinia.com.linkfarmnew.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +25,12 @@ import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.SendAddressTypeActivity;
 import sinia.com.linkfarmnew.activity.StandardDialogActivity;
-import sinia.com.linkfarmnew.adapter.CommentAdapter;
+import sinia.com.linkfarmnew.adapter.GoodsCommentAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
+import sinia.com.linkfarmnew.bean.GoodsCommentBean;
+import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.utils.AppInfoUtil;
+import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.Utility;
 import sinia.com.linkfarmnew.view.CustScrollView;
 import sinia.com.linkfarmnew.view.slideview.SlideShowView;
@@ -47,9 +56,15 @@ public class GoodsFragment extends BaseFragment {
     CustScrollView custScrollView;
     @Bind(R.id.rl_standard)
     LinearLayout rlStandard;
+    @Bind(R.id.tv_commentNum)
+    TextView tvCommentNum;
     private View rootView;
     private List<String> picList = new ArrayList<String>();
-    private CommentAdapter adapter;
+    private GoodsCommentAdapter adapter;
+    private GoodsDetailBean goodsBean;
+
+    private AsyncHttpClient client = new AsyncHttpClient();
+    private List<GoodsCommentBean.CommentBean> list = new ArrayList<>();
 
     @Nullable
     @Override
@@ -57,24 +72,58 @@ public class GoodsFragment extends BaseFragment {
     Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_goods, null);
         ButterKnife.bind(this, rootView);
+        goodsBean = (GoodsDetailBean) getArguments().get("goodsBean");
         initData();
+        getCommentData();
         return rootView;
     }
 
+    private void getCommentData() {
+        RequestParams params = new RequestParams();
+        params.put("type", "1");
+        params.put("otherId", goodsBean.getId());
+        Log.i("tag", Constants.BASE_URL + "myComment&" + params);
+        client.post(Constants.BASE_URL + "myComment", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    GoodsCommentBean bean = gson.fromJson(s, GoodsCommentBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        list.clear();
+                        list.addAll(bean.getItems());
+                        adapter.notifyDataSetChanged();
+                        Utility.setListViewHeightBasedOnChildren(lvComment);
+                        tvCommentNum.setText("评价(" + list.size() + ")");
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
+    }
+
     private void initData() {
+        tvGoodsname.setText(goodsBean.getGoodName());
+        tvBuynum.setText("已" + goodsBean.getBuyNum() + "人购买");
         int h = AppInfoUtil.getScreenWidth(getActivity()) * 560 / 750;
         mySlideShowView.getLayoutParams().height = h;
-        picList.add("http://img2.imgtn.bdimg.com/it/u=436515947,1326912009&fm=21&gp=0.jpg");
-        picList.add("http://img5.imgtn.bdimg.com/it/u=1394043143,3012833488&fm=21&gp=0.jpg");
-        picList.add("http://img3.imgtn.bdimg.com/it/u=3555494465,3598698242&fm=21&gp=0.jpg");
-        picList.add("http://img2.imgtn.bdimg.com/it/u=1913986186,2860582952&fm=21&gp=0.jpg");
-        picList.add("http://img2.imgtn.bdimg.com/it/u=3927119590,239617978&fm=21&gp=0.jpg");
-        picList.add("http://img3.imgtn.bdimg.com/it/u=1190498942,1807679665&fm=21&gp=0.jpg");
-        mySlideShowView.setImagePath(picList);
-        mySlideShowView.startPlay();
-        adapter = new CommentAdapter(getActivity());
+        if (null != goodsBean && null != goodsBean.getImageitems()) {
+            picList = new ArrayList<>();
+            for (int i = 0; i < goodsBean.getImageitems().size(); i++) {
+                picList.add(goodsBean.getImageitems().get(i).getImage());
+            }
+            mySlideShowView.setImagePath(picList);
+            mySlideShowView.startPlay();
+        }
+        adapter = new GoodsCommentAdapter(getActivity(), list);
         lvComment.setAdapter(adapter);
-        Utility.setListViewHeightBasedOnChildren(lvComment);
+//        Utility.setListViewHeightBasedOnChildren(lvComment);
     }
 
     @OnClick({R.id.rl_standard, R.id.tv_send_address})
@@ -87,8 +136,18 @@ public class GoodsFragment extends BaseFragment {
                 break;
             case R.id.tv_send_address:
                 intent = new Intent(getActivity(), SendAddressTypeActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 100);
                 break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1) {
+            if (requestCode == 100) {
+                tvSendAddress.setText(data.getStringExtra("address"));
+            }
         }
     }
 

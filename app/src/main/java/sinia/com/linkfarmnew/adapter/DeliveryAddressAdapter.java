@@ -8,7 +8,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.AddressListBean;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -18,13 +21,16 @@ public class DeliveryAddressAdapter extends BaseAdapter {
 
     private Context context;
 
-    public DeliveryAddressAdapter(Context context) {
+    private List<AddressListBean.AddressBean> list;
+
+    public DeliveryAddressAdapter(Context context, List<AddressListBean.AddressBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return list.size();
     }
 
     @Override
@@ -45,6 +51,7 @@ public class DeliveryAddressAdapter extends BaseAdapter {
         TextView tv_address = ViewHolder.get(view, R.id.tv_address);
         ImageView img = ViewHolder.get(view, R.id.img);
         ImageView img_gou = ViewHolder.get(view, R.id.img_gou);
+        tv_address.setText(list.get(i).getAddArea() + list.get(i).getAddAddress());
         return view;
     }
 }

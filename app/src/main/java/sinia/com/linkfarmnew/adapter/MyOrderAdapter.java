@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.OrderDetailActivity;
 import sinia.com.linkfarmnew.activity.PayActivity;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
@@ -70,6 +71,13 @@ public class MyOrderAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, PayActivity.class);
+                context.startActivity(intent);
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, OrderDetailActivity.class);
                 context.startActivity(intent);
             }
         });

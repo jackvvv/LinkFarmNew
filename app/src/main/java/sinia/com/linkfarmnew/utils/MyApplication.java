@@ -4,6 +4,10 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.tencent.bugly.crashreport.CrashReport;
+
+import sinia.com.linkfarmnew.bean.LoginBean;
+
 
 /**
  * Created by 忧郁的眼神 on 2016/7/15.
@@ -13,13 +17,14 @@ public class MyApplication extends Application {
     private static MyApplication instance;
 
     public static Context context;
-//    private LoginBean login;
+    private LoginBean login;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = this.getApplicationContext();
         instance = this;
+        CrashReport.initCrashReport(getApplicationContext(), "900038739", true);
     }
 
     public static synchronized MyApplication getInstance() {
@@ -61,21 +66,21 @@ public class MyApplication extends Application {
         sp = null;
         return ret;
     }
-//
-//    public LoginBean getLoginBean() {
-//        if (null == login) {
-//            LoginBean lb = SaveUtils.getShareObject(context, "LOGIN",
-//                    "loginbean", LoginBean.class);
-//            return lb;
-//        }
-//        return login;
-//    }
-//
-//    public void setLoginBean(LoginBean login) {
-//        this.login = login;
-//        if (login != null) {
-//            SaveUtils.putShareObject(context, "LOGIN", "loginbean", login);
-//        }
-//    }
+
+    public LoginBean getLoginBean() {
+        if (null == login) {
+            LoginBean lb = SaveUtils.getShareObject(context, "LOGIN",
+                    "loginbean", LoginBean.class);
+            return lb;
+        }
+        return login;
+    }
+
+    public void setLoginBean(LoginBean login) {
+        this.login = login;
+        if (login != null) {
+            SaveUtils.putShareObject(context, "LOGIN", "loginbean", login);
+        }
+    }
 
 }

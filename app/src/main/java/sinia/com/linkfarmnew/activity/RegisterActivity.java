@@ -1,33 +1,87 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationListener;
+import com.amap.api.location.LocationManagerProxy;
+import com.amap.api.location.LocationProviderProxy;
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.NotEmpty;
+import com.mobsandgeeks.saripaar.annotation.Order;
+import com.mobsandgeeks.saripaar.annotation.Password;
+import com.mobsandgeeks.saripaar.annotation.Pattern;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
+
 import butterknife.Bind;
 import butterknife.OnClick;
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.listener.UploadFileListener;
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.JsonBean;
+import sinia.com.linkfarmnew.bean.ValidateCodeBean;
+import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.CacheUtils;
+import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.StringUtil;
+import sinia.com.linkfarmnew.utils.StringUtils;
+import sinia.com.linkfarmnew.utils.ValidationUtils;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
  */
-public class RegisterActivity extends BaseActivity {
+public class RegisterActivity extends BaseActivity implements AMapLocationListener {
 
     @Bind(R.id.tv_get_code)
     TextView tvGetCode;
+    @Pattern(regex = "^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", message =
+            "请输入正确的手机号码")
+    @Order(1)
     @Bind(R.id.et_phone)
     EditText etPhone;
+    @NotEmpty(message = "请输入验证码")
+    @Order(2)
     @Bind(R.id.et_code)
     EditText etCode;
+    @Password(sequence = 1, message = "请输入密码")
+    @Order(3)
     @Bind(R.id.et_password)
     EditText etPassword;
+    @NotEmpty(message = "请输入公司名称")
+    @Order(4)
     @Bind(R.id.et_company_name)
     EditText etCompanyName;
+    @NotEmpty(message = "请输入公司地址")
+    @Order(4)
     @Bind(R.id.et_company_address)
     EditText etCompanyAddress;
+    @NotEmpty(message = "请输入联系人姓名")
+    @Order(4)
     @Bind(R.id.et_contact_name)
     EditText etContactName;
     @Bind(R.id.et_recommend_code)
@@ -36,21 +90,343 @@ public class RegisterActivity extends BaseActivity {
     ImageView ivAdd;
     @Bind(R.id.tv_submit)
     TextView tvSubmit;
+    private Validator validator;
+    private LocationManagerProxy mLocationManagerProxy;
+    private int i = 60;
+    private String imgPath, dateTime, code;
+    private String imgUrl = "";
+    private AsyncHttpClient client = new AsyncHttpClient();
+    private String city = "南京";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register, "注册");
         getDoingView().setVisibility(View.GONE);
+        Bmob.initialize(this, Constants.BMOB_KEY);
+        validator = new Validator(this);
+        location();
+        initView();
     }
 
-    @OnClick({R.id.tv_get_code, R.id.tv_submit})
+    private void location() {
+        mLocationManagerProxy = LocationManagerProxy.getInstance(this);
+        mLocationManagerProxy.setGpsEnable(true);
+        mLocationManagerProxy.requestLocationData(
+                LocationProviderProxy.AMapNetwork, 60 * 1000, 15, this);
+    }
+
+    private void initView() {
+        validator.setValidationListener(new ValidationUtils.ValidationListener() {
+            @Override
+            public void onValidationSucceeded() {
+                super.onValidationSucceeded();
+                if (!etCode.getEditableText().toString().trim().equals(code)) {
+                    showToast("验证码不正确");
+                    return;
+                }
+                if (StringUtil.isEmpty(imgUrl)) {
+                    showToast("请上传营业执照");
+                    return;
+                }
+                register();
+            }
+        });
+    }
+
+    private void register() {
+        showLoad("注册中...");
+        RequestParams params = new RequestParams();
+        params.put("telephone", etPhone.getEditableText().toString().trim());
+        params.put("password", etPassword.getEditableText().toString().trim());
+        params.put("company", etCompanyName.getEditableText().toString().trim());
+        params.put("address", etCompanyAddress.getEditableText().toString().trim());
+        params.put("name", etContactName.getEditableText().toString().trim());
+        params.put("city", city);
+        if (StringUtil.isEmpty(etRecommendCode.getEditableText().toString().trim())) {
+            params.put("content", "-1");
+        } else {
+            params.put("content", etRecommendCode.getEditableText().toString().trim());
+        }
+        params.put("image", imgUrl);
+        params.put("type", "1");
+        Log.i("tag", Constants.BASE_URL + "register&" + params);
+        client.post(Constants.BASE_URL + "register", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    JsonBean bean = gson.fromJson(s, JsonBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("注册成功");
+                        startActivityForNoIntent(CheckingActivity.class);
+                        ActivityManager.getInstance().finishCurrentActivity();
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("注册失败");
+                    } else {
+                        showToast("邀请码输入错误，请重新输入");
+                    }
+                }
+            }
+        });
+    }
+
+    @OnClick({R.id.tv_get_code, R.id.tv_submit, R.id.iv_add})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_get_code:
+                if (!StringUtils.isMobileNumber(etPhone.getEditableText().toString().trim())) {
+                    showToast("请输入正确的手机号码");
+                } else {
+                    tvGetCode.setClickable(false);
+                    tvGetCode.setText("重新发送(" + i + ")");
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (; i > 0; i--) {
+                                handler.sendEmptyMessage(-9);
+                                if (i <= 0) {
+                                    break;
+                                }
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            handler.sendEmptyMessage(-8);
+                        }
+                    }).start();
+                    getCode();
+                }
                 break;
             case R.id.tv_submit:
+                validator.validate();
+                break;
+            case R.id.iv_add:
+                selectHeadImage();
                 break;
         }
+    }
+
+    private void getCode() {
+        showLoad("正在发送短信...");
+        RequestParams params = new RequestParams();
+        params.put("telephone", etPhone.getEditableText().toString().trim());
+        params.put("type", "1");
+        params.put("choose", "1");
+        Log.i("tag", Constants.BASE_URL + "gainValidateCode&" + params);
+        client.post(Constants.BASE_URL + "gainValidateCode", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    ValidateCodeBean bean = gson.fromJson(s, ValidateCodeBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("验证码已发送");
+                        code = bean.getValidateCode();
+                        showToast(code);
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("该手机号已经被注册");
+                    } else {
+                        showToast("验证码发送失败");
+                    }
+                }
+            }
+        });
+    }
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == -9) {
+                tvGetCode.setText("重新发送(" + i + ")");
+            } else if (msg.what == -8) {
+                tvGetCode.setText("获取验证码");
+                tvGetCode.setClickable(true);
+                i = 60;
+            }
+        }
+    };
+
+    private void selectHeadImage() {
+        new ActionSheetDialog(this)
+                .builder()
+                .setCancelable(true)
+                .setCanceledOnTouchOutside(true)
+                .addSheetItem("拍照选择", ActionSheetDialog.SheetItemColor.THEME_COLOR,
+                        new ActionSheetDialog.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                Date date1 = new Date(System
+                                        .currentTimeMillis());
+                                dateTime = date1.getTime() + "";
+                                getAvataFromCamera();
+                            }
+                        })
+                .addSheetItem("从手机相册选择", ActionSheetDialog.SheetItemColor.THEME_COLOR,
+                        new ActionSheetDialog.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                Intent intent = new Intent();
+                                intent.setAction(Intent.ACTION_PICK);
+                                intent.setType("image/*");
+                                intent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                startActivityForResult(intent, 2);
+                            }
+                        }).show();
+    }
+
+    protected void getAvataFromCamera() {
+        File f = new File(CacheUtils.getCacheDirectory(this, true,
+                "icon") + dateTime + "avatar.jpg");
+        if (f.exists()) {
+            f.delete();
+        }
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Uri uri = Uri.fromFile(f);
+        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        camera.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(camera, 1);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == -1) {
+            switch (requestCode) {
+                case 1:
+                    String files = CacheUtils.getCacheDirectory(this,
+                            true, "icon") + dateTime + "avatar.jpg";
+                    File file = new File(files);
+                    if (file.exists() && file.length() > 0) {
+                        Uri uri = Uri.fromFile(file);
+                        startPhotoZoom(uri);
+                    }
+                    break;
+                case 2:
+                    if (data == null) {
+                        return;
+                    }
+                    startPhotoZoom(data.getData());
+                    break;
+                case 3:
+                    if (data != null) {
+                        Bundle extras = data.getExtras();
+                        if (extras != null) {
+                            Bitmap bitmap = extras.getParcelable("data");
+                            imgPath = saveToSdCard(bitmap);
+                            Log.i("lamp", "iconUrl---" + imgPath);
+                            ivAdd.setImageBitmap(bitmap);
+                            updateIcon(imgPath);
+                        }
+                    }
+                    break;
+            }
+        }
+    }
+
+    private void updateIcon(String avataPath) {
+        if (avataPath != null) {
+            showLoad("正在上传营业执照");
+            final BmobFile file = new BmobFile(new File(avataPath));
+            file.upload(this, new UploadFileListener() {
+
+                @Override
+                public void onSuccess() {
+                    dismiss();
+                    imgUrl = file.getFileUrl(RegisterActivity.this);
+                    showToast("图片上传成功");
+                }
+
+                @Override
+                public void onFailure(int arg0, String arg1) {
+                    Log.i("tag", "图片上传失败错误码：" + arg0 + "----" + arg1);
+                    dismiss();
+                }
+            });
+        }
+    }
+
+    public String saveToSdCard(Bitmap bitmap) {
+        String files = CacheUtils
+                .getCacheDirectory(this, true, "icon")
+                + dateTime
+                + "_11.jpg";
+        File file = new File(files);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            if (bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos)) {
+                fos.flush();
+                fos.close();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file.getAbsolutePath();
+    }
+
+    public void startPhotoZoom(Uri uri) {
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 1);
+        intent.putExtra("aspectY", 1);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 280);
+        intent.putExtra("outputY", 280);
+        intent.putExtra("crop", "true");
+        intent.putExtra("scale", true);// 黑边
+        intent.putExtra("scaleUpIfNeeded", true);// 黑边
+        intent.putExtra("return-data", true);// 选择返回数据
+        startActivityForResult(intent, 3);
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (null != aMapLocation.getCity()) {
+            city = aMapLocation.getCity().split("市")[0];
+        } else {
+            city = "南京";
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 }

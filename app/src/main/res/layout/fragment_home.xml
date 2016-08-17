@@ -19,6 +19,7 @@
             android:layout_centerVertical="true"
             android:drawablePadding="2dp"
             android:drawableTop="@drawable/ic_locate"
+            android:singleLine="true"
             android:text="定位"
             android:textColor="#fff"
             android:textSize="13sp" />
@@ -30,11 +31,11 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
             android:layout_toLeftOf="@+id/tv_scan"
             android:layout_toRightOf="@+id/tv_locate"
             android:background="@drawable/bg_search"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:padding="8dp">
 
             <TextView
@@ -138,19 +139,23 @@
                         android:textColor="#D91800"
                         android:textSize="15sp" />
 
-                    <TextView
-                        android:id="@+id/tv_content"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ViewFlipper
+                        android:id="@+id/viewFlipper"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="10dp"
-                        android:layout_toEndOf="@+id/textView"
+                        android:layout_toLeftOf="@+id/v"
                         android:layout_toRightOf="@+id/textView"
-                        android:singleLine="true"
-                        android:text="有机蔬菜特价秒杀！！！"
-                        android:textSize="15sp" />
+                        android:autoStart="true"
+                        android:background="#ffffff"
+                        android:flipInterval="5000"
+                        android:gravity="center_vertical"
+                        android:inAnimation="@anim/slide_in"
+                        android:outAnimation="@anim/slide_out" />
 
                     <View
+                        android:id="@+id/v"
                         android:layout_width="0.5dp"
                         android:layout_height="match_parent"
                         android:layout_toLeftOf="@+id/llup"
@@ -164,14 +169,16 @@
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
-                        android:paddingLeft="18dp"
-                        android:paddingRight="18dp">
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp">
 
                         <ImageView
                             android:id="@+id/img_up"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="top"
+                            android:background="@drawable/layout_selector"
+                            android:padding="7dp"
                             android:src="@drawable/ic_up" />
 
                         <ImageView
@@ -179,7 +186,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
-                            android:layout_marginTop="6dp"
+                            android:background="@drawable/layout_selector"
+                            android:padding="7dp"
                             android:src="@drawable/ic_down" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -197,11 +205,15 @@
                     android:id="@+id/img_left_big"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/layout_selector"
                     android:scaleType="fitXY"
-                    android:src="@drawable/zuo_big" />
+                    android:src="@drawable/load_failed_left" />
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@color/grayBgColor" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -213,11 +225,15 @@
                         android:id="@+id/img_right_top"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/layout_selector"
                         android:scaleType="fitXY"
-                        android:src="@drawable/zuo_xiao" />
+                        android:src="@drawable/load_failed_right" />
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="11dp"
+                        android:background="@color/grayBgColor" />
 
                     <ImageView
                         android:id="@+id/img_right_bottom"
@@ -226,7 +242,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/layout_selector"
                         android:scaleType="fitXY"
-                        android:src="@drawable/zuo_xiao" />
+                        android:src="@drawable/load_failed_right" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -241,7 +257,6 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
                     android:layout_weight="1"
                     android:orientation="vertical">
 
@@ -249,11 +264,15 @@
                         android:id="@+id/img_left_top"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_marginBottom="10dp"
                         android:layout_weight="1"
                         android:background="@drawable/layout_selector"
                         android:scaleType="fitXY"
-                        android:src="@drawable/zuo_xiao" />
+                        android:src="@drawable/load_failed_right" />
+
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="11dp"
+                        android:background="@color/grayBgColor" />
 
                     <ImageView
                         android:id="@+id/img_left_bottom"
@@ -262,8 +281,13 @@
                         android:layout_weight="1"
                         android:background="@drawable/layout_selector"
                         android:scaleType="fitXY"
-                        android:src="@drawable/zuo_xiao" />
+                        android:src="@drawable/load_failed_right" />
                 </LinearLayout>
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:background="@color/grayBgColor" />
 
                 <ImageView
                     android:id="@+id/img_right_big"
@@ -272,7 +296,7 @@
                     android:layout_weight="1"
                     android:background="@drawable/layout_selector"
                     android:scaleType="fitXY"
-                    android:src="@drawable/zuo_big" />
+                    android:src="@drawable/load_failed_left" />
             </LinearLayout>
 
             <ImageView
@@ -291,6 +315,7 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:scrollbars="none" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

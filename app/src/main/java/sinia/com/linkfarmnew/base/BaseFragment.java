@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.view.loadingview.LoadingView;
 
 
@@ -52,7 +53,11 @@ public class BaseFragment extends Fragment {
                 R.layout.layout_loading_dialog, null);
         mLoadingView = (LoadingView) mDialogContentView
                 .findViewById(R.id.loadView);
-        mLoadingView.setLoadingText(text);
+        if (StringUtil.isEmpty(text)) {
+            mLoadingView.setLoadingText("加载中...");
+        } else {
+            mLoadingView.setLoadingText(text);
+        }
         Display d = getActivity().getWindowManager().getDefaultDisplay();
         dialog.show();
         dialog.setContentView(mDialogContentView, new ViewGroup.LayoutParams((int) (d.getWidth() * 0.5),

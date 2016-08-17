@@ -5,59 +5,12 @@
     android:background="@color/grayBgColor"
     android:orientation="vertical">
 
-    <TextView
+    <ListView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
-        android:padding="10dp"
-        android:text="生产地：江苏省南京市"
-        android:textColor="@color/textblackColor"
-        android:textSize="15sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="#ddd" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:padding="10dp"
-        android:text="单果果径：20.15mm"
-        android:textColor="@color/textblackColor"
-        android:textSize="15sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="#ddd" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:padding="10dp"
-        android:text="生产地：江苏省南京市"
-        android:textColor="@color/textblackColor"
-        android:textSize="15sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="#ddd" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#fff"
-        android:padding="10dp"
-        android:text="单果果径：20.15mm"
-        android:textColor="@color/textblackColor"
-        android:textSize="15sp" />
-
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1px"
-        android:background="#ddd" />
+        android:divider="#ccc"
+        android:dividerHeight="0.5dp"
+        android:listSelector="#00000000"
+        android:overScrollMode="never" />
 </LinearLayout>

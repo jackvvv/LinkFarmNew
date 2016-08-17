@@ -34,11 +34,11 @@ public class MyOrderActivity extends BaseActivity {
     private void initData() {
         adapter = new MyOrderAdapter(this);
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivityForNoIntent(OrderDetailActivity.class);
-            }
-        });
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                startActivityForNoIntent(OrderDetailActivity.class);
+//            }
+//        });
     }
 }

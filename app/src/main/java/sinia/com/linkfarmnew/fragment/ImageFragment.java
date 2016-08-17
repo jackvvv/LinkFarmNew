@@ -12,6 +12,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseFragment;
+import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 
 /**
@@ -23,6 +24,7 @@ public class ImageFragment extends BaseFragment {
     WebView webView;
     private View rootView;
     private boolean hasInited = false;
+    private GoodsDetailBean goodsBean;
 
     @Nullable
     @Override
@@ -30,13 +32,14 @@ public class ImageFragment extends BaseFragment {
     Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_image, null);
         ButterKnife.bind(this, rootView);
+        goodsBean = (GoodsDetailBean) getArguments().get("goodsBean");
         return rootView;
     }
 
-    public void initImg() {
+    public void initImg(String imgUrl) {
         if (null != webView && !hasInited) {
             hasInited = true;
-            webView.loadUrl("http://img.zcool.cn/community/0153fd55d6968132f875a13220fd84.jpg");
+            webView.loadUrl(imgUrl);
         }
     }
 

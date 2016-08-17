@@ -15,7 +15,9 @@ import butterknife.ButterKnife;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
 import sinia.com.linkfarmnew.fragment.GoodsCollectFragment;
+import sinia.com.linkfarmnew.fragment.GoodsFootFragment;
 import sinia.com.linkfarmnew.fragment.ShopCollectFragment;
+import sinia.com.linkfarmnew.fragment.ShopFootFragment;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/8.
@@ -30,8 +32,8 @@ public class MyFootPrintActivity extends BaseActivity {
     private MyFragmentPagerAdapter pagerAdapter;
     private List<String> titleList;
     private List<Fragment> fragmentList;
-    private GoodsCollectFragment goodsFragment;
-    private ShopCollectFragment shopFragment;
+    private GoodsFootFragment goodsFragment;
+    private ShopFootFragment shopFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,8 @@ public class MyFootPrintActivity extends BaseActivity {
         titleList.add("商品");
         titleList.add("商铺");
         fragmentList = new ArrayList<>();
-        goodsFragment = new GoodsCollectFragment();
-        shopFragment = new ShopCollectFragment();
+        goodsFragment = new GoodsFootFragment();
+        shopFragment = new ShopFootFragment();
         fragmentList.add(goodsFragment);
         fragmentList.add(shopFragment);
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);

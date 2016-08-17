@@ -71,6 +71,7 @@ public class OrderDetailActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_yhq:
+                startActivityForNoIntent(UseCouponsActivity.class);
                 break;
             case R.id.btn2:
                 startActivityForNoIntent(PayActivity.class);

@@ -8,7 +8,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.MyCollectBean;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -18,13 +23,16 @@ public class GoodsCollectAdapter extends BaseAdapter {
 
     private Context context;
 
-    public GoodsCollectAdapter(Context context) {
+    private List<MyCollectBean.CollectBean> list;
+
+    public GoodsCollectAdapter(Context context, List<MyCollectBean.CollectBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 5;
+        return list.size();
     }
 
     @Override
@@ -45,6 +53,10 @@ public class GoodsCollectAdapter extends BaseAdapter {
         TextView tv_title = ViewHolder.get(view, R.id.tv_title);
         TextView tv_comment = ViewHolder.get(view, R.id.tv_comment);
         ImageView img = ViewHolder.get(view, R.id.img);
+
+        Glide.with(context).load(list.get(i).getGoodImage()).placeholder(R.drawable.ic_launcher).into(img);
+        tv_title.setText(list.get(i).getGoodName());
+        tv_comment.setText(list.get(i).getComNum() + "人评论");
         return view;
     }
 }

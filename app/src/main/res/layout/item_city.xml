@@ -15,6 +15,7 @@
         android:paddingRight="23dp"
         android:paddingTop="6dp"
         android:text="南京"
+        android:textColor="@color/textblackColor"
         android:textSize="15sp" />
 
 </LinearLayout>

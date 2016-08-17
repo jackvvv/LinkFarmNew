@@ -140,7 +140,7 @@ public class SlideShowView extends FrameLayout {
 				// ImageLoader.getInstance().displayImage(imageUrls.get(pos),
 				// view, uOption);
 				BitmapUtilsHelp.getImage(getContext(),
-						R.drawable.banner_default).display(view,
+						R.drawable.load_failed_right).display(view,
 						imageUrls.get(pos));
 				// view.setImageResource(Integer.valueOf(imageUrls.get(pos)));
 			}

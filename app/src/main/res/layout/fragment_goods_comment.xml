@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="全部评价\n 500"
+            android:text="全部评价\n 0"
             android:textColor="@drawable/home_tab_home_text_color"
             android:textSize="14sp" />
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="好评\n 390"
+            android:text="好评\n 0"
             android:textColor="@drawable/home_tab_home_text_color"
             android:textSize="14sp" />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="中评\n 100"
+            android:text="中评\n 0"
             android:textColor="@drawable/home_tab_home_text_color"
             android:textSize="14sp" />
 
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:text="差评\n 10"
+            android:text="差评\n 0"
             android:textColor="@drawable/home_tab_home_text_color"
             android:textSize="14sp" />
     </LinearLayout>

@@ -14,6 +14,8 @@ import butterknife.OnClick;
 import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.MyApplication;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/9.
@@ -82,6 +84,11 @@ public class SettingsActivity extends BaseActivity {
                 .setPositiveButton("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        MyApplication.getInstance().setBooleanValue("is_login",
+                                false);
+                        MyApplication.getInstance().setLoginBean(null);
+                        startActivityForNoIntent(LoginActivity.class);
+                        ActivityManager.getInstance().finishCurrentActivity();
                         materialDialog.dismiss();
                     }
                 }).setNegativeButton("取消", new View.OnClickListener() {

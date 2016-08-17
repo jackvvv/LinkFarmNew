@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.CouponListBean;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -16,14 +19,16 @@ import sinia.com.linkfarmnew.utils.ViewHolder;
 public class MyCouponsAdapter extends BaseAdapter {
 
     private Context context;
+    private List<CouponListBean.CouponBean> list;
 
-    public MyCouponsAdapter(Context context) {
+    public MyCouponsAdapter(Context context, List<CouponListBean.CouponBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 5;
+        return list.size();
     }
 
     @Override
@@ -42,6 +47,7 @@ public class MyCouponsAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.item_my_coupons, null);
         }
         TextView tv_money = ViewHolder.get(view, R.id.tv_money);
+        tv_money.setText(list.get(i).getPrice());
         return view;
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#fff"
@@ -47,7 +48,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_toRightOf="@+id/img"
                     android:maxLines="2"
-                    android:text="152人已购买"
+                    android:text="0人已购买"
                     android:textColor="#999"
                     android:textSize="14sp" />
 
@@ -59,7 +60,7 @@
                     android:layout_marginRight="10dp"
                     android:layout_toLeftOf="@+id/ll_collect"
                     android:gravity="center"
-                    android:text="15人\n 收藏人数"
+                    android:text="0人\n 收藏人数"
                     android:textColor="@color/textblackColor"
                     android:textSize="15sp" />
 
@@ -74,12 +75,16 @@
                     android:orientation="horizontal"
                     android:padding="8dp">
 
-                    <ImageView
-                        android:id="@+id/img_collect"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <com.ldoublem.thumbUplib.ThumbUpView
+                        android:id="@+id/tpv"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginRight="6dp"
-                        android:src="@drawable/ic_not_collect" />
+                        android:focusable="false"
+                        app:cracksColor="#ffffff"
+                        app:edgeColor="#E51412"
+                        app:fillColor="#E51412"
+                        app:unlikeType="1" />
 
                     <TextView
                         android:layout_width="wrap_content"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,21 +12,32 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.AddressManagerActivity;
+import sinia.com.linkfarmnew.activity.LoginActivity;
 import sinia.com.linkfarmnew.activity.MyCollectActivity;
 import sinia.com.linkfarmnew.activity.MyCouponsActivity;
 import sinia.com.linkfarmnew.activity.MyExpandActivity;
 import sinia.com.linkfarmnew.activity.MyFootPrintActivity;
 import sinia.com.linkfarmnew.activity.MyOrderActivity;
 import sinia.com.linkfarmnew.activity.PersonalCenterActivty;
-import sinia.com.linkfarmnew.activity.ServiceActivity;
 import sinia.com.linkfarmnew.activity.SettingsActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
+import sinia.com.linkfarmnew.bean.LoginBean;
+import sinia.com.linkfarmnew.bean.RefreshBean;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
+import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.view.CircleImageView;
 
 /**
@@ -89,8 +101,13 @@ public class MineFragment extends BaseFragment {
     ImageView ivDingdan6;
     @Bind(R.id.rl_tuiguang)
     RelativeLayout rlTuiguang;
+    @Bind(R.id.rl_login)
+    RelativeLayout rl_login;
+    @Bind(R.id.tv_level)
+    TextView tvLevel;
     private View rootView;
     private MaterialDialog materialDialog;
+    private AsyncHttpClient client = new AsyncHttpClient();
 
     @Nullable
     @Override
@@ -102,12 +119,66 @@ public class MineFragment extends BaseFragment {
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
+    public void onResume() {
+        super.onResume();
+        if (MyApplication.getInstance().getBoolValue("is_login")) {
+            setUserData();
+            rl_login.setVisibility(View.GONE);
+            rlPersonInfo.setVisibility(View.VISIBLE);
+        } else {
+            rl_login.setVisibility(View.VISIBLE);
+            rlPersonInfo.setVisibility(View.GONE);
+        }
     }
 
-    @OnClick({R.id.img_kefu, R.id.img_settings, R.id.iv_head, R.id.img_mall, R.id.rl_person_info, R.id.rl_notpay, R.id.rl_delivery, R.id.rl_notcomment, R.id.rl_yhq, R.id.rl_tuihuo, R.id.rl_my_collect, R.id.rl_foot, R.id.rl_address_manager, R.id.rl_tuiguang})
+    private void setUserData() {
+        RequestParams params = new RequestParams();
+        params.put("userId", MyApplication.getInstance().getStringValue("userId"));
+        params.put("type", "1");
+        Log.i("tag", Constants.BASE_URL + "refresh&" + params);
+        client.post(Constants.BASE_URL + "refresh", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Log.i("tag", s);
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    RefreshBean bean = gson.fromJson(s, RefreshBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        BitmapUtilsHelp.getImage(getActivity(), R.drawable
+                                .ic_launcher).display(ivHead, bean.getImageUrl());
+                        tvUsername.setText(bean.getNickName());
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    } else {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
+        LoginBean userBean = MyApplication.getInstance().getLoginBean();
+        if (null != userBean) {
+            tvJifen.setText(userBean.getPoint() + "\n 积分分数");
+            tvLevel.setText("Lv" + userBean.getLeave());
+            if ("1".equals(userBean.getCheakStatus())) {
+                tvStatus.setText("企业已认证");
+            } else if ("2".equals(userBean.getCheakStatus())) {
+                tvStatus.setText("企业待认证");
+            } else if ("2".equals(userBean.getCheakStatus())) {
+                tvStatus.setText("认证失败");
+            }
+        }
+
+    }
+
+    @OnClick({R.id.img_kefu, R.id.img_settings, R.id.iv_head, R.id.img_mall, R.id.rl_person_info, R.id.rl_login, R.id
+            .rl_notpay, R
+            .id.rl_delivery, R.id.rl_notcomment, R.id.rl_yhq, R.id.rl_tuihuo, R.id.rl_my_collect, R.id.rl_foot, R.id
+            .rl_address_manager, R.id.rl_tuiguang})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -115,56 +186,122 @@ public class MineFragment extends BaseFragment {
                 callService();
                 break;
             case R.id.img_settings:
-                intent = new Intent(getActivity(), SettingsActivity.class);
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), SettingsActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.iv_head:
+//                intent = new Intent(getActivity(), LoginActivity.class);
+//                startActivity(intent);
                 break;
             case R.id.img_mall:
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_person_info:
-                intent = new Intent(getActivity(), PersonalCenterActivty.class);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), PersonalCenterActivty.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.rl_login:
+                intent = new Intent(getActivity(), LoginActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_notpay:
-                intent = new Intent(getActivity(), MyOrderActivity.class);
-                intent.putExtra("title", "待付款");
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyOrderActivity.class);
+                    intent.putExtra("title", "待付款");
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_delivery:
-                intent = new Intent(getActivity(), MyOrderActivity.class);
-                intent.putExtra("title", "待收货");
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyOrderActivity.class);
+                    intent.putExtra("title", "待收货");
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_notcomment:
-                intent = new Intent(getActivity(), MyOrderActivity.class);
-                intent.putExtra("title", "待评价");
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyOrderActivity.class);
+                    intent.putExtra("title", "待评价");
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_yhq:
-                intent = new Intent(getActivity(), MyCouponsActivity.class);
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyCouponsActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_tuihuo:
-                intent = new Intent(getActivity(), MyOrderActivity.class);
-                intent.putExtra("title", "退货订单");
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyOrderActivity.class);
+                    intent.putExtra("title", "退货订单");
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_my_collect:
-                intent = new Intent(getActivity(), MyCollectActivity.class);
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyCollectActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_foot:
-                intent = new Intent(getActivity(), MyFootPrintActivity.class);
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyFootPrintActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_address_manager:
-                intent = new Intent(getActivity(), AddressManagerActivity.class);
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), AddressManagerActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.rl_tuiguang:
-                intent = new Intent(getActivity(), MyExpandActivity.class);
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyExpandActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
         }
     }
@@ -185,5 +322,11 @@ public class MineFragment extends BaseFragment {
                 materialDialog.dismiss();
             }
         }).show();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
     }
 }

@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,6 +23,7 @@ import sinia.com.linkfarmnew.activity.AddressManagerActivity;
 import sinia.com.linkfarmnew.adapter.AddressAdapter;
 import sinia.com.linkfarmnew.adapter.ShopCollectAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
+import sinia.com.linkfarmnew.bean.AddressListBean;
 import sinia.com.linkfarmnew.utils.AppInfoUtil;
 import sinia.com.linkfarmnew.view.swipmenulistview.SwipeMenu;
 import sinia.com.linkfarmnew.view.swipmenulistview.SwipeMenuCreator;
@@ -37,19 +41,20 @@ public class SendtoAddressFragment extends BaseFragment {
     TextView tvAdd;
 
     private AddressAdapter adapter;
+    private List<AddressListBean.AddressBean> list = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
     Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.activity_address_manager, null);
-        ButterKnife.bind(this,rootView);
+        ButterKnife.bind(this, rootView);
         initData();
         return rootView;
     }
 
     private void initData() {
-        adapter = new AddressAdapter(getActivity());
+        adapter = new AddressAdapter(getActivity(), list);
         listview.setAdapter(adapter);
         SwipeMenuCreator creator = new SwipeMenuCreator() {
 

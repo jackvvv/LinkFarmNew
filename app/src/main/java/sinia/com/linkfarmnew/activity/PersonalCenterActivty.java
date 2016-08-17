@@ -1,5 +1,6 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
@@ -12,12 +13,18 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 
 import butterknife.Bind;
@@ -29,8 +36,15 @@ import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog;
 import sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialogUtils;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.JsonBean;
+import sinia.com.linkfarmnew.bean.LoginBean;
+import sinia.com.linkfarmnew.bean.RefreshBean;
+import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.CacheUtils;
 import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.view.CircleImageView;
 
 /**
@@ -43,14 +57,14 @@ public class PersonalCenterActivty extends BaseActivity {
     @Bind(R.id.tv_changeimg)
     TextView tvChangeimg;
     @Bind(R.id.et_name)
-    EditText etName;
+    TextView etName;
     @Bind(R.id.tv_sex)
     TextView tvSex;
     @Bind(R.id.rl_sex)
     RelativeLayout rlSex;
 
     private AsyncHttpClient client = new AsyncHttpClient();
-    private String imgPath, dateTime;
+    private String imgPath, dateTime, imageUrl;
     private String imgUrl = "";
 
     @Override
@@ -63,18 +77,127 @@ public class PersonalCenterActivty extends BaseActivity {
     }
 
     private void initData() {
+        RequestParams params = new RequestParams();
+        params.put("userId", MyApplication.getInstance().getStringValue("userId"));
+        params.put("type", "1");
+        Log.i("tag", Constants.BASE_URL + "refresh&" + params);
+        client.post(Constants.BASE_URL + "refresh", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Log.i("tag", s);
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    RefreshBean bean = gson.fromJson(s, RefreshBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        BitmapUtilsHelp.getImage(PersonalCenterActivty.this, R.drawable
+                                .ic_launcher).display(imgHead, bean.getImageUrl());
+                        imageUrl = bean.getImageUrl();
+                        etName.setText(bean.getNickName());
+                        tvSex.setText(bean.getSex());
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    } else {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
     }
 
-    @OnClick({R.id.tv_changeimg, R.id.rl_sex})
+    @OnClick({R.id.tv_changeimg, R.id.rl_sex, R.id.rl_workplace})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_changeimg:
                 selectHeadImage();
                 break;
             case R.id.rl_sex:
-                ActionSheetDialogUtils.createSexDialog(this, tvSex);
+                createSexDialog(this, tvSex);
+                break;
+            case R.id.rl_workplace:
+                Intent intent = new Intent(PersonalCenterActivty.this, ChangeNameActivity.class);
+                intent.putExtra("img", imageUrl);
+                intent.putExtra("name", etName.getText().toString());
+                intent.putExtra("sex", tvSex.getText().toString());
+                startActivityForResult(intent, 100);
                 break;
         }
+    }
+
+    private void changeInfo(String img, String sex) {
+        showLoad("修改中...");
+        RequestParams params = new RequestParams();
+        params.put("userId", MyApplication.getInstance().getStringValue("userId"));
+        params.put("type", "1");
+        try {
+            if (StringUtil.isEmpty(etName.getText().toString().trim())) {
+                params.put("name", "-1");
+            } else {
+                params.put("name", URLEncoder.encode(etName.getText().toString().trim(), "UTF-8"));
+            }
+            if (StringUtil.isEmpty(img)) {
+                params.put("image", "-1");
+            } else {
+                params.put("image", img);
+            }
+            if (StringUtil.isEmpty(sex)) {
+                params.put("sex", URLEncoder.encode("男", "UTF-8"));
+            } else {
+                params.put("sex", URLEncoder.encode(sex, "UTF-8"));
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.i("tag", Constants.BASE_URL + "updateInfo&" + params);
+        client.post(Constants.BASE_URL + "updateInfo", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Log.i("tag", s);
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    JsonBean bean = gson.fromJson(s, JsonBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("修改成功");
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("修改失败");
+                    } else {
+                        showToast("修改失败");
+                    }
+                }
+            }
+        });
+    }
+
+    private void createSexDialog(Context context, final TextView tv) {
+        new sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog(context)
+                .builder()
+                .setCancelable(true)
+                .setCanceledOnTouchOutside(true)
+                .addSheetItem("男", sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog.SheetItemColor.BLACK,
+                        new sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                tv.setText("男");
+                                changeInfo(imageUrl, "男");
+                            }
+                        })
+                .addSheetItem("女", sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog.SheetItemColor.BLACK,
+                        new sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog.OnSheetItemClickListener() {
+                            @Override
+                            public void onClick(int which) {
+                                tv.setText("女");
+                                changeInfo(imageUrl, "女");
+                            }
+                        }).show();
     }
 
     private void selectHeadImage() {
@@ -127,6 +250,10 @@ public class PersonalCenterActivty extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
             switch (requestCode) {
+                case 100:
+                    String name = data.getStringExtra("name");
+                    etName.setText(name);
+                    break;
                 case 1:
                     String files = CacheUtils.getCacheDirectory(this,
                             true, "icon") + dateTime + "avatar.jpg";
@@ -148,7 +275,7 @@ public class PersonalCenterActivty extends BaseActivity {
                         if (extras != null) {
                             Bitmap bitmap = extras.getParcelable("data");
                             imgPath = saveToSdCard(bitmap);
-                            Log.i("lamp", "iconUrl---" + imgPath);
+                            Log.i("tag", "iconUrl---" + imgPath);
                             imgHead.setImageBitmap(bitmap);
                             updateIcon(imgPath);
                         }
@@ -169,6 +296,7 @@ public class PersonalCenterActivty extends BaseActivity {
                     dismiss();
                     imgUrl = file.getFileUrl(PersonalCenterActivty.this);
                     // showToast("图片上传成功");
+                    changeInfo(imgUrl, tvSex.getText().toString());
                 }
 
                 @Override

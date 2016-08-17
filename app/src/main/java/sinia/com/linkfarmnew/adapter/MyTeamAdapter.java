@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.RecommendCodeBean;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -16,14 +19,16 @@ import sinia.com.linkfarmnew.utils.ViewHolder;
 public class MyTeamAdapter extends BaseAdapter {
 
     private Context context;
+    private List<RecommendCodeBean.RecommendName> list;
 
-    public MyTeamAdapter(Context context) {
+    public MyTeamAdapter(Context context, List<RecommendCodeBean.RecommendName> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return list.size();
     }
 
     @Override
@@ -43,6 +48,7 @@ public class MyTeamAdapter extends BaseAdapter {
         }
         TextView tv_name = ViewHolder.get(view, R.id.tv_name);
         TextView tv_num = ViewHolder.get(view, R.id.tv_num);
+        tv_num.setText(list.get(i).getUserName());
         return view;
     }
 }

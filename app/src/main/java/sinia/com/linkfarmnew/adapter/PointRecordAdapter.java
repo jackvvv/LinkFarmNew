@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.PointRecordBean;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -17,13 +20,16 @@ public class PointRecordAdapter extends BaseAdapter {
 
     private Context context;
 
-    public PointRecordAdapter(Context context) {
+    private List<PointRecordBean.PointBean> list;
+
+    public PointRecordAdapter(Context context, List<PointRecordBean.PointBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return list.size();
     }
 
     @Override
@@ -43,6 +49,8 @@ public class PointRecordAdapter extends BaseAdapter {
         }
         TextView tv_name = ViewHolder.get(view, R.id.tv_name);
         TextView tv_num = ViewHolder.get(view, R.id.tv_num);
+        tv_name.setText(list.get(i).getUserName());
+        tv_name.setText(list.get(i).getPoint());
         return view;
     }
 }

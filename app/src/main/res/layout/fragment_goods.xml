@@ -90,7 +90,8 @@
                 android:layout_marginLeft="10dp"
                 android:drawableLeft="@drawable/ic_lo"
                 android:drawablePadding="5dp"
-                android:text="江苏省南京市鼓楼区古平岗"
+                android:text=""
+                android:singleLine="true"
                 android:textColor="@color/textblackColor"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -103,10 +104,11 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_commentNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="评价(150)"
+                android:text="评价(0)"
                 android:textColor="#999"
                 android:textSize="14sp" />
 

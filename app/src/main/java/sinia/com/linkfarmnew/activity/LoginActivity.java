@@ -1,10 +1,15 @@
 package sinia.com.linkfarmnew.activity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
@@ -15,6 +20,13 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.JsonBean;
+import sinia.com.linkfarmnew.bean.LoginBean;
+import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.StringUtil;
+import sinia.com.linkfarmnew.utils.ValidationUtils;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
@@ -43,6 +55,7 @@ public class LoginActivity extends BaseActivity {
     TextView tvWeibo;
 
     private Validator validator;
+    private AsyncHttpClient client = new AsyncHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +65,57 @@ public class LoginActivity extends BaseActivity {
         getBackView().setVisibility(View.GONE);
         getDoingView().setVisibility(View.GONE);
         validator = new Validator(this);
+        initView();
+    }
+
+    private void initView() {
+        validator.setValidationListener(new ValidationUtils.ValidationListener() {
+            @Override
+            public void onValidationSucceeded() {
+                super.onValidationSucceeded();
+                login();
+            }
+        });
+    }
+
+    private void login() {
+        showLoad("登录中...");
+        RequestParams params = new RequestParams();
+        params.put("telephone", etPhone.getEditableText().toString().trim());
+        params.put("password", etPassword.getEditableText().toString().trim());
+        params.put("content", "-1");
+        params.put("type", "1");
+        Log.i("tag", Constants.BASE_URL + "login&" + params);
+        client.post(Constants.BASE_URL + "login", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Log.i("tag",s);
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    LoginBean bean = gson.fromJson(s, LoginBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("登录成功");
+                        MyApplication.getInstance().setBooleanValue(
+                                "is_login", true);
+                        MyApplication.getInstance().setStringValue(
+                                "userId", bean.getId());
+                        MyApplication.getInstance().setLoginBean(bean);
+//                        startActivityForNoIntent(MainActivity.class);
+                        ActivityManager.getInstance()
+                                .finishCurrentActivity();
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("第一次登陆，请先第三方通过后，进行手机号号和密码登录");
+                    } else {
+                        showToast("手机号或密码输入有误");
+                    }
+                }
+            }
+        });
     }
 
     @OnClick({R.id.tv_login, R.id.tv_register, R.id.tv_find_pwd, R.id.tv_qq, R.id.tv_wechat, R.id

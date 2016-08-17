@@ -11,6 +11,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseFragment;
+import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/10.
@@ -20,6 +21,7 @@ public class VideoFragment extends BaseFragment {
     @Bind(R.id.webView)
     WebView webView;
     private View rootView;
+    private GoodsDetailBean goodsBean;
 
     @Nullable
     @Override
@@ -27,12 +29,18 @@ public class VideoFragment extends BaseFragment {
     Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_video, null);
         ButterKnife.bind(this, rootView);
+        goodsBean = (GoodsDetailBean) getArguments().get("goodsBean");
         initData();
         return rootView;
     }
 
+    public static VideoFragment newInstance() {
+        VideoFragment fragment = new VideoFragment();
+        return fragment;
+    }
+
     private void initData() {
-        webView.loadUrl("http://live.bilibili.com/207");
+        webView.loadUrl(goodsBean.getMoiveLink());
     }
 
     @Override

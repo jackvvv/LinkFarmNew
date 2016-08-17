@@ -29,6 +29,7 @@ import sinia.com.linkfarmnew.adapter.MyExpandableListAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.GoodsBean;
 import sinia.com.linkfarmnew.bean.GroupBean;
+import sinia.com.linkfarmnew.bean.HomePageBean;
 import sinia.com.linkfarmnew.myinterface.CheckInterface;
 import sinia.com.linkfarmnew.myinterface.ModifyCountInterface;
 import sinia.com.linkfarmnew.utils.Utility;
@@ -73,6 +74,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     private boolean checkAll = false, isEdit = false;
     private double totalPrice = 0.00;// 购买的商品总价
     private int totalCount = 0;// 购买的商品总数量
+    private List<HomePageBean.RecarrayItemsBean> recommendList = new ArrayList<>();
 
     private Handler handler = new Handler() {
         @Override
@@ -143,7 +145,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     private void inintData() {
         footView = LayoutInflater.from(getActivity()).inflate(R.layout.view_cart_recommend, null);
         gridView = (MyGridView) footView.findViewById(R.id.gridView);
-        recommendAdapter = new HomeRecommendAdapter(getActivity());
+        recommendAdapter = new HomeRecommendAdapter(getActivity(),recommendList);
         gridView.setAdapter(recommendAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -194,7 +196,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 doCheckAll();
                 break;
             case R.id.btnSettle:
-                if (totalCount == 0) {
+                if (allSize() == 0) {
                     showToast("请选择要支付的商品");
                 } else {
                     showToast("选择了" + allSize() + "件商品，共" + "需要支付" + allPrice() + "元");
@@ -245,7 +247,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
      * 全选与反选---结算
      */
     private void doCheckAll() {
-        if (null != adapter.groups && 0 != adapter.groups.size()) {
+        if (null != adapter.groups && 0 != adapter.groups.size() && null != adapter.childs && 0
+                != adapter.childs.size()) {
             for (int i = 0; i < adapter.groups.size(); i++) {
                 adapter.groups.get(i).setChecked(ivSelectAll.isChecked());
                 GroupBean group = adapter.groups.get(i);
@@ -264,7 +267,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
      * 全选与反选---删除
      */
     private void doDeleteAll() {
-        if (null != adapter.groups && 0 != adapter.groups.size()) {
+        if (null != adapter.groups && 0 != adapter.groups.size() && null != adapter.childs && 0
+                != adapter.childs.size()) {
             for (int i = 0; i < adapter.groups.size(); i++) {
                 adapter.groups.get(i).setChecked(ivDeleteAll.isChecked());
                 GroupBean group = adapter.groups.get(i);
@@ -284,7 +288,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     // 选中的价格
     private double allPrice() {
         double allPrice = 0;
-        if (null != adapter.childs && 0 != adapter.childs.size()) {
+        if (null != adapter.childs && 0 != adapter.childs.size() && null != adapter.groups && 0
+                != adapter.groups.size()) {
             for (int i = 0; i < adapter.childs.size(); i++) {
                 String key = adapter.groups.get(i).getShopName();
                 List<GoodsBean> data = adapter.childs.get(key);
@@ -301,7 +306,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     // 选中的数量
     private int allSize() {
         int allSize = 0;
-        if (null != adapter.childs && 0 != adapter.childs.size()) {
+        if (null != adapter.childs && 0 != adapter.childs.size() && null != adapter.groups && 0
+                != adapter.groups.size()) {
             for (int i = 0; i < adapter.childs.size(); i++) {
                 String key = adapter.groups.get(i).getShopName();
                 List<GoodsBean> data = adapter.childs.get(key);
@@ -316,7 +322,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     }
 
     @Override
-    public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
+    public void doIncrease(int groupPosition, int childPosition, View showCountView, boolean
+            isChecked) {
         GoodsBean goods = (GoodsBean) adapter.getChild(groupPosition, childPosition);
         int currentCount = Integer.parseInt(goods.getGoodNum());
         currentCount++;
@@ -327,7 +334,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     }
 
     @Override
-    public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean isChecked) {
+    public void doDecrease(int groupPosition, int childPosition, View showCountView, boolean
+            isChecked) {
         GoodsBean goods = (GoodsBean) adapter.getChild(groupPosition, childPosition);
         int currentCount = Integer.parseInt(goods.getGoodNum());
         if (currentCount == 1)
@@ -404,7 +412,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 GoodsBean goods = goodsList.get(j);
                 if (goods.isChecked()) {
                     totalCount++;
-                    totalPrice += Double.parseDouble(goods.getGoodPrice()) * Double.parseDouble(goods.getGoodNum());
+                    totalPrice += Double.parseDouble(goods.getGoodPrice()) * Double.parseDouble
+                            (goods.getGoodNum());
                 }
             }
         }
