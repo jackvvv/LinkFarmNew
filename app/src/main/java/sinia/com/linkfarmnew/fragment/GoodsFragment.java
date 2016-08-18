@@ -100,8 +100,10 @@ public class GoodsFragment extends BaseFragment {
                         list.clear();
                         list.addAll(bean.getItems());
                         adapter.notifyDataSetChanged();
-                        Utility.setListViewHeightBasedOnChildren(lvComment);
-                        tvCommentNum.setText("评价(" + list.size() + ")");
+                        if (null != lvComment && null != tvCommentNum) {
+                            Utility.setListViewHeightBasedOnChildren(lvComment);
+                            tvCommentNum.setText("评价(" + list.size() + ")");
+                        }
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("请求失败");
                     }
