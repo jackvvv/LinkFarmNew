@@ -43,13 +43,13 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/rl_standard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="#fff"
+            android:background="@drawable/layout_selector"
             android:orientation="horizontal"
-            android:padding="10dp"
-            android:id="@+id/rl_standard">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -63,15 +63,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:text="红苹果 10Kg"
+                android:text=""
                 android:textColor="@color/textblackColor"
                 android:textSize="14sp" />
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ll_sendAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
+            android:visibility="gone"
             android:background="#fff"
             android:orientation="horizontal"
             android:padding="10dp">
@@ -90,8 +92,8 @@
                 android:layout_marginLeft="10dp"
                 android:drawableLeft="@drawable/ic_lo"
                 android:drawablePadding="5dp"
-                android:text=""
                 android:singleLine="true"
+                android:text=""
                 android:textColor="@color/textblackColor"
                 android:textSize="14sp" />
         </LinearLayout>

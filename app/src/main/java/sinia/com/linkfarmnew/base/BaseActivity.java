@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.AppInfoUtil;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.SystemBarTintManager;
 import sinia.com.linkfarmnew.view.loadingview.LoadingView;
 
@@ -162,7 +163,7 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-    protected void back(){
+    protected void back() {
     }
 
     @Override
@@ -268,7 +269,11 @@ public class BaseActivity extends AppCompatActivity {
                 R.layout.layout_loading_dialog, null);
         mLoadingView = (LoadingView) mDialogContentView
                 .findViewById(R.id.loadView);
-        mLoadingView.setLoadingText(text);
+        if (StringUtil.isEmpty(text)) {
+            mLoadingView.setLoadingText("加载中...");
+        } else {
+            mLoadingView.setLoadingText(text);
+        }
         Display d = getWindowManager().getDefaultDisplay();
         dialog.show();
         dialog.setContentView(mDialogContentView, new ViewGroup.LayoutParams((int) (d.getWidth() * 0.5),

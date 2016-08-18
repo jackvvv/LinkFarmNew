@@ -9,23 +9,27 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.EditAddressActivity;
 import sinia.com.linkfarmnew.bean.AddressListBean;
+import sinia.com.linkfarmnew.bean.GoodsDetailBean;
+import sinia.com.linkfarmnew.myinterface.CalculatePriceInterface;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/5.
  */
-public class ZiTiAddressAdapter extends BaseAdapter {
+public class StandardPriceAdapter extends BaseAdapter {
 
     private Context context;
 
-    private List<AddressListBean.AddressBean> list;
+    private List<GoodsDetailBean.NormListBean.NormTypeListBean> list;
 
-    public ZiTiAddressAdapter(Context context, List<AddressListBean.AddressBean> list) {
+    public StandardPriceAdapter(Context context, List<GoodsDetailBean.NormListBean.NormTypeListBean> list) {
         this.context = context;
         this.list = list;
     }
@@ -46,18 +50,18 @@ public class ZiTiAddressAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    public View getView(final int i, View view, ViewGroup viewGroup) {
         if (view == null) {
-            view = LayoutInflater.from(context).inflate(R.layout.item_ziti_address, null);
+            view = LayoutInflater.from(context).inflate(R.layout.item_price, null);
         }
-        TextView tv_name = ViewHolder.get(view, R.id.tv_name);
-        TextView tv_tel = ViewHolder.get(view, R.id.tv_tel);
-        TextView tv_address = ViewHolder.get(view, R.id.tv_address);
-        ImageView img_default = ViewHolder.get(view, R.id.img_default);
+        TextView kg_s = ViewHolder.get(view, R.id.kg_s);
+        TextView kg_e = ViewHolder.get(view, R.id.kg_e);
+        TextView tv_price = ViewHolder.get(view, R.id.tv_price);
 
-        tv_name.setText(list.get(i).getAddName());
-        tv_tel.setText(list.get(i).getAddTelephone());
-        tv_address.setText(list.get(i).getAddArea() + list.get(i).getAddAddress());
+        kg_s.setText(list.get(i).getStKg() + "kg");
+        kg_e.setText(list.get(i).getEnKg() + "kg");
+        tv_price.setText(list.get(i).getPrice() + "");
+
         return view;
     }
 }

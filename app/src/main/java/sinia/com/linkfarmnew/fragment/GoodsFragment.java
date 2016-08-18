@@ -31,6 +31,7 @@ import sinia.com.linkfarmnew.bean.GoodsCommentBean;
 import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.utils.AppInfoUtil;
 import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.Utility;
 import sinia.com.linkfarmnew.view.CustScrollView;
 import sinia.com.linkfarmnew.view.slideview.SlideShowView;
@@ -65,6 +66,7 @@ public class GoodsFragment extends BaseFragment {
 
     private AsyncHttpClient client = new AsyncHttpClient();
     private List<GoodsCommentBean.CommentBean> list = new ArrayList<>();
+    private String price;
 
     @Nullable
     @Override
@@ -126,15 +128,16 @@ public class GoodsFragment extends BaseFragment {
 //        Utility.setListViewHeightBasedOnChildren(lvComment);
     }
 
-    @OnClick({R.id.rl_standard, R.id.tv_send_address})
+    @OnClick({R.id.rl_standard, R.id.ll_sendAddress})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
             case R.id.rl_standard:
                 intent = new Intent(getActivity(), StandardDialogActivity.class);
-                startActivity(intent);
+                intent.putExtra("goodsBean", goodsBean);
+                startActivityForResult(intent, 99);
                 break;
-            case R.id.tv_send_address:
+            case R.id.ll_sendAddress:
                 intent = new Intent(getActivity(), SendAddressTypeActivity.class);
                 startActivityForResult(intent, 100);
                 break;
@@ -145,6 +148,17 @@ public class GoodsFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == -1) {
+            if (requestCode == 99) {
+                String type = data.getStringExtra("type");
+                String weight = data.getStringExtra("weight");
+                String normId = data.getStringExtra("normId");
+                price = data.getStringExtra("price");
+                tvSelect.setText(type + "  " + weight + "kg");
+                MyApplication.getInstance().setStringValue("buy_type", type);
+                MyApplication.getInstance().setStringValue("buy_normId", normId);
+                MyApplication.getInstance().setStringValue("buy_weight", weight);
+                MyApplication.getInstance().setStringValue("buy_price", price);
+            }
             if (requestCode == 100) {
                 tvSendAddress.setText(data.getStringExtra("address"));
             }

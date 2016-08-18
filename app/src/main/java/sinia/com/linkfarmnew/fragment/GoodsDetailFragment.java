@@ -27,6 +27,7 @@ import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.view.DragLayout;
 
 /**
@@ -72,6 +73,10 @@ public class GoodsDetailFragment extends BaseFragment {
     }
 
     private void initData() {
+        MyApplication.getInstance().setStringValue("buy_type", null);
+        MyApplication.getInstance().setStringValue("buy_weight", null);
+        MyApplication.getInstance().setStringValue("buy_price", null);
+        MyApplication.getInstance().setStringValue("buy_normId", null);
         tpv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -112,8 +117,50 @@ public class GoodsDetailFragment extends BaseFragment {
             case R.id.tv_cart:
                 break;
             case R.id.tv_ok:
+                if (!StringUtil.isEmpty(MyApplication.getInstance().getStringValue("buy_type")) && !StringUtil
+                        .isEmpty(MyApplication.getInstance().getStringValue("buy_weight")) && !StringUtil.isEmpty
+                        (MyApplication.getInstance().getStringValue("buy_price"))) {
+                    addInCart();
+                } else {
+                    showToast("请选择产品规格");
+                }
                 break;
         }
+    }
+
+    private void addInCart() {
+        showLoad("加载中...");
+        RequestParams params = new RequestParams();
+        params.put("userId", MyApplication.getInstance().getStringValue("userId"));
+        params.put("goodId", goodsBean.getId());
+        params.put("otherId", MyApplication.getInstance().getStringValue("buy_normId"));
+        params.put("content", MyApplication.getInstance().getStringValue("buy_type"));
+        params.put("num", MyApplication.getInstance().getStringValue("buy_weight"));
+        params.put("price", MyApplication.getInstance().getStringValue("buy_price"));
+        Log.i("tag", Constants.BASE_URL + "addCar&" + params);
+        client.post(Constants.BASE_URL + "addCar", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    JsonBean bean = gson.fromJson(s, JsonBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("加入购物车成功");
+                        MyApplication.getInstance().setStringValue("buy_type", null);
+                        MyApplication.getInstance().setStringValue("buy_normId", null);
+                        MyApplication.getInstance().setStringValue("buy_weight", null);
+                        MyApplication.getInstance().setStringValue("buy_price", null);
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
     }
 
     private void collectGoods() {

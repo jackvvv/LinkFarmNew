@@ -263,7 +263,16 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
 
     public static class NormListBean implements Serializable {
         private String normName;
+        private String normId;
         private List<NormTypeListBean> typeItems;
+
+        public String getNormId() {
+            return normId;
+        }
+
+        public void setNormId(String normId) {
+            this.normId = normId;
+        }
 
         public String getNormName() {
             return normName;
@@ -282,31 +291,31 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
         }
 
         public static class NormTypeListBean implements Serializable {
-            private String stKg;
-            private String enKg;
-            private String price;
+            private float stKg;
+            private float enKg;
+            private float price;
 
-            public String getStKg() {
+            public float getStKg() {
                 return stKg;
             }
 
-            public void setStKg(String stKg) {
+            public void setStKg(float stKg) {
                 this.stKg = stKg;
             }
 
-            public String getEnKg() {
+            public float getEnKg() {
                 return enKg;
             }
 
-            public void setEnKg(String enKg) {
+            public void setEnKg(float enKg) {
                 this.enKg = enKg;
             }
 
-            public String getPrice() {
+            public float getPrice() {
                 return price;
             }
 
-            public void setPrice(String price) {
+            public void setPrice(float price) {
                 this.price = price;
             }
         }

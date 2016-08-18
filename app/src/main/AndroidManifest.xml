@@ -87,7 +87,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.StandardDialogActivity"
-            android:theme="@style/ActionSheetDialogStyle" />
+            android:theme="@style/ActionSheetDialogStyle"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name=".activity.SendAddressTypeActivity"
             android:theme="@style/ActionSheetDialogStyle" />
