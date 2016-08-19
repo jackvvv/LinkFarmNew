@@ -2,18 +2,21 @@ package sinia.com.linkfarmnew.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.renderscript.Double2;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,8 +24,10 @@ import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.adapter.GoodImageAdapter;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.CartBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.MoneyCalculate;
 import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.StringUtil;
 
@@ -59,9 +64,13 @@ public class FillOrderActivity extends BaseActivity {
     TextView btnSubmit;
     @Bind(R.id.tv_selectAddress)
     TextView tv_selectAddress;
+    @Bind(R.id.tv_couponMoney)
+    TextView tvCouponMoney;
 
     private GoodImageAdapter adapter;
-    private String norm, num, price, goodId, otherId, choose, type, addressId, coupleId;
+    private String norm, num, price, goodId, otherId, choose, type, addressId, coupleId, connectPrices;
+    private double realMoney;
+    private List<String> selectGoodsImage = new ArrayList<>();
     private AsyncHttpClient client = new AsyncHttpClient();
 
     @Override
@@ -77,12 +86,20 @@ public class FillOrderActivity extends BaseActivity {
         norm = getIntent().getStringExtra("norm");
         num = getIntent().getStringExtra("num");
         price = getIntent().getStringExtra("price");
+        connectPrices = getIntent().getStringExtra("connectPrices");
         goodId = getIntent().getStringExtra("goodId");
         otherId = getIntent().getStringExtra("otherId");
         choose = getIntent().getStringExtra("choose");
         type = getIntent().getStringExtra("type");
-        adapter = new GoodImageAdapter(this);
+        selectGoodsImage = (List<String>) getIntent().getSerializableExtra("selectGoodsImage");
+        tvGoodCount.setText(selectGoodsImage.size() + "件");
+        Log.i("tag", connectPrices);
+
+        adapter = new GoodImageAdapter(this, selectGoodsImage);
         gvGoods.setAdapter(adapter);
+        realMoney = Double.parseDouble(price);
+        tvOldcost.setText("¥ " + price);
+        tvRealmoney.setText("¥ " + realMoney);
     }
 
     @OnClick({R.id.rl_address, R.id.rl_yhq, R.id.btn_submit})
@@ -93,6 +110,8 @@ public class FillOrderActivity extends BaseActivity {
                 startActivityForResult(intent, 100);
                 break;
             case R.id.rl_yhq:
+                Intent intent2 = new Intent(FillOrderActivity.this, UseCouponsActivity.class);
+                startActivityForResult(intent2, 101);
                 break;
             case R.id.btn_submit:
                 if (StringUtil.isEmpty(addressId)) {
@@ -119,7 +138,11 @@ public class FillOrderActivity extends BaseActivity {
         params.put("norm", norm);
         params.put("num", num);
         params.put("type", type);
-        params.put("price", price);
+        if (type.equals("2")) {
+            params.put("price", connectPrices);
+        } else {
+            params.put("price", realMoney + "");
+        }
         params.put("addressId", addressId);
         if (StringUtil.isEmpty(coupleId)) {
             params.put("coupleId", "-1");
@@ -144,6 +167,7 @@ public class FillOrderActivity extends BaseActivity {
                         MyApplication.getInstance().setStringValue("buy_weight", null);
                         MyApplication.getInstance().setStringValue("buy_price", null);
                         MyApplication.getInstance().setStringValue("buy_normId", null);
+                        startActivityForNoIntent(PayActivity.class);
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("请求失败");
                     }
@@ -163,6 +187,14 @@ public class FillOrderActivity extends BaseActivity {
                 tvTel.setText(data.getStringExtra("tel"));
                 tv_selectAddress.setVisibility(View.GONE);
                 tvAddress.setVisibility(View.VISIBLE);
+            }
+            if (requestCode == 101) {
+                coupleId = data.getStringExtra("coupons_id");
+                String coupons_money = data.getStringExtra("coupons_money");
+                tvCouponMoney.setText("¥ " + coupons_money);
+                realMoney = MoneyCalculate.substract(Double.parseDouble(price), Double.parseDouble
+                        (coupons_money));
+                tvRealmoney.setText("¥ " + realMoney);
             }
         }
     }

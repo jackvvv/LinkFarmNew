@@ -5,24 +5,24 @@ package sinia.com.linkfarmnew.bean;
  */
 public class GroupBean {
 
-    private String shopName;
-    private String shopId;
+    private String merName;
+    private String merchantId;
     private boolean isChecked = false;
 
-    public String getShopName() {
-        return shopName;
+    public String getMerName() {
+        return merName;
     }
 
-    public void setShopName(String shopName) {
-        this.shopName = shopName;
+    public void setMerName(String merName) {
+        this.merName = merName;
     }
 
-    public String getShopId() {
-        return shopId;
+    public String getMerchantId() {
+        return merchantId;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setMerchantId(String merchantId) {
+        this.merchantId = merchantId;
     }
 
     public boolean isChecked() {

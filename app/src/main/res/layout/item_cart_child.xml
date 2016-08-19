@@ -72,14 +72,15 @@
 
             <RelativeLayout
                 android:id="@+id/rl_jian"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/layout_selector">
 
                 <ImageView
                     android:id="@+id/jian"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:src="@drawable/jian" />
@@ -107,10 +108,11 @@
 
             <RelativeLayout
                 android:id="@+id/rl_jia"
-                android:layout_width="20dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp">
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/layout_selector">
 
                 <ImageView
                     android:id="@+id/jia"

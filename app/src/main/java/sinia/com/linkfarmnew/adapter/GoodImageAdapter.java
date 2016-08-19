@@ -9,7 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -19,13 +22,16 @@ public class GoodImageAdapter extends BaseAdapter {
 
     private Context context;
 
-    public GoodImageAdapter(Context context) {
+    private List<String> list;
+
+    public GoodImageAdapter(Context context, List<String> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return list.size();
     }
 
     @Override
@@ -44,6 +50,7 @@ public class GoodImageAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.item_order_goodimg, null);
         }
         ImageView img_goods = ViewHolder.get(view, R.id.img_goods);
+        BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img_goods, list.get(i));
         return view;
     }
 }

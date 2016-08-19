@@ -117,8 +117,7 @@ public class GoodsDetailFragment extends BaseFragment {
             case R.id.tv_cart:
                 break;
             case R.id.tv_ok:
-                if (!StringUtil.isEmpty(MyApplication.getInstance().getStringValue("buy_type")) && !StringUtil
-                        .isEmpty(MyApplication.getInstance().getStringValue("buy_weight")) && !StringUtil.isEmpty
+                if (!StringUtil.isEmpty(MyApplication.getInstance().getStringValue("buy_weight")) && !StringUtil.isEmpty
                         (MyApplication.getInstance().getStringValue("buy_price"))) {
                     addInCart();
                 } else {
@@ -134,7 +133,6 @@ public class GoodsDetailFragment extends BaseFragment {
         params.put("userId", MyApplication.getInstance().getStringValue("userId"));
         params.put("goodId", goodsBean.getId());
         params.put("otherId", MyApplication.getInstance().getStringValue("buy_normId"));
-        params.put("content", MyApplication.getInstance().getStringValue("buy_type"));
         params.put("num", MyApplication.getInstance().getStringValue("buy_weight"));
         params.put("price", MyApplication.getInstance().getStringValue("buy_price"));
         Log.i("tag", Constants.BASE_URL + "addCar&" + params);

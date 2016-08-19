@@ -9,7 +9,10 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.CouponListBean;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -21,13 +24,16 @@ public class UseCouponsAdapter extends BaseAdapter {
 
     public int selectPosition;
 
-    public UseCouponsAdapter(Context context) {
+    private List<CouponListBean.CouponBean> list;
+
+    public UseCouponsAdapter(Context context, List<CouponListBean.CouponBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 5;
+        return list.size();
     }
 
     @Override
@@ -52,6 +58,7 @@ public class UseCouponsAdapter extends BaseAdapter {
         } else {
             img_check.setVisibility(View.INVISIBLE);
         }
+        tv_money.setText(list.get(i).getPrice());
         return view;
     }
 }

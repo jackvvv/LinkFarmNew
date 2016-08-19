@@ -40,7 +40,8 @@ public class VideoFragment extends BaseFragment {
     }
 
     private void initData() {
-        webView.loadUrl(goodsBean.getMoiveLink());
+//        webView.loadUrl(goodsBean.getMoiveLink());
+        webView.loadUrl("http://www.baidu.com");
     }
 
     @Override

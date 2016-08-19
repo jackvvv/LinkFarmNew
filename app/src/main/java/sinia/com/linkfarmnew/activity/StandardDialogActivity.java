@@ -27,6 +27,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.myinterface.CalculatePriceInterface;
 import sinia.com.linkfarmnew.myinterface.SetPriceDataInterface;
+import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.AppInfoUtil;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
@@ -86,6 +88,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
     private float start_kg, end_kg, singlePrice, money;
     private String selectType, normId;
     private AsyncHttpClient client = new AsyncHttpClient();
+    private List<String> selectGoodsImage = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -227,10 +230,15 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                     intent.putExtra("num", etWeight.getEditableText().toString().trim());
                     intent.putExtra("price", tvMoney.getText().toString().trim());
                     intent.putExtra("goodId", goodsBean.getId());
+                    //填写订单显示的购买商品的图片集合
+                    selectGoodsImage = new ArrayList<>();
+                    selectGoodsImage.add(goodsBean.getGoodImage());
+                    intent.putExtra("selectGoodsImage", (Serializable) selectGoodsImage);
                     intent.putExtra("otherId", "-1");//购物车
                     intent.putExtra("choose", "-1");//商户id
                     intent.putExtra("type", "1");//1.直接购买 2.购物车
                     startActivity(intent);
+                    finish();
                 } else {
                     Toast.makeText(StandardDialogActivity.this, "请选择产品规格", Toast.LENGTH_SHORT).show();
                 }
@@ -244,7 +252,6 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         params.put("userId", MyApplication.getInstance().getStringValue("userId"));
         params.put("goodId", goodsBean.getId());
         params.put("otherId", normId);
-        params.put("content", selectType);
         params.put("num", etWeight.getEditableText().toString().trim());
         params.put("price", tvMoney.getText().toString().trim());
         Log.i("tag", Constants.BASE_URL + "addCar&" + params);

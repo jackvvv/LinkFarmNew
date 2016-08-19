@@ -11,16 +11,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.CartBean;
 import sinia.com.linkfarmnew.bean.GoodsBean;
 import sinia.com.linkfarmnew.bean.GroupBean;
 import sinia.com.linkfarmnew.myinterface.CheckInterface;
 import sinia.com.linkfarmnew.myinterface.IsGroupChecked;
 import sinia.com.linkfarmnew.myinterface.ModifyCountInterface;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -29,8 +33,9 @@ import sinia.com.linkfarmnew.utils.ViewHolder;
 public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
     private Context context;
-    public List<GroupBean> groups = new ArrayList<GroupBean>();
-    public HashMap<String, List<GoodsBean>> childs = new HashMap<String, List<GoodsBean>>();
+    public List<CartBean.MerchantitemsBean> groups = new ArrayList<CartBean.MerchantitemsBean>();
+    public HashMap<String, List<CartBean.MerchantitemsBean.GoodsItemsBean>> childs = new HashMap<String,
+            List<CartBean.MerchantitemsBean.GoodsItemsBean>>();
     private Handler handler;
     //    private IsGroupChecked isGroupChecked;
     private ModifyCountInterface modifyCountInterface;
@@ -44,9 +49,8 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         this.modifyCountInterface = modifyCountInterface;
     }
 
-    public MyExpandableListAdapter(Context context, Handler handler) {
+    public MyExpandableListAdapter(Context context) {
         this.context = context;
-        this.handler = handler;
     }
 
     @Override
@@ -56,7 +60,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int i) {
-        return childs.get(groups.get(i).getShopName()).size();
+        return childs.get(groups.get(i).getMerName()).size();
     }
 
     @Override
@@ -66,7 +70,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getChild(int i, int i1) {
-        return childs.get(groups.get(i).getShopName()).get(i1);
+        return childs.get(groups.get(i).getMerName()).get(i1);
     }
 
     @Override
@@ -91,8 +95,8 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         }
         CheckBox ivCheckGroup = ViewHolder.get(view, R.id.ivCheckGroup);
         TextView tv_shopname = ViewHolder.get(view, R.id.tv_shopname);
-        final GroupBean groupBean = groups.get(i);
-        tv_shopname.setText(groupBean.getShopName());
+        final CartBean.MerchantitemsBean groupBean = groups.get(i);
+        tv_shopname.setText(groupBean.getMerName());
         if (groupBean.isChecked()) {
             ivCheckGroup.setChecked(true);
         } else {
@@ -129,13 +133,14 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         final TextView tv_price = ViewHolder.get(view, R.id.tv_price);
         final TextView tv_num = ViewHolder.get(view, R.id.tv_num);
 
-        final GoodsBean goodsBean = childs.get(groups.get(i).getShopName()).get(i1);
-        final double singlePrice = Double.parseDouble(goodsBean.getGoodPrice())
-                / Integer.parseInt(goodsBean.getGoodNum());
+        final CartBean.MerchantitemsBean.GoodsItemsBean goodsBean = childs.get(groups.get(i).getMerName()).get(i1);
+        final double singlePrice = goodsBean.getPrice() / goodsBean.getGoodNum();
 
+        BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img_goods, goodsBean.getGoodImage());
         tv_goodsname.setText(goodsBean.getGoodName());
-        tv_price.setText("¥ " + goodsBean.getGoodPrice());
-        tv_num.setText(goodsBean.getGoodNum());
+        tv_price.setText("¥ " + goodsBean.getPrice());
+        tv_num.setText(goodsBean.getGoodNum() + "");
+        tv_weight.setText(goodsBean.getNormName());
         if (goodsBean.isChecked()) {
             ivCheckChild.setChecked(true);
         } else {
@@ -194,12 +199,13 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     private void oneClassSetCheck(int groupPosition) {
         boolean isCheckAll = false;
         int j = 0;
-        for (int i = 0; i < childs.get(groups.get(groupPosition).getShopName()).size(); i++) {
-            GoodsBean goodsBean = childs.get(groups.get(groupPosition).getShopName()).get(i);
+        for (int i = 0; i < childs.get(groups.get(groupPosition).getMerName()).size(); i++) {
+            CartBean.MerchantitemsBean.GoodsItemsBean goodsBean = childs.get(groups.get(groupPosition).getMerName())
+                    .get(i);
             if (goodsBean.isChecked()) {
                 j++;
             }
-            if (j == childs.get(groups.get(groupPosition).getShopName()).size()) {
+            if (j == childs.get(groups.get(groupPosition).getMerName()).size()) {
                 isCheckAll = true;
             }
         }
@@ -211,8 +217,9 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
     private void oneClassSetUnCheck(int groupPosition) {
         boolean isCheckAll = true;
-        for (int i = 0; i < childs.get(groups.get(groupPosition).getShopName()).size(); i++) {
-            GoodsBean goodsBean = childs.get(groups.get(groupPosition).getShopName()).get(i);
+        for (int i = 0; i < childs.get(groups.get(groupPosition).getMerName()).size(); i++) {
+            CartBean.MerchantitemsBean.GoodsItemsBean goodsBean = childs.get(groups.get(groupPosition).getMerName())
+                    .get(i);
             if (goodsBean.isChecked()) {
                 isCheckAll = false;
             }

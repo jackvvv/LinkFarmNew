@@ -56,8 +56,8 @@ public class MyOrderAdapter extends BaseAdapter {
         TextView btn2 = ViewHolder.get(view, R.id.btn2);
         LinearLayout ll_detail = ViewHolder.get(view, R.id.ll_detail);
         GridView gv_goods = ViewHolder.get(view, R.id.gv_goods);
-        adapter = new GoodImageAdapter(context);
-        gv_goods.setAdapter(adapter);
+//        adapter = new GoodImageAdapter(context);
+//        gv_goods.setAdapter(adapter);
 
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
