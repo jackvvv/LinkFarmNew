@@ -1,5 +1,6 @@
 package sinia.com.linkfarmnew.fragment;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -18,10 +19,16 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.FillOrderActivity;
+import sinia.com.linkfarmnew.activity.StandardDialogActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
@@ -55,6 +62,7 @@ public class GoodsDetailFragment extends BaseFragment {
     private GoodsDetailBean goodsBean;
     private AsyncHttpClient client = new AsyncHttpClient();
     private String goodsId, isCollect;//1，收藏，2未收藏
+    private List<String> selectGoodsImage = new ArrayList<>();
 
     @Nullable
     @Override
@@ -119,7 +127,7 @@ public class GoodsDetailFragment extends BaseFragment {
             case R.id.tv_ok:
                 if (!StringUtil.isEmpty(MyApplication.getInstance().getStringValue("buy_weight")) && !StringUtil.isEmpty
                         (MyApplication.getInstance().getStringValue("buy_price"))) {
-                    addInCart();
+                    toPay();
                 } else {
                     showToast("请选择产品规格");
                 }
@@ -127,38 +135,20 @@ public class GoodsDetailFragment extends BaseFragment {
         }
     }
 
-    private void addInCart() {
-        showLoad("加载中...");
-        RequestParams params = new RequestParams();
-        params.put("userId", MyApplication.getInstance().getStringValue("userId"));
-        params.put("goodId", goodsBean.getId());
-        params.put("otherId", MyApplication.getInstance().getStringValue("buy_normId"));
-        params.put("num", MyApplication.getInstance().getStringValue("buy_weight"));
-        params.put("price", MyApplication.getInstance().getStringValue("buy_price"));
-        Log.i("tag", Constants.BASE_URL + "addCar&" + params);
-        client.post(Constants.BASE_URL + "addCar", params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, String s) {
-                super.onSuccess(i, s);
-                dismiss();
-                Gson gson = new Gson();
-                if (s.contains("isSuccessful")
-                        && s.contains("state")) {
-                    JsonBean bean = gson.fromJson(s, JsonBean.class);
-                    int state = bean.getState();
-                    int isSuccessful = bean.getIsSuccessful();
-                    if (0 == state && 0 == isSuccessful) {
-                        showToast("加入购物车成功");
-                        MyApplication.getInstance().setStringValue("buy_type", null);
-                        MyApplication.getInstance().setStringValue("buy_normId", null);
-                        MyApplication.getInstance().setStringValue("buy_weight", null);
-                        MyApplication.getInstance().setStringValue("buy_price", null);
-                    } else if (0 == state && 1 == isSuccessful) {
-                        showToast("请求失败");
-                    }
-                }
-            }
-        });
+    private void toPay() {
+        Intent intent = new Intent(getActivity(), FillOrderActivity.class);
+        intent.putExtra("norm", MyApplication.getInstance().getStringValue("buy_type"));
+        intent.putExtra("num", MyApplication.getInstance().getStringValue("buy_weight"));
+        intent.putExtra("price", MyApplication.getInstance().getStringValue("buy_price"));
+        intent.putExtra("goodId", goodsBean.getId());
+        //填写订单显示的购买商品的图片集合
+        selectGoodsImage = new ArrayList<>();
+        selectGoodsImage.add(goodsBean.getGoodImage());
+        intent.putExtra("selectGoodsImage", (Serializable) selectGoodsImage);
+        intent.putExtra("otherId", "-1");//购物车
+        intent.putExtra("choose", "-1");//商户id
+        intent.putExtra("type", "1");//1.直接购买 2.购物车
+        startActivity(intent);
     }
 
     private void collectGoods() {

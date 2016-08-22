@@ -8,7 +8,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.ClassfyListBean;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -18,14 +21,16 @@ public class ClassfyAdapter extends BaseAdapter {
 
     private Context context;
     public int selectPosition;
+    private List<ClassfyListBean.BigClassBean> list;
 
-    public ClassfyAdapter(Context context) {
+    public ClassfyAdapter(Context context, List<ClassfyListBean.BigClassBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 8;
+        return list.size();
     }
 
     @Override
@@ -51,6 +56,7 @@ public class ClassfyAdapter extends BaseAdapter {
             tv_name.setTextColor(context.getResources().getColor(R.color.textblackColor));
             view.setBackgroundColor(Color.WHITE);
         }
+        tv_name.setText(list.get(i).getBigTypeName());
         return view;
     }
 }

@@ -73,6 +73,7 @@ public class ApplyReturnActivity extends BaseActivity {
     private Validator mValidator;
     private List<String> tempList = new LinkedList<String>();
     private List<String> imgUrlList = new LinkedList<String>();
+    private String orderId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class ApplyReturnActivity extends BaseActivity {
     }
 
     private void initView() {
+        orderId = getIntent().getStringExtra("orderId");
         adapter = new GridAdapter(this);
         MyImageFolderAdapter.mSelectedImage.clear();
         adapter.update();
@@ -126,7 +128,8 @@ public class ApplyReturnActivity extends BaseActivity {
                                                 Intent intent = new Intent();
                                                 intent.setAction(Intent.ACTION_PICK);
                                                 intent.setType("image/*");
-                                                intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                                intent.setData(android.provider.MediaStore.Images.Media
+                                                        .EXTERNAL_CONTENT_URI);
                                                 startActivityForResult(intent,
                                                         2);
                                             }

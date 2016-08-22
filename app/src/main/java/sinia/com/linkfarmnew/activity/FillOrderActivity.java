@@ -24,6 +24,7 @@ import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.adapter.GoodImageAdapter;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.AddOrderBean;
 import sinia.com.linkfarmnew.bean.CartBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.utils.Constants;
@@ -68,8 +69,8 @@ public class FillOrderActivity extends BaseActivity {
     TextView tvCouponMoney;
 
     private GoodImageAdapter adapter;
-    private String norm, num, price, goodId, otherId, choose, type, addressId, coupleId, connectPrices;
-    private double realMoney;
+    private String norm, num, price, goodId, otherId, choose, type, addressId, coupleId = "-1", connectPrices, orderId;
+    private double realMoney, payMoney;
     private List<String> selectGoodsImage = new ArrayList<>();
     private AsyncHttpClient client = new AsyncHttpClient();
 
@@ -93,7 +94,6 @@ public class FillOrderActivity extends BaseActivity {
         type = getIntent().getStringExtra("type");
         selectGoodsImage = (List<String>) getIntent().getSerializableExtra("selectGoodsImage");
         tvGoodCount.setText(selectGoodsImage.size() + "件");
-        Log.i("tag", connectPrices);
 
         adapter = new GoodImageAdapter(this, selectGoodsImage);
         gvGoods.setAdapter(adapter);
@@ -158,16 +158,23 @@ public class FillOrderActivity extends BaseActivity {
                 Gson gson = new Gson();
                 if (s.contains("isSuccessful")
                         && s.contains("state")) {
-                    JsonBean bean = gson.fromJson(s, JsonBean.class);
+                    AddOrderBean bean = gson.fromJson(s, AddOrderBean.class);
                     int state = bean.getState();
                     int isSuccessful = bean.getIsSuccessful();
                     if (0 == state && 0 == isSuccessful) {
                         showToast("订单提交成功");
+                        orderId = bean.getOrderId();
+                        payMoney = bean.getPayMoney();
                         MyApplication.getInstance().setStringValue("buy_type", null);
                         MyApplication.getInstance().setStringValue("buy_weight", null);
                         MyApplication.getInstance().setStringValue("buy_price", null);
                         MyApplication.getInstance().setStringValue("buy_normId", null);
-                        startActivityForNoIntent(PayActivity.class);
+                        Intent intent = new Intent();
+                        intent.putExtra("orderId", orderId);
+                        intent.putExtra("payMoney", payMoney + "");
+                        intent.putExtra("coupleId", coupleId);
+                        intent.putExtra("norm", "1");
+                        startActivityForIntent(PayActivity.class, intent);
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("请求失败");
                     }
@@ -190,6 +197,9 @@ public class FillOrderActivity extends BaseActivity {
             }
             if (requestCode == 101) {
                 coupleId = data.getStringExtra("coupons_id");
+                if (StringUtil.isEmpty(coupleId)) {
+                    coupleId = "-1";
+                }
                 String coupons_money = data.getStringExtra("coupons_money");
                 tvCouponMoney.setText("¥ " + coupons_money);
                 realMoney = MoneyCalculate.substract(Double.parseDouble(price), Double.parseDouble

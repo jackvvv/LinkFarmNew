@@ -177,7 +177,8 @@ public class MineFragment extends BaseFragment {
 
     @OnClick({R.id.img_kefu, R.id.img_settings, R.id.iv_head, R.id.img_mall, R.id.rl_person_info, R.id.rl_login, R.id
             .rl_notpay, R
-            .id.rl_delivery, R.id.rl_notcomment, R.id.rl_yhq, R.id.rl_tuihuo, R.id.rl_my_collect, R.id.rl_foot, R.id
+            .id.rl_delivery, R.id.rl_notcomment, R.id.rl_myorder, R.id.rl_yhq, R.id.rl_tuihuo, R.id.rl_my_collect, R
+            .id.rl_foot, R.id
             .rl_address_manager, R.id.rl_tuiguang})
     public void onClick(View view) {
         Intent intent;
@@ -222,6 +223,7 @@ public class MineFragment extends BaseFragment {
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
                     intent = new Intent(getActivity(), MyOrderActivity.class);
                     intent.putExtra("title", "待付款");
+                    intent.putExtra("type", "1");
                     startActivity(intent);
                 } else {
                     intent = new Intent(getActivity(), LoginActivity.class);
@@ -232,6 +234,7 @@ public class MineFragment extends BaseFragment {
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
                     intent = new Intent(getActivity(), MyOrderActivity.class);
                     intent.putExtra("title", "待收货");
+                    intent.putExtra("type", "2");
                     startActivity(intent);
                 } else {
                     intent = new Intent(getActivity(), LoginActivity.class);
@@ -242,6 +245,18 @@ public class MineFragment extends BaseFragment {
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
                     intent = new Intent(getActivity(), MyOrderActivity.class);
                     intent.putExtra("title", "待评价");
+                    intent.putExtra("type", "3");
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.rl_myorder:
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), MyOrderActivity.class);
+                    intent.putExtra("title", "我的订单");
+                    intent.putExtra("type", "4");
                     startActivity(intent);
                 } else {
                     intent = new Intent(getActivity(), LoginActivity.class);
@@ -261,6 +276,7 @@ public class MineFragment extends BaseFragment {
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
                     intent = new Intent(getActivity(), MyOrderActivity.class);
                     intent.putExtra("title", "退货订单");
+                    intent.putExtra("type", "5");
                     startActivity(intent);
                 } else {
                     intent = new Intent(getActivity(), LoginActivity.class);

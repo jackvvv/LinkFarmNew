@@ -87,7 +87,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_notcheck" />
+                    android:src="@drawable/ic_checked" />
 
                 <ImageView
                     android:id="@+id/imageView3"
@@ -139,7 +139,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
                     android:padding="5dp"
-                    android:src="@drawable/ic_checked" />
+                    android:src="@drawable/ic_notcheck" />
 
                 <ImageView
                     android:id="@+id/imageView2"

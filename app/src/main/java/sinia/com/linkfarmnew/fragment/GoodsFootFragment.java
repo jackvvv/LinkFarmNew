@@ -1,11 +1,13 @@
 package sinia.com.linkfarmnew.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.bumptech.glide.Glide;
@@ -19,6 +21,7 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
 import sinia.com.linkfarmnew.adapter.GoodsFootAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.MyFootBean;
@@ -81,6 +84,15 @@ public class GoodsFootFragment extends BaseFragment {
         listView = (ListView) rootView.findViewById(R.id.listView);
         adapter = new GoodsFootAdapter(getActivity(), list);
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String goodId = list.get(i).getGoodId();
+                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
+                intent.putExtra("goodId", goodId);
+                getActivity().startActivity(intent);
+            }
+        });
     }
 
     @Override

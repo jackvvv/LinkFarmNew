@@ -8,7 +8,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.CartBean;
+import sinia.com.linkfarmnew.bean.ClassfyListBean;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -17,14 +23,16 @@ import sinia.com.linkfarmnew.utils.ViewHolder;
 public class ClassfyGridAdapter extends BaseAdapter {
 
     private Context context;
+    private List<ClassfyListBean.BigClassBean.SmallitemsBean> list;
 
-    public ClassfyGridAdapter(Context context) {
+    public ClassfyGridAdapter(Context context, List<ClassfyListBean.BigClassBean.SmallitemsBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 13;
+        return list.size();
     }
 
     @Override
@@ -44,6 +52,8 @@ public class ClassfyGridAdapter extends BaseAdapter {
         }
         TextView tv_name = ViewHolder.get(view, R.id.tv_name);
         ImageView img = ViewHolder.get(view, R.id.img);
+        BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img, list.get(i).getSmallImage());
+        tv_name.setText(list.get(i).getSmallTypeName());
         return view;
     }
 }

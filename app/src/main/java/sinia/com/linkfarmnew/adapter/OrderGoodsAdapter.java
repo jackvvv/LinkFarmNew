@@ -8,7 +8,11 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.List;
+
 import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.bean.OrderDetailBean;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -17,14 +21,16 @@ import sinia.com.linkfarmnew.utils.ViewHolder;
 public class OrderGoodsAdapter extends BaseAdapter {
 
     private Context context;
+    private List<OrderDetailBean.GoodItemsBean> list;
 
-    public OrderGoodsAdapter(Context context) {
+    public OrderGoodsAdapter(Context context, List<OrderDetailBean.GoodItemsBean> list) {
         this.context = context;
+        this.list = list;
     }
 
     @Override
     public int getCount() {
-        return 3;
+        return list.size();
     }
 
     @Override
@@ -47,6 +53,12 @@ public class OrderGoodsAdapter extends BaseAdapter {
         TextView tv_weight = ViewHolder.get(view, R.id.tv_weight);
         TextView tv_price = ViewHolder.get(view, R.id.tv_price);
         ImageView img = ViewHolder.get(view, R.id.img);
+
+        BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img, list.get(i).getGoodImage());
+        tv_name.setText(list.get(i).getGoodName());
+        tv_num.setText("× " + list.get(i).getNorm());
+        tv_weight.setText(list.get(i).getNorm());
+        tv_price.setText("¥ " + list.get(i).getPrice());
         return view;
     }
 }

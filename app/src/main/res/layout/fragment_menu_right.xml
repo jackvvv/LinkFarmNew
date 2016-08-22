@@ -9,6 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
+        android:paddingTop="20dp"
         android:text="出产地"
         android:textColor="@color/textblackColor"
         android:textSize="15sp" />

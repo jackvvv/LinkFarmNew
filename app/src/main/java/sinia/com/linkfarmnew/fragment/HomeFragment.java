@@ -367,6 +367,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                 tvLocate.setText("南京");
                 city = "南京";
             }
+            MyApplication.getInstance().setStringValue("city", city);
         } else {
             tvLocate.setText("南京");
             city = "南京";
