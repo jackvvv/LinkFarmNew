@@ -100,6 +100,8 @@ public class GoodsDetailActivity extends BaseActivity {
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("请求失败");
                     }
+                } else {
+                    showToast("该商品不存在");
                 }
             }
         });
@@ -132,12 +134,30 @@ public class GoodsDetailActivity extends BaseActivity {
         fragmentList.add(videoFragment);
         pagerAdapter = new MyFragmentPagerAdapter(getSupportFragmentManager(), fragmentList, titleList);
         viewPager.setAdapter(pagerAdapter);
+        viewPager.setOffscreenPageLimit(4);
         tabTitle.setTabMode(TabLayout.MODE_FIXED);
         tabTitle.addTab(tabTitle.newTab().setText(titleList.get(0)));
         tabTitle.addTab(tabTitle.newTab().setText(titleList.get(1)));
         tabTitle.addTab(tabTitle.newTab().setText(titleList.get(2)));
         tabTitle.addTab(tabTitle.newTab().setText(titleList.get(3)));
         tabTitle.setupWithViewPager(viewPager);
+        viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 3) {
+                    videoFragment.initData();
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
     @OnClick({R.id.back, R.id.img_share})

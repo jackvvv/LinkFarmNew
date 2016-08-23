@@ -24,6 +24,10 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
@@ -33,6 +37,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -41,14 +47,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.Bmob;
+import cn.bmob.v3.datatype.BmobFile;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog;
 import sinia.com.linkfarmnew.adapter.MyImageFolderAdapter;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.JsonBean;
+import sinia.com.linkfarmnew.bean.OrderDetailBean;
+import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.Bimp;
 import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.CacheUtils;
 import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.ValidationUtils;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/8.
@@ -74,6 +85,7 @@ public class ApplyReturnActivity extends BaseActivity {
     private List<String> tempList = new LinkedList<String>();
     private List<String> imgUrlList = new LinkedList<String>();
     private String orderId;
+    private AsyncHttpClient client = new AsyncHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -141,11 +153,126 @@ public class ApplyReturnActivity extends BaseActivity {
                 }
             }
         });
+        mValidator.setValidationListener(new ValidationUtils.ValidationListener() {
+            @Override
+            public void onValidationSucceeded() {
+                super.onValidationSucceeded();
+                if (0 != MyImageFolderAdapter.mSelectedImage.size()) {
+                    // 发帖，上传图片
+                    uploadPics();
+                } else {
+                    // 发帖，不带图片
+                    submit();
+                }
+            }
+        });
+    }
+
+    private void submit() {
+        showLoad("");
+        RequestParams params = new RequestParams();
+        params.put("otherId", orderId);
+        try {
+            params.put("content", URLEncoder.encode(etContent.getEditableText().toString(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        params.put("image", connectImageUrls());
+        try {
+            params.put("content", URLEncoder.encode(etContent.getEditableText().toString(), "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        Log.i("tag", Constants.BASE_URL + "applyReOrder&" + params);
+        client.post(Constants.BASE_URL + "applyReOrder", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Log.i("tag", s);
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    JsonBean bean = gson.fromJson(s, OrderDetailBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("退货申请已提交");
+                        ActivityManager.getInstance().finishCurrentActivity();
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
+    }
+
+    private String connectImageUrls() {
+        StringBuffer sb = new StringBuffer();
+        if (imgUrlList.size() != 0) {
+            for (int i = 0; i < imgUrlList.size(); i++) {
+                sb.append(imgUrlList.get(i)).append(";");
+            }
+            return sb.toString().substring(0, sb.toString().length() - 1);
+        } else {
+            return "-1";
+        }
+    }
+
+    private void uploadPics() {
+        showLoad("正在上传图片");
+        String[] paths = new String[MyImageFolderAdapter.mSelectedImage.size()];
+        paths = MyImageFolderAdapter.mSelectedImage.toArray(paths);
+        Bmob.uploadBatch(this, paths,
+                new cn.bmob.v3.listener.UploadBatchListener() {
+
+                    @Override
+                    public void onSuccess(List<BmobFile> files,
+                                          List<String> urls) {
+                        // 1、files-上传完成后的BmobFile集合，是为了方便大家对其上传后的数据进行操作，例如你可以将该文件保存到表中
+                        // 2、urls-上传文件的服务器地址
+                        Log.i("tag", "List<BmobFile> files----" + files.size());
+                        dismiss();
+                        for (int i = 0; i < files.size(); i++) {
+                            String imgurl = files.get(i).getFileUrl(
+                                    ApplyReturnActivity.this);
+                            tempList.add(imgurl);
+                            // 图片地址去重
+                            for (String s : tempList) {
+                                if (!imgUrlList.contains(s)) {
+                                    imgUrlList.add(s);
+                                }
+                            }
+                        }
+                        submit();
+                    }
+
+                    @Override
+                    public void onProgress(int curIndex, int curPercent,
+                                           int total, int totalPercent) {
+                        // curIndex :表示当前第几个文件正在上传
+                        // curPercent :表示当前上传文件的进度值（百分比）
+                        // total :表示总的上传文件数
+                        // totalPercent:表示总的上传进度（百分比）
+                        Log.i("bmob", "onProgress :" + curIndex + "---"
+                                + curPercent + "---" + total + "----"
+                                + totalPercent);
+                        if (totalPercent == 100) {
+                            Log.i("tag", "图片全部上传成功 ：" + imgUrlList);
+                            Log.i("tag", "图片size" + imgUrlList.size());
+                        }
+                    }
+
+                    @Override
+                    public void onError(int statuscode, String errormsg) {
+                        Log.i("bmob", "批量上传出错：" + statuscode + "--" + errormsg);
+                    }
+                });
     }
 
     @OnClick(R.id.tv_ok)
     public void onClick() {
-//        mValidator.validate();
+        mValidator.validate();
     }
 
     private void getAvataFromCamera() {

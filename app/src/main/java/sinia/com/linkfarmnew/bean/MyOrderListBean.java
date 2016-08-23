@@ -32,14 +32,24 @@ public class MyOrderListBean extends JsonBean {
         private int comStatus;
         private double price;
         private String merName;
+        private String merImage;
         private int goodNum;
         private int orderStatus;
         private String orderId;
+
         /**
          * image : http://bmob-cdn-5621.b0.upaiyun.com/2016/08/17/f3ad0043c713405ea4a4cdb8a6fe907b.jpg
          */
 
         private List<OrderImageitemBean> orderImageitem;
+
+        public String getMerImage() {
+            return merImage;
+        }
+
+        public void setMerImage(String merImage) {
+            this.merImage = merImage;
+        }
 
         public int getComStatus() {
             return comStatus;

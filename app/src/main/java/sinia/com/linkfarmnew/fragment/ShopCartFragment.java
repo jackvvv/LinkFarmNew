@@ -13,6 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -30,12 +31,14 @@ import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.FillOrderActivity;
 import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
 import sinia.com.linkfarmnew.activity.LoginActivity;
+import sinia.com.linkfarmnew.activity.StandardDialogActivity;
 import sinia.com.linkfarmnew.adapter.CartRecommendAdapter;
 import sinia.com.linkfarmnew.adapter.MyExpandableListAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.CartBean;
 import sinia.com.linkfarmnew.bean.GoodsBean;
 import sinia.com.linkfarmnew.bean.GroupBean;
+import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.myinterface.CheckInterface;
 import sinia.com.linkfarmnew.myinterface.ModifyCountInterface;
 import sinia.com.linkfarmnew.utils.Constants;
@@ -161,10 +164,10 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
             data.addAll(bean.getItems());
             adapter.childs.put(bean.getMerName(), data);
 
-            for (int i = 0; i < data.size(); i++) {
-                CartBean.MerchantitemsBean.GoodsItemsBean goodBean = data.get(i);
-                goodBean.setGoodNum(1);
-            }
+//            for (int i = 0; i < data.size(); i++) {
+//                CartBean.MerchantitemsBean.GoodsItemsBean goodBean = data.get(i);
+//                goodBean.setGoodNum(1);
+//            }
         }
         adapter.groups = groupList;
 
@@ -228,10 +231,10 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                     tvEdit.setText("完成");
                     rlDelete.setVisibility(View.VISIBLE);
                     rlBottomBar.setVisibility(View.INVISIBLE);
-                    if (ivSelectAll.isChecked()) {
-                        ivDeleteAll.setChecked(true);
-                        doDeleteAll();
-                    }
+//                    if (ivSelectAll.isChecked()) {
+//                        ivDeleteAll.setChecked(true);
+//                        doDeleteAll();
+//                    }
                     footView.setVisibility(View.GONE);
                 }
                 break;
@@ -267,7 +270,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 if (totalCount == 0) {
                     showToast("请选择要删除的商品");
                 } else {
-                    deleteGoods();
+//                    deleteGoods();
+                    deleteCart();
                 }
                 break;
         }
@@ -280,13 +284,15 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
      */
     private void deleteGoods() {
         List<CartBean.MerchantitemsBean> toDelGroups = new ArrayList<>();//待删除的组
+        List<CartBean.MerchantitemsBean.GoodsItemsBean> toDelGoods = new ArrayList<>();//待删除的商品
+        List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = new ArrayList<>();
         for (int i = 0; i < adapter.groups.size(); i++) {
             CartBean.MerchantitemsBean groupBean = adapter.groups.get(i);
             if (groupBean.isChecked()) {
                 toDelGroups.add(groupBean);
             }
-            List<CartBean.MerchantitemsBean.GoodsItemsBean> toDelGoods = new ArrayList<>();//待删除的商品
-            List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(groupBean.getMerName());
+            toDelGoods = new ArrayList<>();//待删除的商品
+            goodsList = adapter.childs.get(groupBean.getMerName());
             for (int j = 0; j < goodsList.size(); j++) {
                 if (goodsList.get(j).isChecked()) {
                     toDelGoods.add(goodsList.get(j));
@@ -297,6 +303,33 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
         adapter.groups.removeAll(toDelGroups);
         adapter.notifyDataSetChanged();
         calculateMoneyAndNum();
+    }
+
+    private void deleteCart() {
+        showLoad("");
+        RequestParams params = new RequestParams();
+        params.put("otherId", connectGoodsId());
+        Log.i("tag", Constants.BASE_URL + "delCar&" + params);
+        client.post(Constants.BASE_URL + "delCar", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    JsonBean bean = gson.fromJson(s, JsonBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("删除成功");
+                        getCartListData();
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
     }
 
     private List<String> getSelectGoods() {
@@ -311,6 +344,24 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
             }
         }
         return selectGoodsImage;
+    }
+
+    private String connectGoodsId() {
+        List<String> toConnectGoodsIdsList = new ArrayList<>();
+        for (int i = 0; i < adapter.childs.size(); i++) {
+            String key = adapter.groups.get(i).getMerName();
+            List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
+            for (CartBean.MerchantitemsBean.GoodsItemsBean goodsBean : data) {
+                if (goodsBean.isChecked()) {
+                    toConnectGoodsIdsList.add(goodsBean.getId());
+                }
+            }
+        }
+        StringBuffer sb = new StringBuffer();
+        for (int s = 0; s < toConnectGoodsIdsList.size(); s++) {
+            sb.append(toConnectGoodsIdsList.get(s)).append(";");
+        }
+        return sb.toString().substring(0, sb.toString().length() - 1);
     }
 
     private String connectShopIds() {
@@ -438,7 +489,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
                 for (CartBean.MerchantitemsBean.GoodsItemsBean bean : data) {
                     if (bean.isChecked()) {
-                        allPrice = allPrice + bean.getPrice() * bean.getGoodNum();
+                        allPrice = allPrice + bean.getPrice() * bean.getNum();
                     }
                 }
             }
@@ -470,9 +521,9 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
             isChecked) {
         CartBean.MerchantitemsBean.GoodsItemsBean goods = (CartBean.MerchantitemsBean.GoodsItemsBean) adapter
                 .getChild(groupPosition, childPosition);
-        int currentCount = goods.getGoodNum();
+        int currentCount = goods.getNum();
         currentCount++;
-        goods.setGoodNum(currentCount);
+        goods.setNum(currentCount);
         ((TextView) showCountView).setText(currentCount + "");
         adapter.notifyDataSetChanged();
         calculateMoneyAndNum();
@@ -483,11 +534,11 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
             isChecked) {
         CartBean.MerchantitemsBean.GoodsItemsBean goods = (CartBean.MerchantitemsBean.GoodsItemsBean) adapter
                 .getChild(groupPosition, childPosition);
-        int currentCount = goods.getGoodNum();
+        int currentCount = goods.getNum();
         if (currentCount == 1)
             return;
         currentCount--;
-        goods.setGoodNum(currentCount);
+        goods.setNum(currentCount);
         ((TextView) showCountView).setText(currentCount + "");
         adapter.notifyDataSetChanged();
         calculateMoneyAndNum();
@@ -558,7 +609,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 CartBean.MerchantitemsBean.GoodsItemsBean goods = goodsList.get(j);
                 if (goods.isChecked()) {
                     totalCount++;
-                    totalPrice += goods.getPrice() * goods.getGoodNum();
+                    totalPrice += goods.getPrice() * goods.getNum();
                 }
             }
         }

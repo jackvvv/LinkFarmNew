@@ -236,6 +236,7 @@ public class GoodsListActivity extends BaseActivity {
                 tvJiage.setSelected(false);
                 imgPricedown.setSelected(false);
                 imgPriceup.setSelected(false);
+                imgShaixuan.setSelected(false);
                 getGoodsListByFilters("1", "-1", "-1", "-1", "-1");
                 break;
             case R.id.ll_xiaoliang:
@@ -243,6 +244,7 @@ public class GoodsListActivity extends BaseActivity {
                 ivZonghe.setSelected(false);
                 tvXiaoliang.setSelected(true);
                 tvShaixuan.setSelected(false);
+                imgShaixuan.setSelected(false);
                 tvJiage.setSelected(false);
                 imgPricedown.setSelected(false);
                 imgPriceup.setSelected(false);
@@ -263,6 +265,7 @@ public class GoodsListActivity extends BaseActivity {
                 ivZonghe.setSelected(false);
                 tvXiaoliang.setSelected(false);
                 tvShaixuan.setSelected(false);
+                imgShaixuan.setSelected(false);
                 tvJiage.setSelected(true);
                 imgSellup.setSelected(false);
                 imgSelldown.setSelected(false);
@@ -284,6 +287,7 @@ public class GoodsListActivity extends BaseActivity {
                 tvXiaoliang.setSelected(false);
                 tvJiage.setSelected(false);
                 tvShaixuan.setSelected(true);
+                imgShaixuan.setSelected(true);
                 imgPricedown.setSelected(false);
                 imgPriceup.setSelected(false);
                 imgSellup.setSelected(false);

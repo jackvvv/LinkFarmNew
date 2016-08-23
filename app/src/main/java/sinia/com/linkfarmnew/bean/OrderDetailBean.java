@@ -164,9 +164,18 @@ public class OrderDetailBean extends JsonBean {
     public static class GoodItemsBean {
         private String id;
         private int price;
+        private int buyNum;
         private String norm;
         private String goodName;
         private String goodImage;
+
+        public int getBuyNum() {
+            return buyNum;
+        }
+
+        public void setBuyNum(int buyNum) {
+            this.buyNum = buyNum;
+        }
 
         public String getId() {
             return id;

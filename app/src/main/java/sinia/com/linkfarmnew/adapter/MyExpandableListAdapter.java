@@ -134,13 +134,12 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         final TextView tv_num = ViewHolder.get(view, R.id.tv_num);
 
         final CartBean.MerchantitemsBean.GoodsItemsBean goodsBean = childs.get(groups.get(i).getMerName()).get(i1);
-        final double singlePrice = goodsBean.getPrice() / goodsBean.getGoodNum();
 
         BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img_goods, goodsBean.getGoodImage());
         tv_goodsname.setText(goodsBean.getGoodName());
         tv_price.setText("¥ " + goodsBean.getPrice());
-        tv_num.setText(goodsBean.getGoodNum() + "");
-        tv_weight.setText(goodsBean.getNormName());
+        tv_num.setText(goodsBean.getNum() + "");
+        tv_weight.setText(goodsBean.getNormName() + " " + goodsBean.getGoodNum() + "kg");
         if (goodsBean.isChecked()) {
             ivCheckChild.setChecked(true);
         } else {
@@ -149,44 +148,18 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         rl_jian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                int num1 = Integer.parseInt(tv_num.getText().toString());
-//                if (num1 > 1) {
-//                    int num2 = num1 - 1;
-//                    tv_num.setText(num2 + "");
-//                    goodsBean.setGoodNum(num2 + "");
-//                    goodsBean.setGoodPrice(singlePrice * num2 + "");
-//                    tv_price.setText("¥ " + goodsBean.getGoodPrice());
-//                    handler.sendEmptyMessage(100);
-//                }
                 modifyCountInterface.doDecrease(i, i1, tv_num, ivCheckChild.isChecked());
             }
         });
         rl_jia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                int num1 = Integer.parseInt(tv_num.getText().toString());
-//                int num2 = num1 + 1;
-//                tv_num.setText(num2 + "");
-//                goodsBean.setGoodNum(num2 + "");
-//                goodsBean.setGoodPrice(singlePrice * num2 + "");
-//                tv_price.setText("¥ " + goodsBean.getGoodPrice());
-//                handler.sendEmptyMessage(100);
                 modifyCountInterface.doIncrease(i, i1, tv_num, ivCheckChild.isChecked());
             }
         });
         ivCheckChild.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (((CheckBox) v).isChecked()) {
-//                    //二级分类全部选中，一级分类全选
-//                    goodsBean.setChecked(true);
-//                    oneClassSetCheck(i);
-//                } else {
-//                    //二级分类取消选中，一级分类取消选中
-//                    goodsBean.setChecked(false);
-//                    oneClassSetUnCheck(i);
-//                }
-//                handler.sendEmptyMessage(100);
                 goodsBean.setChecked(((CheckBox) v).isChecked());
                 ivCheckChild.setChecked(((CheckBox) v).isChecked());
                 checkInterface.checkChild(i, i1,

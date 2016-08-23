@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.sinia.zxing.CaptureActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -136,10 +137,15 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String goodId = recommendList.get(i).getGoodId();
-                Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
-                intent.putExtra("goodId", goodId);
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    String goodId = recommendList.get(i).getGoodId();
+                    Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
+                    intent.putExtra("goodId", goodId);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -304,8 +310,13 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                 startActivity(intent);
                 break;
             case R.id.tv_scan:
-                intent = new Intent(getActivity(), ServiceCommentActivity.class);
-                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), CaptureActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.tv_msg:
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
@@ -396,7 +407,9 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         if (resultCode == -1) {
             if (requestCode == 100) {
                 selectCity = data.getStringExtra("selectCity");
+                city = selectCity;
                 tvLocate.setText(selectCity);
+                MyApplication.getInstance().setStringValue("city", selectCity);
             }
         }
     }

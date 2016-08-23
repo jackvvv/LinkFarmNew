@@ -55,8 +55,8 @@
                     android:layout_gravity="center"
                     android:focusable="false"
                     app:cracksColor="#ffffff"
-                    app:edgeColor="#E51412"
-                    app:fillColor="#E51412"
+                    app:edgeColor="#FD2A2A"
+                    app:fillColor="#FD2A2A"
                     app:unlikeType="1" />
 
                 <TextView
@@ -68,17 +68,44 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_cart"
+            <LinearLayout
+                android:id="@+id/ll_cart"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:drawablePadding="3dp"
-                android:drawableTop="@drawable/youwe"
-                android:gravity="center"
-                android:text="购物车"
-                android:textColor="@color/textblackColor"
-                android:textSize="15sp" />
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <ImageView
+                        android:id="@+id/img_cart"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/youwe" />
+
+                    <ImageView
+                        android:id="@+id/img_reddot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/img_cart"
+                        android:src="@drawable/red_dot"
+                        android:visibility="invisible" />
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tv_cart"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="购物车"
+                    android:textColor="@color/textblackColor"
+                    android:textSize="15sp" />
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView

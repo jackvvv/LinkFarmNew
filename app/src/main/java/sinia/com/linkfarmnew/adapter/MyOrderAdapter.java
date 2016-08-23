@@ -79,15 +79,25 @@ public class MyOrderAdapter extends BaseAdapter {
         tv_num.setText("共" + list.get(i).getGoodNum() + "件商品 实付款：");
         tv_price.setText("¥ " + list.get(i).getPrice());
         final String orderId = list.get(i).getOrderId();
+        final String merImage = list.get(i).getMerImage();
         final int orderStatus = list.get(i).getOrderStatus();
+        final int commentStatus = list.get(i).getComStatus();
         switch (orderStatus) {
             case 1:
                 tv_orderstatus.setText("待付款");
                 btn1.setText("取消订单");
                 btn2.setText("去支付");
+                btn2.setBackgroundResource(R.drawable.green_round_edit);
+                btn1.setVisibility(View.VISIBLE);
+                btn2.setClickable(true);
                 break;
             case 2:
                 tv_orderstatus.setText("待发货");
+                //申请退货
+                btn1.setVisibility(View.GONE);
+                btn2.setText("申请退货");
+                btn2.setBackgroundResource(R.drawable.green_round_edit);
+                btn2.setClickable(true);
                 break;
             case 3:
                 tv_orderstatus.setText("待收货");
@@ -95,23 +105,46 @@ public class MyOrderAdapter extends BaseAdapter {
                 btn1.setTextColor(Color.parseColor("#962722"));
                 btn1.setBackgroundResource(R.drawable.red_round_edit);
                 btn2.setText("确认送达");
+                btn2.setBackgroundResource(R.drawable.green_round_edit);
+                btn1.setVisibility(View.VISIBLE);
+                btn2.setClickable(true);
                 break;
             case 4:
-                tv_orderstatus.setText("待评价");
+                if (1 == commentStatus) {
+                    tv_orderstatus.setText("已评价");
+                    btn2.setBackgroundResource(R.drawable.gray_round_edit);
+                    btn2.setClickable(false);
+                } else {
+                    tv_orderstatus.setText("待评价");
+                    btn2.setBackgroundResource(R.drawable.green_round_edit);
+                }
                 btn1.setVisibility(View.GONE);
                 btn2.setText("服务评价");
+                btn2.setClickable(true);
                 break;
             case 5:
                 tv_orderstatus.setText("退货中");
+                //灰色的申请退货
+                btn1.setVisibility(View.GONE);
+                btn2.setText("申请退货");
+                btn2.setBackgroundResource(R.drawable.gray_round_edit);
+                btn2.setClickable(false);
                 break;
             case 6:
                 tv_orderstatus.setText("退货成功");
+                //删除订单
+                btn2.setText("删除订单");
+                btn2.setBackgroundResource(R.drawable.green_round_edit);
+                btn1.setVisibility(View.GONE);
+                btn2.setClickable(true);
                 break;
             case 7:
                 tv_orderstatus.setText("退货失败");
-                break;
-            case 8:
-                tv_orderstatus.setText("等待付款");
+                //申请退货
+                btn1.setVisibility(View.GONE);
+                btn2.setText("申请退货");
+                btn2.setBackgroundResource(R.drawable.green_round_edit);
+                btn2.setClickable(true);
                 break;
         }
 
@@ -145,13 +178,30 @@ public class MyOrderAdapter extends BaseAdapter {
                     intent.putExtra("norm", "2");
                     context.startActivity(intent);
                 }
+                if (orderStatus == 2) {
+                    //申请退货退款
+                    Intent intent = new Intent(context, ApplyReturnActivity.class);
+                    intent.putExtra("orderId", orderId);
+                    context.startActivity(intent);
+                }
                 if (orderStatus == 3) {
                     //确认送达
                     orderOperatorInterface.confirmOrderSend(orderId, i);
                 }
-                if (orderStatus == 4) {
+                if (orderStatus == 4 && commentStatus == 2) {
                     //评价
                     Intent intent = new Intent(context, ServiceCommentActivity.class);
+                    intent.putExtra("orderId", orderId);
+                    intent.putExtra("merImage", merImage);
+                    context.startActivity(intent);
+                }
+                if (orderStatus == 6) {
+                    //删除订单
+                    orderOperatorInterface.cancelOrder(orderId, i);
+                }
+                if (orderStatus == 7) {
+                    //再次申请退货
+                    Intent intent = new Intent(context, ApplyReturnActivity.class);
                     intent.putExtra("orderId", orderId);
                     context.startActivity(intent);
                 }
@@ -162,6 +212,7 @@ public class MyOrderAdapter extends BaseAdapter {
             public void onClick(View view) {
                 Intent intent = new Intent(context, OrderDetailActivity.class);
                 intent.putExtra("orderId", orderId);
+                intent.putExtra("merImage", merImage);
                 context.startActivity(intent);
             }
         });

@@ -87,15 +87,24 @@ public class CartBean extends JsonBean {
             this.items = items;
         }
 
-        public static class GoodsItemsBean implements Serializable{
+        public static class GoodsItemsBean implements Serializable {
             private String id;
             private String goodId;
             private double price;
-            private int goodNum;
+            private int goodNum;//商品重量
+            private int num;//商品数量
             private String goodName;
             private String goodImage;
             private String normName;
             private boolean isChecked = false;
+
+            public int getNum() {
+                return num;
+            }
+
+            public void setNum(int num) {
+                this.num = num;
+            }
 
             public String getNormName() {
                 return normName;

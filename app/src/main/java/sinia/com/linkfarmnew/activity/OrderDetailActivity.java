@@ -70,9 +70,11 @@ public class OrderDetailActivity extends BaseActivity {
     View v1;
     @Bind(R.id.tv_couponMoney)
     TextView tvCouponMoney;
+    @Bind(R.id.tv_self_tip)
+    TextView tvSelfTip;
 
     private OrderGoodsAdapter adapter;
-    private String orderId, coupleId = "-1";
+    private String orderId, merImage, coupleId = "-1";
     private int orderStatus;
     private double realMoney, price;
     private OrderDetailBean bean;
@@ -91,6 +93,7 @@ public class OrderDetailActivity extends BaseActivity {
 
     private void initData() {
         orderId = getIntent().getStringExtra("orderId");
+        merImage = getIntent().getStringExtra("merImage");
         adapter = new OrderGoodsAdapter(this, list);
         lvGoods.setAdapter(adapter);
         Utility.setListViewHeightBasedOnChildren(lvGoods);
@@ -139,8 +142,10 @@ public class OrderDetailActivity extends BaseActivity {
         }
         if (1 == bean.getDeType()) {
             tvSendType.setText("配送");
+            tvSelfTip.setVisibility(View.GONE);
         } else {
             tvSendType.setText("自提");
+            tvSelfTip.setText("自提运费和商家线下结算");
         }
         orderStatus = bean.getOrderStatus();
         if (1 == orderStatus) {
@@ -152,6 +157,9 @@ public class OrderDetailActivity extends BaseActivity {
             //待发货
             v1.setVisibility(View.GONE);
             rlYhq.setVisibility(View.GONE);
+            btn1.setVisibility(View.GONE);
+            btn2.setText("申请退货");
+            btn2.setBackgroundResource(R.drawable.green_round_edit);
         }
         if (3 == orderStatus) {
             //待收货
@@ -162,8 +170,43 @@ public class OrderDetailActivity extends BaseActivity {
             v1.setVisibility(View.GONE);
             rlYhq.setVisibility(View.GONE);
         }
+        if (5 == orderStatus) {
+            //灰色的申请退货
+            btn1.setVisibility(View.GONE);
+            btn2.setText("申请退货");
+            btn2.setBackgroundResource(R.drawable.gray_round_edit);
+            btn2.setClickable(false);
+            v1.setVisibility(View.GONE);
+            rlYhq.setVisibility(View.GONE);
+        }
+        if (6 == orderStatus) {
+            //删除订单
+            btn2.setText("删除订单");
+            btn2.setBackgroundResource(R.drawable.green_round_edit);
+            btn1.setVisibility(View.GONE);
+            btn2.setClickable(true);
+            v1.setVisibility(View.GONE);
+            rlYhq.setVisibility(View.GONE);
+        }
+        if (7 == orderStatus) {
+            //申请退货
+            btn1.setVisibility(View.GONE);
+            btn2.setText("申请退货");
+            btn2.setBackgroundResource(R.drawable.green_round_edit);
+            btn2.setClickable(true);
+            v1.setVisibility(View.GONE);
+            rlYhq.setVisibility(View.GONE);
+        }
+        int commentStatus = bean.getComStatus();
         if (4 == orderStatus) {
             //已完成
+            if (1 == commentStatus) {
+                //已评价
+                btn2.setBackgroundResource(R.drawable.gray_round_edit);
+                btn2.setClickable(false);
+            } else {
+                btn2.setBackgroundResource(R.drawable.green_round_edit);
+            }
             btn1.setVisibility(View.GONE);
             btn2.setText("服务评价");
             v1.setVisibility(View.GONE);
@@ -191,6 +234,12 @@ public class OrderDetailActivity extends BaseActivity {
                     intent.putExtra("norm", "2");
                     startActivity(intent);
                 }
+                if (orderStatus == 2) {
+                    //申请退货
+                    Intent intent = new Intent(OrderDetailActivity.this, ApplyReturnActivity.class);
+                    intent.putExtra("orderId", orderId);
+                    startActivity(intent);
+                }
                 if (orderStatus == 3) {
                     //确认送达
                     confirmOrderSend(orderId);
@@ -198,6 +247,17 @@ public class OrderDetailActivity extends BaseActivity {
                 if (orderStatus == 4) {
                     //评价
                     Intent intent = new Intent(OrderDetailActivity.this, ServiceCommentActivity.class);
+                    intent.putExtra("orderId", orderId);
+                    intent.putExtra("merImage", merImage);
+                    startActivity(intent);
+                }
+                if (orderStatus == 6) {
+                    //删除订单
+                    cancelOrder(orderId);
+                }
+                if (orderStatus == 7) {
+                    //再次申请退货
+                    Intent intent = new Intent(OrderDetailActivity.this, ApplyReturnActivity.class);
                     intent.putExtra("orderId", orderId);
                     startActivity(intent);
                 }

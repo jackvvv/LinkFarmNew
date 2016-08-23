@@ -82,8 +82,8 @@
                         android:layout_marginRight="6dp"
                         android:focusable="false"
                         app:cracksColor="#ffffff"
-                        app:edgeColor="#E51412"
-                        app:fillColor="#E51412"
+                        app:edgeColor="#FD2A2A"
+                        app:fillColor="#FD2A2A"
                         app:unlikeType="1" />
 
                     <TextView

@@ -56,7 +56,7 @@ public class OrderGoodsAdapter extends BaseAdapter {
 
         BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img, list.get(i).getGoodImage());
         tv_name.setText(list.get(i).getGoodName());
-        tv_num.setText("× " + list.get(i).getNorm());
+        tv_num.setText("× " + list.get(i).getBuyNum());
         tv_weight.setText(list.get(i).getNorm());
         tv_price.setText("¥ " + list.get(i).getPrice());
         return view;

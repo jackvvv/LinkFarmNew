@@ -206,7 +206,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
-                        android:src="@drawable/ic_shaixuan" />
+                        android:src="@drawable/filter_icon_helper_select" />
                 </LinearLayout>
             </LinearLayout>
 

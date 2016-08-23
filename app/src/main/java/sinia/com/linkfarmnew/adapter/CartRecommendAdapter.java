@@ -61,7 +61,7 @@ public class CartRecommendAdapter extends BaseAdapter {
         int itemWidth = AppInfoUtil.getScreenWidth(context) / 2 - AppInfoUtil.dip2px(context, 15);
         int itemHeight = AppInfoUtil.getScreenHeight(context) / 3;
         // 大图片LayoutParams
-        LinearLayout.LayoutParams lpB = new LinearLayout.LayoutParams(itemWidth, itemHeight);
+        LinearLayout.LayoutParams lpB = new LinearLayout.LayoutParams(itemWidth, itemWidth);
         img.setLayoutParams(lpB);
         return view;
     }

@@ -91,7 +91,7 @@ public class ServiceCommentActivity extends BaseActivity {
     private Validator mValidator;
     private List<String> tempList = new LinkedList<String>();
     private List<String> imgUrlList = new LinkedList<String>();
-    private String orderId, type = "1";
+    private String orderId, merImage, type = "1";
     private AsyncHttpClient client = new AsyncHttpClient();
 
     @Override
@@ -107,6 +107,8 @@ public class ServiceCommentActivity extends BaseActivity {
 
     private void initView() {
         orderId = getIntent().getStringExtra("orderId");
+        merImage = getIntent().getStringExtra("merImage");
+        BitmapUtilsHelp.getImage(this, R.drawable.ic_launcher).display(img, merImage);
         tvGood.setSelected(true);
         tvZhong.setSelected(false);
         tvBad.setSelected(false);

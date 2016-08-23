@@ -1,7 +1,6 @@
 package sinia.com.linkfarmnew.fragment;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -10,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -28,7 +28,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.FillOrderActivity;
-import sinia.com.linkfarmnew.activity.StandardDialogActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
@@ -56,6 +55,10 @@ public class GoodsDetailFragment extends BaseFragment {
     ThumbUpView tpv;
     @Bind(R.id.ll_collect)
     LinearLayout llCollect;
+    @Bind(R.id.img_cart)
+    ImageView imgCart;
+    @Bind(R.id.img_reddot)
+    ImageView imgReddot;
     private View rootView;
     private GoodsFragment goodsFragment;
     private ImageFragment imgFragment;
@@ -80,6 +83,19 @@ public class GoodsDetailFragment extends BaseFragment {
         return fragment;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        goodsId = MyApplication.getInstance().getStringValue("addcart_goodid");
+        if (goodsBean.getId().equals(goodsId)) {
+            imgCart.setImageResource(R.drawable.youwe_select);
+            imgReddot.setVisibility(View.VISIBLE);
+        } else {
+            imgCart.setImageResource(R.drawable.youwe);
+            imgReddot.setVisibility(View.GONE);
+        }
+    }
+
     private void initData() {
         MyApplication.getInstance().setStringValue("buy_type", null);
         MyApplication.getInstance().setStringValue("buy_weight", null);
@@ -88,9 +104,11 @@ public class GoodsDetailFragment extends BaseFragment {
         tpv.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                //return true 屏蔽触摸事件
                 return true;
             }
         });
+
         if (1 == goodsBean.getCollStatus()) {
             isCollect = "1";
             tpv.Like();
