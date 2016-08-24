@@ -191,7 +191,7 @@ public class OrderDetailActivity extends BaseActivity {
         if (7 == orderStatus) {
             //申请退货
             btn1.setVisibility(View.GONE);
-            btn2.setText("申请退货");
+            btn2.setText("再次申请");
             btn2.setBackgroundResource(R.drawable.green_round_edit);
             btn2.setClickable(true);
             v1.setVisibility(View.GONE);

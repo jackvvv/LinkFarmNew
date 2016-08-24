@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -15,6 +16,8 @@ import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
 import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.AppInfoUtil;
+import sinia.com.linkfarmnew.utils.DataCleanManager;
 import sinia.com.linkfarmnew.utils.MyApplication;
 
 /**
@@ -56,13 +59,18 @@ public class SettingsActivity extends BaseActivity {
         setContentView(R.layout.activity_settings, "我的设置");
         ButterKnife.bind(this);
         getDoingView().setVisibility(View.GONE);
+        initData();
+    }
+
+    private void initData() {
+        tvVersion.setText("v" + AppInfoUtil.getVersionCode(this) + ".0");
     }
 
     @OnClick({R.id.rl_clear, R.id.rl_aboutus, R.id.rl_feedback, R.id.rl_logout, R.id.img_switch})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_clear:
-                showToast("清除缓存成功");
+                clearCache();
                 break;
             case R.id.rl_aboutus:
                 startActivityForNoIntent(AboutUsActivity.class);
@@ -76,6 +84,25 @@ public class SettingsActivity extends BaseActivity {
             case R.id.img_switch:
                 break;
         }
+    }
+
+    private void clearCache() {
+        materialDialog = new MaterialDialog(this);
+        materialDialog.setTitle("提示").setMessage("缓存数据清理后将无法恢复，您确定要清理吗?")
+                .setPositiveButton("确定", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        DataCleanManager.clearAllCache(SettingsActivity.this);
+                        showToast("清理了缓存" + DataCleanManager
+                                .getTotalCacheSize(SettingsActivity.this));
+                        materialDialog.dismiss();
+                    }
+                }).setNegativeButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDialog.dismiss();
+            }
+        }).show();
     }
 
     private void logout() {

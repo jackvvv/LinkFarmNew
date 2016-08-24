@@ -152,6 +152,24 @@ public class MineFragment extends BaseFragment {
                         BitmapUtilsHelp.getImage(getActivity(), R.drawable
                                 .ic_launcher).display(ivHead, bean.getImageUrl());
                         tvUsername.setText(bean.getNickName());
+                        if (0 != bean.getWaitPayNum()) {
+                            tvDaizhifucount.setVisibility(View.VISIBLE);
+                            tvDaizhifucount.setText(bean.getWaitPayNum() + "");
+                        } else {
+                            tvDaizhifucount.setVisibility(View.INVISIBLE);
+                        }
+                        if (0 != bean.getWaitShouNum()) {
+                            tvDaishouhuocount.setVisibility(View.VISIBLE);
+                            tvDaishouhuocount.setText(bean.getWaitShouNum() + "");
+                        } else {
+                            tvDaishouhuocount.setVisibility(View.INVISIBLE);
+                        }
+                        if (0 != bean.getComNum()) {
+                            tvDaipingjiacount.setVisibility(View.VISIBLE);
+                            tvDaipingjiacount.setText(bean.getComNum() + "");
+                        } else {
+                            tvDaipingjiacount.setVisibility(View.INVISIBLE);
+                        }
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("请求失败");
                     } else {
@@ -196,8 +214,13 @@ public class MineFragment extends BaseFragment {
                 }
                 break;
             case R.id.iv_head:
-//                intent = new Intent(getActivity(), LoginActivity.class);
-//                startActivity(intent);
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), PersonalCenterActivty.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
                 break;
             case R.id.img_mall:
                 if (MyApplication.getInstance().getBoolValue("is_login")) {

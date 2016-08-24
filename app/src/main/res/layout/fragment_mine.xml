@@ -207,10 +207,12 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="5dp"
-                        android:background="@drawable/red_yuandian"
+                        android:background="@drawable/red_round"
                         android:gravity="center"
+                        android:text="10"
                         android:textColor="#fff"
-                        android:visibility="invisible" />
+                        android:textSize="12sp"
+                        android:visibility="visible" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -240,9 +242,10 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="5dp"
-                        android:background="@drawable/red_yuandian"
+                        android:background="@drawable/red_round"
                         android:gravity="center"
                         android:textColor="#fff"
+                        android:textSize="12sp"
                         android:visibility="invisible" />
                 </RelativeLayout>
 
@@ -273,9 +276,10 @@
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="10dp"
                         android:layout_marginTop="5dp"
-                        android:background="@drawable/red_yuandian"
+                        android:background="@drawable/red_round"
                         android:gravity="center"
                         android:textColor="#fff"
+                        android:textSize="12sp"
                         android:visibility="invisible" />
                 </RelativeLayout>
 

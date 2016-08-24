@@ -8,6 +8,33 @@ public class RefreshBean extends JsonBean {
     private String imageUrl;
     private String nickName;
     private String sex;
+    private int comNum;
+    private int waitShouNum;
+    private int waitPayNum;
+
+    public int getComNum() {
+        return comNum;
+    }
+
+    public void setComNum(int comNum) {
+        this.comNum = comNum;
+    }
+
+    public int getWaitShouNum() {
+        return waitShouNum;
+    }
+
+    public void setWaitShouNum(int waitShouNum) {
+        this.waitShouNum = waitShouNum;
+    }
+
+    public int getWaitPayNum() {
+        return waitPayNum;
+    }
+
+    public void setWaitPayNum(int waitPayNum) {
+        this.waitPayNum = waitPayNum;
+    }
 
     public String getImageUrl() {
         return imageUrl;

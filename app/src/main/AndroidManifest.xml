@@ -108,6 +108,10 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="dce82a99a98f53a4af5e0f1f5ef9834b" />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="57bd0e30e0f55aeebd0043c2" >
+        </meta-data>
     </application>
 
 </manifest>

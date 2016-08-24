@@ -123,7 +123,7 @@ public class MyOrderAdapter extends BaseAdapter {
                 btn2.setClickable(true);
                 break;
             case 5:
-                tv_orderstatus.setText("退货中");
+                tv_orderstatus.setText("审核中");
                 //灰色的申请退货
                 btn1.setVisibility(View.GONE);
                 btn2.setText("申请退货");
@@ -131,7 +131,7 @@ public class MyOrderAdapter extends BaseAdapter {
                 btn2.setClickable(false);
                 break;
             case 6:
-                tv_orderstatus.setText("退货成功");
+                tv_orderstatus.setText("审核成功");
                 //删除订单
                 btn2.setText("删除订单");
                 btn2.setBackgroundResource(R.drawable.green_round_edit);
@@ -139,10 +139,10 @@ public class MyOrderAdapter extends BaseAdapter {
                 btn2.setClickable(true);
                 break;
             case 7:
-                tv_orderstatus.setText("退货失败");
+                tv_orderstatus.setText("审核失败");
                 //申请退货
                 btn1.setVisibility(View.GONE);
-                btn2.setText("申请退货");
+                btn2.setText("再次申请");
                 btn2.setBackgroundResource(R.drawable.green_round_edit);
                 btn2.setClickable(true);
                 break;
