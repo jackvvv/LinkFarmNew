@@ -1,9 +1,11 @@
 package sinia.com.linkfarmnew.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -128,6 +130,9 @@ public class MineFragment extends BaseFragment {
         } else {
             rl_login.setVisibility(View.VISIBLE);
             rlPersonInfo.setVisibility(View.GONE);
+            tvDaizhifucount.setVisibility(View.INVISIBLE);
+            tvDaishouhuocount.setVisibility(View.INVISIBLE);
+            tvDaipingjiacount.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -186,7 +191,7 @@ public class MineFragment extends BaseFragment {
                 tvStatus.setText("企业已认证");
             } else if ("2".equals(userBean.getCheakStatus())) {
                 tvStatus.setText("企业待认证");
-            } else if ("2".equals(userBean.getCheakStatus())) {
+            } else if ("3".equals(userBean.getCheakStatus())) {
                 tvStatus.setText("认证失败");
             }
         }

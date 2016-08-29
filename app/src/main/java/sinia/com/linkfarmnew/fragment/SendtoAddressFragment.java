@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -111,6 +112,16 @@ public class SendtoAddressFragment extends BaseFragment {
                         String id = list.get(position).getAddId();
                         deleteAddress(id, position);
                 }
+                return false;
+            }
+        });
+        listview.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP)
+                    listview.getParent().requestDisallowInterceptTouchEvent(false);
+                else
+                    listview.getParent().requestDisallowInterceptTouchEvent(true);
                 return false;
             }
         });

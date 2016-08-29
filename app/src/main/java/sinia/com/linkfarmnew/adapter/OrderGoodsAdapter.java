@@ -13,6 +13,7 @@ import java.util.List;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.bean.OrderDetailBean;
 import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -58,7 +59,7 @@ public class OrderGoodsAdapter extends BaseAdapter {
         tv_name.setText(list.get(i).getGoodName());
         tv_num.setText("× " + list.get(i).getBuyNum());
         tv_weight.setText(list.get(i).getNorm());
-        tv_price.setText("¥ " + list.get(i).getPrice());
+        tv_price.setText("¥ " + StringUtil.formatePrice(list.get(i).getPrice()));
         return view;
     }
 }

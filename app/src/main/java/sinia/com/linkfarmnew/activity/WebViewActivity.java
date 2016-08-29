@@ -15,7 +15,7 @@ import sinia.com.linkfarmnew.view.MyWebView;
 public class WebViewActivity extends BaseActivity {
 
     @Bind(R.id.webView)
-    MyWebView webView;
+    com.tencent.smtt.sdk.WebView webView;
 
     private String link;
 
@@ -31,5 +31,29 @@ public class WebViewActivity extends BaseActivity {
     private void initData() {
         link = getIntent().getStringExtra("link");
         webView.loadUrl(link);
+        com.tencent.smtt.sdk.WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webView.setWebViewClient(new com.tencent.smtt.sdk.WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(com.tencent.smtt.sdk.WebView webView, String s) {
+                webView.loadUrl(s);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
+        /**
+         * 解决二级fragment嵌套的时候，fragment重新创建的时候，外链页面load失败
+         */
+        if (webView != null) {
+            webView.stopLoading();
+            webView.removeAllViews();
+            webView.destroy();
+            webView = null;
+        }
     }
 }

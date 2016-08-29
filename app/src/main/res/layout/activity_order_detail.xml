@@ -92,7 +92,8 @@
                     android:layout_marginLeft="15dp"
                     android:text="链农荟"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:id="@+id/tv_shopName" />
 
             </RelativeLayout>
 

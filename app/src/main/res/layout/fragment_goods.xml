@@ -37,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="已有152人购买"
+                android:text="已有0人购买"
                 android:textColor="@color/themeColor"
                 android:textSize="14sp" />
         </LinearLayout>
@@ -64,6 +64,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:text=""
+                android:hint="请选择产品规格"
                 android:textColor="@color/textblackColor"
                 android:textSize="14sp" />
         </LinearLayout>

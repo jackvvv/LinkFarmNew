@@ -82,7 +82,7 @@ public class ForgetPasswordActivity extends BaseActivity {
     }
 
     private void findPassword() {
-        showLoad("注册中...");
+        showLoad("加载中...");
         RequestParams params = new RequestParams();
         params.put("telephone", etPhone.getEditableText().toString().trim());
         params.put("password", etPassword.getEditableText().toString().trim());
@@ -101,6 +101,7 @@ public class ForgetPasswordActivity extends BaseActivity {
                     int isSuccessful = bean.getIsSuccessful();
                     if (0 == state && 0 == isSuccessful) {
                         showToast("密码重置成功");
+                        startActivityForNoIntent(LoginActivity.class);
                         ActivityManager.getInstance().finishCurrentActivity();
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("请求失败");

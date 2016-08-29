@@ -31,21 +31,21 @@ public class MyCollectBean extends JsonBean {
     }
 
     public static class CollectBean {
-        private int price;
+        private String price;
         private String merName;
         private String collId;
         private String merImage;
-        private int comNum;
+        private String comNum;
         private String merchantId;
         private String goodId;
         private String goodName;
         private String goodImage;
 
-        public int getPrice() {
+        public String getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(String price) {
             this.price = price;
         }
 
@@ -73,11 +73,11 @@ public class MyCollectBean extends JsonBean {
             this.merImage = merImage;
         }
 
-        public int getComNum() {
+        public String getComNum() {
             return comNum;
         }
 
-        public void setComNum(int comNum) {
+        public void setComNum(String comNum) {
             this.comNum = comNum;
         }
 

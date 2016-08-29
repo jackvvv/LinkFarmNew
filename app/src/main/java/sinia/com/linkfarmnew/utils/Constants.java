@@ -7,10 +7,10 @@ import com.a.a.method;
  */
 public class Constants {
 
-    public static String BASE_URL = "http://192.168.0.116:8080/farmer/xiNaiInterfaceController" +
-            ".do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
-//    public static String BASE_URL = "http://114.55.91.34:8080/farmer/xiNaiInterfaceController" +
+//    public static String BASE_URL = "http://192.168.0.116:8080/farmer/xiNaiInterfaceController" +
 //            ".do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
+    public static String BASE_URL = "http://114.55.91.34:8080/farmer/xiNaiInterfaceController" +
+            ".do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
 
     public static final String BMOB_KEY = "d4ecefd1ecdd89d41b182409cd68f2d4";
 

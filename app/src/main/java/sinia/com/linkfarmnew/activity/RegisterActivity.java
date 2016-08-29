@@ -164,7 +164,6 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
                     int isSuccessful = bean.getIsSuccessful();
                     if (0 == state && 0 == isSuccessful) {
                         showToast("注册成功");
-                        startActivityForNoIntent(CheckingActivity.class);
                         ActivityManager.getInstance().finishCurrentActivity();
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("注册失败");
@@ -423,6 +422,28 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
 
     @Override
     public void onProviderDisabled(String s) {
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (null != mLocationManagerProxy) {
+            // 移除定位请求
+            mLocationManagerProxy.removeUpdates(this);
+            // 销毁定位
+            mLocationManagerProxy.destroy();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (null != mLocationManagerProxy) {
+            // 移除定位请求
+            mLocationManagerProxy.removeUpdates(this);
+            // 销毁定位
+            mLocationManagerProxy.destroy();
+        }
     }
 
     @Override

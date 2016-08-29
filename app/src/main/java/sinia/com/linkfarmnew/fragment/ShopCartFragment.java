@@ -43,6 +43,7 @@ import sinia.com.linkfarmnew.myinterface.CheckInterface;
 import sinia.com.linkfarmnew.myinterface.ModifyCountInterface;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.view.MyGridView;
 
 /**
@@ -173,11 +174,11 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
 
         if (checkAll) {
             ivSelectAll.setChecked(true);
-            tvCountMoney.setText(allPrice() + "");
+            tvCountMoney.setText(StringUtil.formatePrice(allPrice()) + "");
             btnSettle.setText("去结算" + "(" + allSize() + ")");
         } else {
             ivSelectAll.setChecked(false);
-            tvCountMoney.setText(0.0 + "");
+            tvCountMoney.setText(0.00 + "");
             btnSettle.setText("去结算" + "(" + 0 + ")");
         }
         adapter.notifyDataSetChanged();

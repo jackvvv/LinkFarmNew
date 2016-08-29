@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -21,6 +22,7 @@ import sinia.com.linkfarmnew.activity.PayActivity;
 import sinia.com.linkfarmnew.activity.ServiceCommentActivity;
 import sinia.com.linkfarmnew.bean.MyOrderListBean;
 import sinia.com.linkfarmnew.myinterface.OrderOperatorInterface;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -77,7 +79,7 @@ public class MyOrderAdapter extends BaseAdapter {
         gv_goods.setAdapter(adapter);
         tv_shopname.setText(list.get(i).getMerName());
         tv_num.setText("共" + list.get(i).getGoodNum() + "件商品 实付款：");
-        tv_price.setText("¥ " + list.get(i).getPrice());
+        tv_price.setText("¥ " + StringUtil.formatePrice(list.get(i).getPrice()));
         final String orderId = list.get(i).getOrderId();
         final String merImage = list.get(i).getMerImage();
         final int orderStatus = list.get(i).getOrderStatus();

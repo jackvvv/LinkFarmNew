@@ -91,7 +91,7 @@ public class LoginActivity extends BaseActivity {
             public void onSuccess(int i, String s) {
                 super.onSuccess(i, s);
                 dismiss();
-                Log.i("tag",s);
+                Log.i("tag", s);
                 Gson gson = new Gson();
                 if (s.contains("isSuccessful")
                         && s.contains("state")) {
@@ -105,9 +105,14 @@ public class LoginActivity extends BaseActivity {
                         MyApplication.getInstance().setStringValue(
                                 "userId", bean.getId());
                         MyApplication.getInstance().setLoginBean(bean);
-//                        startActivityForNoIntent(MainActivity.class);
-                        ActivityManager.getInstance()
-                                .finishCurrentActivity();
+                        if ("1".equals(bean.getCheakStatus())) {
+                            ActivityManager.getInstance()
+                                    .finishCurrentActivity();
+                        } else if ("2".equals(bean.getCheakStatus())) {
+                            startActivityForNoIntent(CheckingActivity.class);
+                        } else if ("3".equals(bean.getCheakStatus())) {
+                            showToast("审核失败，请重新注册并提交审核");
+                        }
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("第一次登陆，请先第三方通过后，进行手机号号和密码登录");
                     } else {
@@ -130,6 +135,8 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.tv_find_pwd:
                 startActivityForNoIntent(ForgetPasswordActivity.class);
+                ActivityManager.getInstance()
+                        .finishCurrentActivity();
                 break;
             case R.id.tv_qq:
                 break;

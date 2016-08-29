@@ -18,6 +18,7 @@ import sinia.com.linkfarmnew.activity.EditAddressActivity;
 import sinia.com.linkfarmnew.bean.AddressListBean;
 import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.myinterface.CalculatePriceInterface;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -60,7 +61,7 @@ public class StandardPriceAdapter extends BaseAdapter {
 
         kg_s.setText(list.get(i).getStKg() + "kg");
         kg_e.setText(list.get(i).getEnKg() + "kg");
-        tv_price.setText(list.get(i).getPrice() + "");
+        tv_price.setText(StringUtil.formatePrice(list.get(i).getPrice()));
 
         return view;
     }

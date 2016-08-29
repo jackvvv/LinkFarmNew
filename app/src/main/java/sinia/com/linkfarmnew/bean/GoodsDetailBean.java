@@ -18,12 +18,21 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
     private String goodName;
     private String goodImage;
     private String moiveLink;
+    private String leastKiloGram;//剩余量
     private List<CommentBean> commentitems;//评价集合
     private List<GoodsImageBean> imageitems;//商品图片集合
     private List<NormListBean> normitems;//规格集合
     private List<SendAddressBean> peiitems;//配送地址集合
     private List<SelfGetBean> ziitems;//自提地址集合
     private List<SourceBean> orginitems;//溯源集合
+
+    public String getLeastKiloGram() {
+        return leastKiloGram;
+    }
+
+    public void setLeastKiloGram(String leastKiloGram) {
+        this.leastKiloGram = leastKiloGram;
+    }
 
     public String getId() {
         return id;
@@ -291,31 +300,31 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
         }
 
         public static class NormTypeListBean implements Serializable {
-            private float stKg;
-            private float enKg;
-            private float price;
+            private double stKg;
+            private double enKg;
+            private double price;
 
-            public float getStKg() {
+            public double getStKg() {
                 return stKg;
             }
 
-            public void setStKg(float stKg) {
+            public void setStKg(double stKg) {
                 this.stKg = stKg;
             }
 
-            public float getEnKg() {
+            public double getEnKg() {
                 return enKg;
             }
 
-            public void setEnKg(float enKg) {
+            public void setEnKg(double enKg) {
                 this.enKg = enKg;
             }
 
-            public float getPrice() {
+            public double getPrice() {
                 return price;
             }
 
-            public void setPrice(float price) {
+            public void setPrice(double price) {
                 this.price = price;
             }
         }

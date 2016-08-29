@@ -36,6 +36,7 @@ import java.util.Set;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.adapter.StandardPriceAdapter;
 import sinia.com.linkfarmnew.adapter.StandardTypeAdapter;
@@ -85,10 +86,12 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
     private StandardPriceAdapter priceAdapter;
     private SetPriceDataInterface priceDataInterface;
     private List<GoodsDetailBean.NormListBean.NormTypeListBean> priceList = new ArrayList<>();
-    private float start_kg, end_kg, singlePrice, money;
     private String selectType, normId;
     private AsyncHttpClient client = new AsyncHttpClient();
     private List<String> selectGoodsImage = new ArrayList<>();
+    private List<GoodsDetailBean.GoodsImageBean> imgList = new ArrayList<>();
+    private String lastNum;//剩余量s
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +108,14 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, FrameLayout.LayoutParams.WRAP_CONTENT);
         ll_root.setLayoutParams(lp);
 
-        Glide.with(this).load(goodsBean.getGoodImage()).placeholder(R.drawable.ic_launcher).into(img);
+        lastNum = goodsBean.getLeastKiloGram();
+        imgList.clear();
+        imgList.addAll(goodsBean.getImageitems());
+        if (0 != imgList.size()) {
+            Glide.with(this).load(imgList.get(0).getImage()).placeholder(R.drawable.ic_launcher).into(img);
+        } else {
+            Glide.with(this).load("").placeholder(R.drawable.ic_launcher).into(img);
+        }
 
         headerView = LayoutInflater.from(this).inflate(R.layout.view_standard_head, null);
         gv_type = (MyGridView) headerView.findViewById(R.id.gv_type);
@@ -131,6 +141,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 etWeight.setText("");
+                tvMoney.setText(0.00 + "");
                 imgJian.setImageResource(R.drawable.img_jian_n);
                 typeAdapter.selectPosition = i;
                 typeAdapter.notifyDataSetChanged();
@@ -165,7 +176,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 }
                 calculatePrice(priceList, inputWeight, tvMoney);
             } else {
-                tvMoney.setText(0.0 + "");
+                tvMoney.setText(0.00 + "");
                 imgJian.setImageResource(R.drawable.img_jian_n);
             }
         }
@@ -216,7 +227,20 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 if (!StringUtil.isEmpty(selectType) && !StringUtil.isEmpty(etWeight.getEditableText().toString().trim
                         ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Float.parseFloat
                         (etWeight.getEditableText().toString().trim())) {
-                    addInCart();
+                    if (!StringUtil.isEmpty(lastNum) && Float.parseFloat(etWeight.getEditableText().toString().trim()
+                    ) - Float
+                            .parseFloat(lastNum) > 0) {
+                        materialDialog = new MaterialDialog(this);
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + "kg,如需大量购买，请联系商家")
+                                .setPositiveButton("知道了", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        materialDialog.dismiss();
+                                    }
+                                }).show();
+                    } else {
+                        addInCart();
+                    }
                 } else {
                     Toast.makeText(StandardDialogActivity.this, "请选择产品规格", Toast.LENGTH_SHORT).show();
                 }
@@ -225,20 +249,33 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 if (!StringUtil.isEmpty(selectType) && !StringUtil.isEmpty(etWeight.getEditableText().toString().trim
                         ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Float.parseFloat
                         (etWeight.getEditableText().toString().trim())) {
-                    Intent intent = new Intent(StandardDialogActivity.this, FillOrderActivity.class);
-                    intent.putExtra("norm", selectType);
-                    intent.putExtra("num", etWeight.getEditableText().toString().trim());
-                    intent.putExtra("price", tvMoney.getText().toString().trim());
-                    intent.putExtra("goodId", goodsBean.getId());
-                    //填写订单显示的购买商品的图片集合
-                    selectGoodsImage = new ArrayList<>();
-                    selectGoodsImage.add(goodsBean.getGoodImage());
-                    intent.putExtra("selectGoodsImage", (Serializable) selectGoodsImage);
-                    intent.putExtra("otherId", "-1");//购物车
-                    intent.putExtra("choose", "-1");//商户id
-                    intent.putExtra("type", "1");//1.直接购买 2.购物车
-                    startActivity(intent);
-                    finish();
+                    if (!StringUtil.isEmpty(lastNum) && Float.parseFloat(etWeight.getEditableText().toString().trim()
+                    ) - Float
+                            .parseFloat(lastNum) > 0) {
+                        materialDialog = new MaterialDialog(this);
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + "kg,如需大量购买，请联系商家")
+                                .setPositiveButton("知道了", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        materialDialog.dismiss();
+                                    }
+                                }).show();
+                    } else {
+                        Intent intent = new Intent(StandardDialogActivity.this, FillOrderActivity.class);
+                        intent.putExtra("norm", selectType);
+                        intent.putExtra("num", etWeight.getEditableText().toString().trim());
+                        intent.putExtra("price", tvMoney.getText().toString().trim());
+                        intent.putExtra("goodId", goodsBean.getId());
+                        //填写订单显示的购买商品的图片集合
+                        selectGoodsImage = new ArrayList<>();
+                        selectGoodsImage.add(goodsBean.getGoodImage());
+                        intent.putExtra("selectGoodsImage", (Serializable) selectGoodsImage);
+                        intent.putExtra("otherId", "-1");//购物车
+                        intent.putExtra("choose", "-1");//商户id
+                        intent.putExtra("type", "1");//1.直接购买 2.购物车
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     Toast.makeText(StandardDialogActivity.this, "请选择产品规格", Toast.LENGTH_SHORT).show();
                 }
@@ -301,16 +338,16 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
     public static void calculatePrice(List<GoodsDetailBean.NormListBean.NormTypeListBean> list, float inputWeight,
                                       TextView tvMoney) {
         for (int i = 0; i < list.size(); i++) {
-            float kg_start = list.get(i).getStKg();
-            float kg_end = list.get(i).getEnKg();
-            float singlePrice = list.get(i).getPrice();
-            float money;
+            double kg_start = list.get(i).getStKg();
+            double kg_end = list.get(i).getEnKg();
+            double singlePrice = list.get(i).getPrice();
+            double money;
             if (inputWeight >= kg_start && inputWeight <= kg_end) {
                 money = inputWeight * singlePrice;
                 BigDecimal b = new BigDecimal(money);
                 //四舍五入，保留两位小数
-                money = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                tvMoney.setText(money + "");
+                money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                tvMoney.setText(StringUtil.formatePrice(money));
                 return;
             } else {
                 //如果重量不在第一个区间，那么与下一个区间相比较
@@ -319,24 +356,24 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         money = inputWeight * list.get(i + 1).getPrice();
                         BigDecimal b = new BigDecimal(money);
                         //表明四舍五入，保留两位小数
-                        money = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                        tvMoney.setText(money + "");
+                        money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                        tvMoney.setText(StringUtil.formatePrice(money));
                         return;
                     } else if (list.size() > i + 2) {
                         if (inputWeight >= list.get(i + 2).getStKg() && inputWeight <= list.get(i + 2).getEnKg()) {
                             money = inputWeight * list.get(i + 2).getPrice();
                             BigDecimal b = new BigDecimal(money);
                             //表明四舍五入，保留两位小数
-                            money = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                            tvMoney.setText(money + "");
+                            money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                            tvMoney.setText(StringUtil.formatePrice(money));
                             return;
                         } else if (list.size() > i + 3) {
                             if (inputWeight >= list.get(i + 3).getStKg() && inputWeight <= list.get(i + 3).getEnKg()) {
                                 money = inputWeight * list.get(i + 3).getPrice();
                                 BigDecimal b = new BigDecimal(money);
                                 //表明四舍五入，保留两位小数
-                                money = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                                tvMoney.setText(money + "");
+                                money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                tvMoney.setText(StringUtil.formatePrice(money));
                                 return;
                             } else if (list.size() > i + 4) {
                                 if (inputWeight >= list.get(i + 4).getStKg() && inputWeight <= list.get(i + 4)
@@ -344,15 +381,15 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                                     money = inputWeight * list.get(i + 4).getPrice();
                                     BigDecimal b = new BigDecimal(money);
                                     //表明四舍五入，保留两位小数
-                                    money = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                                    tvMoney.setText(money + "");
+                                    money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                    tvMoney.setText(StringUtil.formatePrice(money));
                                     return;
                                 } else {
                                     money = inputWeight * list.get(list.size() - 1).getPrice();
                                     BigDecimal b = new BigDecimal(money);
                                     //表明四舍五入，保留两位小数
-                                    money = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                                    tvMoney.setText(money + "");
+                                    money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                    tvMoney.setText(StringUtil.formatePrice(money));
                                     return;
                                 }
                             }
@@ -361,16 +398,16 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         money = inputWeight * list.get(list.size() - 1).getPrice();
                         BigDecimal b = new BigDecimal(money);
                         //表明四舍五入，保留两位小数
-                        money = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                        tvMoney.setText(money + "");
+                        money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                        tvMoney.setText(StringUtil.formatePrice(money));
                         return;
                     }
                 } else {
                     money = inputWeight * list.get(list.size() - 1).getPrice();
                     BigDecimal b = new BigDecimal(money);
                     //表明四舍五入，保留两位小数
-                    money = b.setScale(2, BigDecimal.ROUND_HALF_UP).floatValue();
-                    tvMoney.setText(money + "");
+                    money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                    tvMoney.setText(StringUtil.formatePrice(money));
                     return;
                 }
 

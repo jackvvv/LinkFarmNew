@@ -28,11 +28,11 @@ public class OrderDetailBean extends JsonBean {
 
     private String createTime;
     private int comStatus;
-    private int truePrice;
+    private double truePrice;
     private String orderNum;
     private int orderStatus;
     private int deType;
-    private int price;
+    private double price;
     private String address;
     private String merName;
     private String name;
@@ -65,11 +65,11 @@ public class OrderDetailBean extends JsonBean {
         this.comStatus = comStatus;
     }
 
-    public int getTruePrice() {
+    public double getTruePrice() {
         return truePrice;
     }
 
-    public void setTruePrice(int truePrice) {
+    public void setTruePrice(double truePrice) {
         this.truePrice = truePrice;
     }
 
@@ -97,11 +97,11 @@ public class OrderDetailBean extends JsonBean {
         this.deType = deType;
     }
 
-    public int getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -163,7 +163,7 @@ public class OrderDetailBean extends JsonBean {
 
     public static class GoodItemsBean {
         private String id;
-        private int price;
+        private double price;
         private int buyNum;
         private String norm;
         private String goodName;
@@ -185,11 +185,11 @@ public class OrderDetailBean extends JsonBean {
             this.id = id;
         }
 
-        public int getPrice() {
+        public double getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(double price) {
             this.price = price;
         }
 

@@ -72,6 +72,8 @@ public class OrderDetailActivity extends BaseActivity {
     TextView tvCouponMoney;
     @Bind(R.id.tv_self_tip)
     TextView tvSelfTip;
+    @Bind(R.id.tv_shopName)
+    TextView tvShopName;
 
     private OrderGoodsAdapter adapter;
     private String orderId, merImage, coupleId = "-1";
@@ -129,16 +131,17 @@ public class OrderDetailActivity extends BaseActivity {
     private void setOrderData(OrderDetailBean bean) {
         tvOrderNum.setText("订单号：" + bean.getOrderNum());
         tvPerson.setText(bean.getName());
+        tvShopName.setText(bean.getMerName());
         tvTel.setText(bean.getTelephone());
         tvAddress.setText(bean.getAddress());
         orderTime.setText("下单时间：" + bean.getCreateTime());
-        tvOldcost.setText("¥ " + bean.getPrice());
-        tvRealmoney.setText("¥ " + bean.getTruePrice());
+        tvOldcost.setText("¥ " + StringUtil.formatePrice(bean.getPrice()));
+        tvRealmoney.setText("¥ " + StringUtil.formatePrice(bean.getTruePrice()));
         price = bean.getPrice();
         if (1 == bean.getPayType()) {
-            tvPayType.setText("支付宝支付");
+            tvPayType.setText("在线支付");
         } else {
-            tvPayType.setText("微信支付");
+            tvPayType.setText("在线支付");
         }
         if (1 == bean.getDeType()) {
             tvSendType.setText("配送");

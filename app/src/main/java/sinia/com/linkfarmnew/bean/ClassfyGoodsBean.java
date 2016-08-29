@@ -28,18 +28,18 @@ public class ClassfyGoodsBean extends JsonBean {
     }
 
     public static class ItemsBean {
-        private int minKilograme;
+        private double minKilograme;
         private int comNum;
         private int buyNum;
         private String goodId;
         private String goodName;
         private String goodImage;
 
-        public int getMinKilograme() {
+        public double getMinKilograme() {
             return minKilograme;
         }
 
-        public void setMinKilograme(int minKilograme) {
+        public void setMinKilograme(double minKilograme) {
             this.minKilograme = minKilograme;
         }
 

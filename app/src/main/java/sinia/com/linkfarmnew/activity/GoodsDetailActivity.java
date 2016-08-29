@@ -1,6 +1,7 @@
 package sinia.com.linkfarmnew.activity;
 
 import android.app.Dialog;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -15,11 +17,17 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.sina.weibo.sdk.WeiboAppManager;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +80,14 @@ public class GoodsDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods_detail);
         ButterKnife.bind(this);
+        //网页中的视频，上屏幕的时候，可能出现闪烁的情况
+        getWindow().setFormat(PixelFormat.TRANSLUCENT);
         getGoodsDetail();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     private void getGoodsDetail() {
@@ -148,9 +163,9 @@ public class GoodsDetailActivity extends BaseActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 3) {
-                    videoFragment.initData();
-                }
+//                if (position == 3) {
+//                    videoFragment.initData();
+//                }
             }
 
             @Override
@@ -190,10 +205,14 @@ public class GoodsDetailActivity extends BaseActivity {
         ImageView img_weibo = (ImageView) dialog.findViewById(R.id.img_weibo);
         ImageView img_qq = (ImageView) dialog.findViewById(R.id.img_qq);
         TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
+        final UMImage image = new UMImage(this, "http://7xnmrr.com1.z0.glb.clouddn.com/111jianhse.jpg");
         img_qq.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
+//                new ShareAction(GoodsDetailActivity.this).setPlatform(SHARE_MEDIA.QQ).setCallback(umShareListener)
+//                        .withTitle("点击网络分享").withText("分享测试").withTargetUrl("https://www.baidu.com").withMedia(image)
+//                        .share();
                 dialog.dismiss();
             }
         });
@@ -201,6 +220,13 @@ public class GoodsDetailActivity extends BaseActivity {
 
             @Override
             public void onClick(View arg0) {
+//                if (WeiboAppManager.getInstance(GoodsDetailActivity.this).getWeiboInfo() == null) {
+//                    showToast("请安装新浪微博客户端");
+//                }
+//                new ShareAction(GoodsDetailActivity.this).setPlatform(SHARE_MEDIA.SINA).setCallback(umShareListener)
+//                        .withTitle
+//                                ("点击网络分享").withText("分享测试").withTargetUrl("https://www.baidu.com").withMedia(image)
+//                        .share();
                 dialog.dismiss();
             }
         });
@@ -208,6 +234,9 @@ public class GoodsDetailActivity extends BaseActivity {
 
             @Override
             public void onClick(View arg0) {
+//                new ShareAction(GoodsDetailActivity.this).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener)
+//                        .withTitle("点击网络分享").withText("分享测试").withTargetUrl("https://www.baidu.com").withMedia(image)
+//                        .share();
                 dialog.dismiss();
             }
         });
@@ -220,4 +249,22 @@ public class GoodsDetailActivity extends BaseActivity {
         });
         return dialog;
     }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            showToast("分享成功啦");
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            showToast("分享失败啦");
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            showToast("分享取消了");
+        }
+    };
+
 }

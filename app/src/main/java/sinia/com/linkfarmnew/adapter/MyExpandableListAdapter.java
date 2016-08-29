@@ -25,6 +25,7 @@ import sinia.com.linkfarmnew.myinterface.CheckInterface;
 import sinia.com.linkfarmnew.myinterface.IsGroupChecked;
 import sinia.com.linkfarmnew.myinterface.ModifyCountInterface;
 import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -105,13 +106,6 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         ivCheckGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (((CheckBox) v).isChecked()) {
-//                    groups.get(i).setChecked(true);
-//                    isGroupChecked.isChekgroup(i, true);
-//                } else {
-//                    isGroupChecked.isChekgroup(i, false);
-//                }
-//                handler.sendEmptyMessage(100);
                 groupBean.setChecked(((CheckBox) v).isChecked());
                 checkInterface.checkGroup(i, ((CheckBox) v).isChecked());// 暴露组选接口
             }
@@ -137,7 +131,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
         BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img_goods, goodsBean.getGoodImage());
         tv_goodsname.setText(goodsBean.getGoodName());
-        tv_price.setText("¥ " + goodsBean.getPrice());
+        tv_price.setText("¥ " + StringUtil.formatePrice(goodsBean.getPrice()));
         tv_num.setText(goodsBean.getNum() + "");
         tv_weight.setText(goodsBean.getNormName() + " " + goodsBean.getGoodNum() + "kg");
         if (goodsBean.isChecked()) {

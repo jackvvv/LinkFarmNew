@@ -76,7 +76,7 @@ public class ShopDetailBean extends JsonBean {
         private String goodName;
         private String goodImage;
         private int buyNum;
-        private int minKilograme;
+        private String minKilograme;
 
         public String getGoodId() {
             return goodId;
@@ -110,11 +110,11 @@ public class ShopDetailBean extends JsonBean {
             this.buyNum = buyNum;
         }
 
-        public int getMinKilograme() {
+        public String getMinKilograme() {
             return minKilograme;
         }
 
-        public void setMinKilograme(int minKilograme) {
+        public void setMinKilograme(String minKilograme) {
             this.minKilograme = minKilograme;
         }
     }

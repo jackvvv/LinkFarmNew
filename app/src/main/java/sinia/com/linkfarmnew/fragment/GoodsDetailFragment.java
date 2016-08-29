@@ -26,6 +26,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.FillOrderActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
@@ -66,6 +67,8 @@ public class GoodsDetailFragment extends BaseFragment {
     private AsyncHttpClient client = new AsyncHttpClient();
     private String goodsId, isCollect;//1，收藏，2未收藏
     private List<String> selectGoodsImage = new ArrayList<>();
+    private String lastNum;//剩余量s
+    private MaterialDialog materialDialog;
 
     @Nullable
     @Override
@@ -74,6 +77,7 @@ public class GoodsDetailFragment extends BaseFragment {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_goods_detail, null);
         ButterKnife.bind(this, rootView);
         goodsBean = (GoodsDetailBean) getArguments().get("goodsBean");
+        lastNum = goodsBean.getLeastKiloGram();
         initData();
         return rootView;
     }
@@ -145,7 +149,21 @@ public class GoodsDetailFragment extends BaseFragment {
             case R.id.tv_ok:
                 if (!StringUtil.isEmpty(MyApplication.getInstance().getStringValue("buy_weight")) && !StringUtil.isEmpty
                         (MyApplication.getInstance().getStringValue("buy_price"))) {
-                    toPay();
+                    if (!StringUtil.isEmpty(lastNum) && Float.parseFloat(MyApplication.getInstance().getStringValue
+                            ("buy_weight")
+                    ) - Float
+                            .parseFloat(lastNum) > 0) {
+                        materialDialog = new MaterialDialog(getActivity());
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + "kg,如需大量购买，请联系商家")
+                                .setPositiveButton("知道了", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        materialDialog.dismiss();
+                                    }
+                                }).show();
+                    } else {
+                        toPay();
+                    }
                 } else {
                     showToast("请选择产品规格");
                 }
@@ -217,5 +235,6 @@ public class GoodsDetailFragment extends BaseFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+        dismiss();
     }
 }

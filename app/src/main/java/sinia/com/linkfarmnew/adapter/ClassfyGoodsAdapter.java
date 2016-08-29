@@ -19,6 +19,7 @@ import sinia.com.linkfarmnew.activity.LoginActivity;
 import sinia.com.linkfarmnew.bean.ClassfyGoodsBean;
 import sinia.com.linkfarmnew.bean.SearchBean;
 import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -63,7 +64,7 @@ public class ClassfyGoodsAdapter extends BaseAdapter {
         Glide.with(context).load(list.get(i).getGoodImage()).placeholder(R.drawable.ic_launcher).into(img);
         tv_title.setText(list.get(i).getGoodName());
         tv_buynum.setText(list.get(i).getComNum() + "人评论");
-        tv_price.setText(list.get(i).getMinKilograme() + "元/kg");
+        tv_price.setText(StringUtil.formatePrice(list.get(i).getMinKilograme()) + "元/kg");
 
         final String goodId = list.get(i).getGoodId();
         view.setOnClickListener(new View.OnClickListener() {

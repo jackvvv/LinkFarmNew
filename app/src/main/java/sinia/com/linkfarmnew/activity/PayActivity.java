@@ -1,5 +1,6 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -168,6 +169,10 @@ public class PayActivity extends BaseActivity {
                             //1 从填写订单页面跳转，支付完成销毁填写订单页面
                             ActivityManager.getInstance().finishActivity(FillOrderActivity.class);
                         }
+                        Intent intent = new Intent();
+                        intent.putExtra("title", "我的订单");
+                        intent.putExtra("type", "4");
+                        startActivityForIntent(MyOrderActivity.class, intent);
                         ActivityManager.getInstance().finishCurrentActivity();
                     } else {
                         showToast("请求失败");

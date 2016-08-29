@@ -81,7 +81,7 @@ public class GoodsCommentFragment extends BaseFragment {
                     GoodsCommentBean bean = gson.fromJson(s, GoodsCommentBean.class);
                     int state = bean.getState();
                     int isSuccessful = bean.getIsSuccessful();
-                    if (0 == state && 0 == isSuccessful && null != bean) {
+                    if (0 == state && 0 == isSuccessful && null != bean && null != tvAll) {
                         tvAll.setText("全部评价\n" + bean.getAllComNum());
                         tvGood.setText("好评\n" + bean.getGoodComNum());
                         tvZhong.setText("中评\n" + bean.getMidComNum());

@@ -98,8 +98,8 @@ public class FillOrderActivity extends BaseActivity {
         adapter = new GoodImageAdapter(this, selectGoodsImage);
         gvGoods.setAdapter(adapter);
         realMoney = Double.parseDouble(price);
-        tvOldcost.setText("¥ " + price);
-        tvRealmoney.setText("¥ " + realMoney);
+        tvOldcost.setText("¥ " + StringUtil.formatePrice(Double.parseDouble(price)));
+        tvRealmoney.setText("¥ " + StringUtil.formatePrice(realMoney));
     }
 
     @OnClick({R.id.rl_address, R.id.rl_yhq, R.id.btn_submit})
@@ -171,7 +171,7 @@ public class FillOrderActivity extends BaseActivity {
                         MyApplication.getInstance().setStringValue("buy_normId", null);
                         Intent intent = new Intent();
                         intent.putExtra("orderId", orderId);
-                        intent.putExtra("payMoney", payMoney + "");
+                        intent.putExtra("payMoney", realMoney + "");
                         intent.putExtra("coupleId", coupleId);
                         intent.putExtra("norm", "1");
                         startActivityForIntent(PayActivity.class, intent);
@@ -201,10 +201,12 @@ public class FillOrderActivity extends BaseActivity {
                     coupleId = "-1";
                 }
                 String coupons_money = data.getStringExtra("coupons_money");
-                tvCouponMoney.setText("¥ " + coupons_money);
+                if (!StringUtil.isEmpty(coupons_money)) {
+                    tvCouponMoney.setText("¥ " + StringUtil.formatePrice(Double.parseDouble(coupons_money)));
+                }
                 realMoney = MoneyCalculate.substract(Double.parseDouble(price), Double.parseDouble
                         (coupons_money));
-                tvRealmoney.setText("¥ " + realMoney);
+                tvRealmoney.setText("¥ " + StringUtil.formatePrice(realMoney));
             }
         }
     }

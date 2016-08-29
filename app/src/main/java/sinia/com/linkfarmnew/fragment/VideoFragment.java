@@ -1,10 +1,13 @@
 package sinia.com.linkfarmnew.fragment;
 
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -21,7 +24,7 @@ import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 public class VideoFragment extends BaseFragment {
 
     //    @Bind(R.id.webView)
-    WebView webView;
+    static com.tencent.smtt.sdk.WebView webView;
     private View rootView;
     private GoodsDetailBean goodsBean;
 
@@ -31,9 +34,12 @@ public class VideoFragment extends BaseFragment {
     Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_video, null);
         ButterKnife.bind(this, rootView);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         goodsBean = (GoodsDetailBean) getArguments().get("goodsBean");
-        webView = (WebView) rootView.findViewById(R.id.webView);
-//        initData();
+        webView = (com.tencent.smtt.sdk.WebView) rootView.findViewById(R.id.webView);
+        initData();
         return rootView;
     }
 
@@ -43,12 +49,13 @@ public class VideoFragment extends BaseFragment {
     }
 
     public void initData() {
-        WebSettings wSet = webView.getSettings();
-        wSet.setJavaScriptEnabled(true);
         webView.loadUrl(goodsBean.getMoiveLink());
-        webView.setWebViewClient(new WebViewClient() {
-            public boolean shouldOverrideUrlLoading(WebView webView, String url) { //
-                // 重写此方法表明点击网页里面的链接还是在当前的webview里跳转，不跳到浏览器那边
+        com.tencent.smtt.sdk.WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webView.setWebViewClient(new com.tencent.smtt.sdk.WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(com.tencent.smtt.sdk.WebView webView, String s) {
+                webView.loadUrl(s);
                 return true;
             }
         });
@@ -68,4 +75,5 @@ public class VideoFragment extends BaseFragment {
             webView = null;
         }
     }
+
 }

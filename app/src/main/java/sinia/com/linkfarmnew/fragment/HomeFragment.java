@@ -289,6 +289,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         title.setGravity(Gravity.CENTER_VERTICAL);
         title.setEllipsize(TextUtils.TruncateAt.valueOf("END"));
         title.setText(task.getContent());
+        title.setTextSize(16);
         item.addView(title);
         viewFlipper.addView(item);
     }
@@ -301,12 +302,12 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         switch (view.getId()) {
             case R.id.tv_locate:
                 intent = new Intent(getActivity(), LocationActivity.class);
-                intent.putExtra("city", city);
+                intent.putExtra("city", MyApplication.getInstance().getStringValue("city"));
                 startActivityForResult(intent, 100);
                 break;
             case R.id.rl_search:
                 intent = new Intent(getActivity(), SearchActivity.class);
-                intent.putExtra("city", city);
+                intent.putExtra("city", MyApplication.getInstance().getStringValue("city"));
                 startActivity(intent);
                 break;
             case R.id.tv_scan:
@@ -321,7 +322,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
             case R.id.tv_msg:
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
                     intent = new Intent(getActivity(), MessageActivity.class);
-                    intent.putExtra("city", MyApplication.getInstance().getLoginBean().getCity());
+                    intent.putExtra("city", MyApplication.getInstance().getStringValue("city"));
                     startActivity(intent);
                 } else {
                     intent = new Intent(getActivity(), LoginActivity.class);
@@ -373,16 +374,17 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
             city = aMapLocation.getCity().split("市")[0];
             showToast(aMapLocation.getCity().split("市")[0]);
             if (!StringUtil.isEmpty(city)) {
-                tvLocate.setText(aMapLocation.getCity().split("市")[0]);
+//                tvLocate.setText(aMapLocation.getCity().split("市")[0]);
+                tvLocate.setText("定位");
             } else {
-                tvLocate.setText("南京");
+                tvLocate.setText("定位");
                 city = "南京";
             }
-            MyApplication.getInstance().setStringValue("city", city);
         } else {
-            tvLocate.setText("南京");
+            tvLocate.setText("定位");
             city = "南京";
         }
+        MyApplication.getInstance().setStringValue("city", city);
     }
 
     @Override
@@ -408,7 +410,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
             if (requestCode == 100) {
                 selectCity = data.getStringExtra("selectCity");
                 city = selectCity;
-                tvLocate.setText(selectCity);
+                tvLocate.setText("定位");
                 MyApplication.getInstance().setStringValue("city", selectCity);
             }
         }

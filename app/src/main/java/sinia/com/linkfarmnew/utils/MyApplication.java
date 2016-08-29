@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.socialize.PlatformConfig;
 
 import sinia.com.linkfarmnew.bean.LoginBean;
 
@@ -25,7 +26,15 @@ public class MyApplication extends Application {
         context = this.getApplicationContext();
         instance = this;
         CrashReport.initCrashReport(getApplicationContext(), "900038739", true);
+        initShareKey();
     }
+
+    private void initShareKey() {
+        PlatformConfig.setWeixin("wx72646ac912a1a65a", "df5d7fc9d7f6664038b26ff95b3423b0");
+        PlatformConfig.setQQZone("1105256171", "6xAwTDWTtz08qQFs");
+        PlatformConfig.setSinaWeibo("1382880293", "d165e356f5a75c6c09f46bf8999cebe8");
+    }
+
 
     public static synchronized MyApplication getInstance() {
         return instance;
@@ -81,6 +90,12 @@ public class MyApplication extends Application {
         if (login != null) {
             SaveUtils.putShareObject(context, "LOGIN", "loginbean", login);
         }
+    }
+
+    // 回收
+    public void onLowMemory() {
+        super.onLowMemory();
+        System.gc();
     }
 
 }

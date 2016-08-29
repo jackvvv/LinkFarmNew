@@ -21,6 +21,13 @@ android {
         }
     }
 
+    //导入友盟分享的arr文件配置
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
+
     sourceSets {
         main {
             jni.srcDirs = []
@@ -43,4 +50,6 @@ dependencies {
     compile 'cn.bmob.android:http-legacy:1.0'
     compile 'cn.bmob.android:bmob-sdk:3.4.7-aar'
     compile 'com.ldoublem.thumbUplib:ThumbUplib:0.2'
+
+    compile (name:'myshare-debug',ext:'aar')
 }
