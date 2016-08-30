@@ -372,7 +372,6 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (null != aMapLocation.getCity()) {
             city = aMapLocation.getCity().split("市")[0];
-            showToast(aMapLocation.getCity().split("市")[0]);
             if (!StringUtil.isEmpty(city)) {
 //                tvLocate.setText(aMapLocation.getCity().split("市")[0]);
                 tvLocate.setText("定位");

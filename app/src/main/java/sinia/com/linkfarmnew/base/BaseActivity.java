@@ -17,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.message.PushAgent;
+
 import butterknife.ButterKnife;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.utils.ActivityManager;
@@ -65,6 +67,8 @@ public class BaseActivity extends AppCompatActivity {
         if (!AppInfoUtil.isNetworkConnected(getApplicationContext())) {
             showToast("网络未连接");
         }
+        //统计应用启动数据.如果不调用此方法，不仅会导致按照"几天不活跃"条件来推送失效，还将导致广播发送不成功以及设备描述红色等问题发生。
+        PushAgent.getInstance(this).onAppStart();
     }
 
     public void showToast(String text) {

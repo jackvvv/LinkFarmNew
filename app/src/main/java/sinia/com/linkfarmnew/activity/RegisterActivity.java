@@ -234,7 +234,7 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
                     if (0 == state && 0 == isSuccessful) {
                         showToast("验证码已发送");
                         code = bean.getValidateCode();
-                        showToast(code);
+//                        showToast(code);
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("该手机号已经被注册");
                     } else {
@@ -265,7 +265,7 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
                 .builder()
                 .setCancelable(true)
                 .setCanceledOnTouchOutside(true)
-                .addSheetItem("拍照选择", ActionSheetDialog.SheetItemColor.THEME_COLOR,
+                .addSheetItem("拍照选择", ActionSheetDialog.SheetItemColor.Blue,
                         new ActionSheetDialog.OnSheetItemClickListener() {
                             @Override
                             public void onClick(int which) {
@@ -275,7 +275,7 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
                                 getAvataFromCamera();
                             }
                         })
-                .addSheetItem("从手机相册选择", ActionSheetDialog.SheetItemColor.THEME_COLOR,
+                .addSheetItem("从手机相册选择", ActionSheetDialog.SheetItemColor.Blue,
                         new ActionSheetDialog.OnSheetItemClickListener() {
                             @Override
                             public void onClick(int which) {
@@ -403,6 +403,10 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (null != aMapLocation.getCity()) {
             city = aMapLocation.getCity().split("市")[0];
+            if (!StringUtil.isEmpty(city)) {
+            } else {
+                city = "南京";
+            }
         } else {
             city = "南京";
         }

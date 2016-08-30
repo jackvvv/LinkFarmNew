@@ -9,6 +9,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.umeng.message.PushAgent;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -63,6 +65,11 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void initData() {
+        if (MyApplication.mPushAgent.isEnabled()) {
+            imgSwitch.setImageResource(R.drawable.switch_open);
+        } else {
+            imgSwitch.setImageResource(R.drawable.switch_close);
+        }
         tvVersion.setText("v" + AppInfoUtil.getVersionCode(this) + ".0");
     }
 
@@ -82,6 +89,13 @@ public class SettingsActivity extends BaseActivity {
                 logout();
                 break;
             case R.id.img_switch:
+                if (MyApplication.mPushAgent.isEnabled()) {
+                    MyApplication.mPushAgent.disable();
+                    imgSwitch.setImageResource(R.drawable.switch_close);
+                } else {
+                    MyApplication.mPushAgent.enable();
+                    imgSwitch.setImageResource(R.drawable.switch_open);
+                }
                 break;
         }
     }

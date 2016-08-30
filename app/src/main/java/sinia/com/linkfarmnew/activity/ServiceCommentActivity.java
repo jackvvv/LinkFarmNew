@@ -132,7 +132,7 @@ public class ServiceCommentActivity extends BaseActivity {
                                 .builder()
                                 .setCancelable(true)
                                 .setCanceledOnTouchOutside(true)
-                                .addSheetItem("拍照选择", ActionSheetDialog.SheetItemColor.THEME_COLOR,
+                                .addSheetItem("拍照选择", ActionSheetDialog.SheetItemColor.Blue,
                                         new ActionSheetDialog.OnSheetItemClickListener() {
                                             @Override
                                             public void onClick(int which) {
@@ -142,7 +142,7 @@ public class ServiceCommentActivity extends BaseActivity {
                                                 getAvataFromCamera();
                                             }
                                         })
-                                .addSheetItem("从手机相册选择", ActionSheetDialog.SheetItemColor.THEME_COLOR,
+                                .addSheetItem("从手机相册选择", ActionSheetDialog.SheetItemColor.Blue,
                                         new ActionSheetDialog.OnSheetItemClickListener() {
                                             @Override
                                             public void onClick(int which) {

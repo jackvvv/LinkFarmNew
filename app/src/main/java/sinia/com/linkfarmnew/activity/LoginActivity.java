@@ -1,5 +1,6 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +15,7 @@ import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
+import com.umeng.message.ALIAS_TYPE;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -99,15 +101,16 @@ public class LoginActivity extends BaseActivity {
                     int state = bean.getState();
                     int isSuccessful = bean.getIsSuccessful();
                     if (0 == state && 0 == isSuccessful) {
-                        showToast("登录成功");
-                        MyApplication.getInstance().setBooleanValue(
-                                "is_login", true);
-                        MyApplication.getInstance().setStringValue(
-                                "userId", bean.getId());
-                        MyApplication.getInstance().setLoginBean(bean);
                         if ("1".equals(bean.getCheakStatus())) {
+                            showToast("登录成功");
+                            MyApplication.getInstance().setBooleanValue(
+                                    "is_login", true);
+                            MyApplication.getInstance().setStringValue(
+                                    "userId", bean.getId());
+                            MyApplication.getInstance().setLoginBean(bean);
                             ActivityManager.getInstance()
                                     .finishCurrentActivity();
+                            setAlias(bean.getId(), "ALIAS_TYPE.SINA_WEIBO");
                         } else if ("2".equals(bean.getCheakStatus())) {
                             startActivityForNoIntent(CheckingActivity.class);
                         } else if ("3".equals(bean.getCheakStatus())) {
@@ -121,6 +124,34 @@ public class LoginActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    private void setAlias(String alias, String aliasType) {
+        new AddAliasTask(alias, aliasType).execute();
+    }
+
+    class AddAliasTask extends AsyncTask<Void, Void, Boolean> {
+
+        String alias;
+        String aliasType;
+
+        public AddAliasTask(String aliasString, String aliasTypeString) {
+            this.alias = aliasString;
+            this.aliasType = aliasTypeString;
+        }
+
+        protected Boolean doInBackground(Void... params) {
+            try {
+                return MyApplication.mPushAgent.addAlias(alias, ALIAS_TYPE.SINA_WEIBO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+        }
     }
 
     @OnClick({R.id.tv_login, R.id.tv_register, R.id.tv_find_pwd, R.id.tv_qq, R.id.tv_wechat, R.id
