@@ -366,13 +366,24 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     }
 
     private String connectShopIds() {
-        List<String> toConnectShopIdList = new ArrayList<>();//待拼接的商户id
-        for (int i = 0; i < adapter.groups.size(); i++) {
-            CartBean.MerchantitemsBean groupBean = adapter.groups.get(i);
-            if (groupBean.isChecked()) {
-                toConnectShopIdList.add(groupBean.getMerchantId());
+        List<String> tempList = new ArrayList<>();//待拼接的商户id
+        List<String> toConnectShopIdList = new ArrayList<>();
+        for (int i = 0; i < adapter.childs.size(); i++) {
+            String key = adapter.groups.get(i).getMerName();
+            List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
+            for (CartBean.MerchantitemsBean.GoodsItemsBean goodsBean : data) {
+                if (goodsBean.isChecked()) {
+                    tempList.add(adapter.groups.get(i).getMerchantId());
+                }
+            }
+            //去重
+            for (String s : tempList) {
+                if (!toConnectShopIdList.contains(s)) {
+                    toConnectShopIdList.add(s);
+                }
             }
         }
+
         StringBuffer sb = new StringBuffer();
         for (int s = 0; s < toConnectShopIdList.size(); s++) {
             sb.append(toConnectShopIdList.get(s)).append(";");

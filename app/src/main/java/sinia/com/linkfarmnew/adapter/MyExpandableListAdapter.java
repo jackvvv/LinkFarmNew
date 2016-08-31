@@ -37,8 +37,6 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
     public List<CartBean.MerchantitemsBean> groups = new ArrayList<CartBean.MerchantitemsBean>();
     public HashMap<String, List<CartBean.MerchantitemsBean.GoodsItemsBean>> childs = new HashMap<String,
             List<CartBean.MerchantitemsBean.GoodsItemsBean>>();
-    private Handler handler;
-    //    private IsGroupChecked isGroupChecked;
     private ModifyCountInterface modifyCountInterface;
     private CheckInterface checkInterface;
 

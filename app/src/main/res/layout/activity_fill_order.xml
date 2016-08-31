@@ -75,7 +75,7 @@
     <RelativeLayout
         android:id="@+id/rl_goodslist"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:background="#ffffff"
         android:padding="10dp">
 
@@ -85,6 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:verticalSpacing="3dp"
             android:layout_marginRight="4dp"
             android:layout_toLeftOf="@+id/tv_good_count"
             android:listSelector="#00000000"
