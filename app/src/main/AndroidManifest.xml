@@ -82,6 +82,8 @@
         <activity android:name=".activity.ChangeNameActivity" />
         <activity android:name=".activity.WebViewActivity" />
         <activity android:name=".activity.PreViewImageActivity" />
+        <activity android:name=".activity.IntegralMallActivity" />
+        <activity android:name=".activity.ExchangeRecordActivity" />
         <activity
             android:name="com.sinia.zxing.CaptureActivity"
             android:clearTaskOnLaunch="true"

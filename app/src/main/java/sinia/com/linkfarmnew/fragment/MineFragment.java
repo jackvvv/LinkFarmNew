@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.AddressManagerActivity;
+import sinia.com.linkfarmnew.activity.IntegralMallActivity;
 import sinia.com.linkfarmnew.activity.LoginActivity;
 import sinia.com.linkfarmnew.activity.MyCollectActivity;
 import sinia.com.linkfarmnew.activity.MyCouponsActivity;
@@ -110,6 +111,7 @@ public class MineFragment extends BaseFragment {
     private View rootView;
     private MaterialDialog materialDialog;
     private AsyncHttpClient client = new AsyncHttpClient();
+    private String userName, headImage;
 
     @Nullable
     @Override
@@ -157,6 +159,8 @@ public class MineFragment extends BaseFragment {
                         BitmapUtilsHelp.getImage(getActivity(), R.drawable
                                 .ic_launcher).display(ivHead, bean.getImageUrl());
                         tvUsername.setText(bean.getNickName());
+                        userName = bean.getNickName();
+                        headImage = bean.getImageUrl();
                         if (0 != bean.getWaitPayNum()) {
                             tvDaizhifucount.setVisibility(View.VISIBLE);
                             tvDaizhifucount.setText(bean.getWaitPayNum() + "");
@@ -229,6 +233,10 @@ public class MineFragment extends BaseFragment {
                 break;
             case R.id.img_mall:
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), IntegralMallActivity.class);
+                    intent.putExtra("userName",userName);
+                    intent.putExtra("headImage",headImage);
+                    startActivity(intent);
                 } else {
                     intent = new Intent(getActivity(), LoginActivity.class);
                     startActivity(intent);

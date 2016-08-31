@@ -41,7 +41,7 @@ public class MyApplication extends Application {
         super.onCreate();
         context = this.getApplicationContext();
         instance = this;
-        CrashReport.initCrashReport(getApplicationContext(), "900038739", true);
+//        CrashReport.initCrashReport(getApplicationContext(), "900038739", true);
         initShareKey();
         initUMPush();
     }
