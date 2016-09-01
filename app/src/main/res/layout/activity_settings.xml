@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:toggle="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grayBgColor"
@@ -21,13 +22,17 @@
             android:textColor="@color/textblackColor"
             android:textSize="16sp" />
 
-        <ImageView
-            android:id="@+id/img_switch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <com.zcw.togglebutton.ToggleButton
+            android:id="@+id/toggleBtn"
+            android:layout_width="52dp"
+            android:layout_height="26dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/switch_open" />
+            toggle:tbBorderWidth="1dp"
+            toggle:tbOffBorderColor="#ccc"
+            toggle:tbOffColor="#E6E7E6"
+            toggle:tbOnColor="@color/themeColor"
+            toggle:tbSpotColor="#fff"></com.zcw.togglebutton.ToggleButton>
     </RelativeLayout>
 
     <View
@@ -170,7 +175,7 @@
             android:layout_centerVertical="true"
             android:text="手势密码"
             android:textColor="@color/textblackColor"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"

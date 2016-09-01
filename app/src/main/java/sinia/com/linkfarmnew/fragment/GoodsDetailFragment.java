@@ -1,8 +1,12 @@
 package sinia.com.linkfarmnew.fragment;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -60,6 +64,10 @@ public class GoodsDetailFragment extends BaseFragment {
     ImageView imgCart;
     @Bind(R.id.img_reddot)
     ImageView imgReddot;
+    @Bind(R.id.ll_call)
+    LinearLayout llCall;
+    @Bind(R.id.ll_cart)
+    LinearLayout llCart;
     private View rootView;
     private GoodsFragment goodsFragment;
     private ImageFragment imgFragment;
@@ -67,7 +75,7 @@ public class GoodsDetailFragment extends BaseFragment {
     private AsyncHttpClient client = new AsyncHttpClient();
     private String goodsId, isCollect;//1，收藏，2未收藏
     private List<String> selectGoodsImage = new ArrayList<>();
-    private String lastNum;//剩余量s
+    private String merTelephone, lastNum;//剩余量s
     private MaterialDialog materialDialog;
 
     @Nullable
@@ -78,6 +86,7 @@ public class GoodsDetailFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
         goodsBean = (GoodsDetailBean) getArguments().get("goodsBean");
         lastNum = goodsBean.getLeastKiloGram();
+        merTelephone = goodsBean.getMerTelephone();
         initData();
         return rootView;
     }
@@ -236,5 +245,29 @@ public class GoodsDetailFragment extends BaseFragment {
         super.onDestroyView();
         ButterKnife.unbind(this);
         dismiss();
+    }
+
+    @OnClick(R.id.ll_call)
+    public void onClick() {
+        materialDialog = new MaterialDialog(getActivity());
+        materialDialog.setTitle("联系商家").setMessage(merTelephone)
+                .setPositiveButton("呼叫", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + merTelephone));
+                        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission
+                                .CALL_PHONE) !=
+                                PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        startActivity(intent);
+                        materialDialog.dismiss();
+                    }
+                }).setNegativeButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDialog.dismiss();
+            }
+        }).show();
     }
 }

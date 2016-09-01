@@ -18,10 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
+import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -43,7 +46,6 @@ import sinia.com.linkfarmnew.activity.LocationActivity;
 import sinia.com.linkfarmnew.activity.LoginActivity;
 import sinia.com.linkfarmnew.activity.MessageActivity;
 import sinia.com.linkfarmnew.activity.SearchActivity;
-import sinia.com.linkfarmnew.activity.ServiceCommentActivity;
 import sinia.com.linkfarmnew.activity.WebViewActivity;
 import sinia.com.linkfarmnew.adapter.HomeRecommendAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
@@ -52,8 +54,8 @@ import sinia.com.linkfarmnew.utils.AppInfoUtil;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.StringUtil;
-import sinia.com.linkfarmnew.utils.Utility;
 import sinia.com.linkfarmnew.view.MyGridView;
+import sinia.com.linkfarmnew.view.NetworkImageHolderView;
 import sinia.com.linkfarmnew.view.slideview.SlideShowView;
 
 /**
@@ -83,10 +85,6 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
     LinearLayout llup;
     @Bind(R.id.rl_search)
     RelativeLayout rl_search;
-    @Bind(R.id.mySlideShowView)
-    SlideShowView mySlideShowView;
-    @Bind(R.id.viewFlipper)
-    ViewFlipper viewFlipper;
     @Bind(R.id.v)
     View v;
     @Bind(R.id.img_left_big)
@@ -103,6 +101,10 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
     ImageView imgRightBig;
     @Bind(R.id.gridView)
     MyGridView gridView;
+    @Bind(R.id.convenientBanner)
+    ConvenientBanner convenientBanner;
+    @Bind(R.id.viewFlipper)
+    ViewFlipper viewFlipper;
     private View rootView;
     private List<String> picList = new ArrayList<String>();
     private HomeRecommendAdapter adapter;
@@ -149,8 +151,22 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
             }
         });
 
-        int h = AppInfoUtil.getScreenWidth(getActivity()) * 320 / 750;
-        mySlideShowView.getLayoutParams().height = h;
+        int h = AppInfoUtil.getScreenWidth(getActivity()) * 340 / 750;
+        convenientBanner.getLayoutParams().height = h;
+        String transforemerName = "ZoomOutTranformer";
+        ABaseTransformer transforemer = null;
+        try {
+            Class cls = Class.forName("com.ToxicBakery.viewpager.transforms." + transforemerName);
+            transforemer = (ABaseTransformer) cls.newInstance();
+            convenientBanner.setPageIndicator(new int[]{R.drawable.carousel_point, R.drawable.carousel_point_select})
+                    .getViewPager().setPageTransformer(true, transforemer);
+            //部分3D特效需要调整滑动速度
+            if (transforemerName.equals("StackTransformer")) {
+                convenientBanner.setScrollDuration(1200);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         RequestParams params = new RequestParams();
         try {
@@ -187,8 +203,12 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                 for (int i = 0; i < bean.getBanitems().size(); i++) {
                     picList.add(bean.getBanitems().get(i).getImage());
                 }
-                mySlideShowView.setImagePath(picList);
-                mySlideShowView.startPlay();
+                convenientBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
+                    @Override
+                    public NetworkImageHolderView createHolder() {
+                        return new NetworkImageHolderView();
+                    }
+                }, picList).startTurning(3000);
             }
             if (bean.getRecarrayitems() != null) {
                 recommendList.clear();

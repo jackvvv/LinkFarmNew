@@ -1,15 +1,12 @@
 package sinia.com.linkfarmnew.activity;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.umeng.message.PushAgent;
+import com.zcw.togglebutton.ToggleButton;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,8 +48,8 @@ public class SettingsActivity extends BaseActivity {
     RelativeLayout rlPwd;
     @Bind(R.id.rl_logout)
     RelativeLayout rlLogout;
-    @Bind(R.id.img_switch)
-    ImageView imgSwitch;
+    @Bind(R.id.toggleBtn)
+    ToggleButton toggleBtn;
     private MaterialDialog materialDialog;
 
     @Override
@@ -66,14 +63,26 @@ public class SettingsActivity extends BaseActivity {
 
     private void initData() {
         if (MyApplication.mPushAgent.isEnabled()) {
-            imgSwitch.setImageResource(R.drawable.switch_open);
+            toggleBtn.setToggleOn();
         } else {
-            imgSwitch.setImageResource(R.drawable.switch_close);
+            toggleBtn.setToggleOff();
         }
         tvVersion.setText("v" + AppInfoUtil.getVersionCode(this) + ".0");
+        toggleBtn.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
+            @Override
+            public void onToggle(boolean on) {
+                if (on) {
+                    MyApplication.mPushAgent.enable();
+                    toggleBtn.setToggleOn();
+                } else {
+                    MyApplication.mPushAgent.disable();
+                    toggleBtn.setToggleOff();
+                }
+            }
+        });
     }
 
-    @OnClick({R.id.rl_clear, R.id.rl_aboutus, R.id.rl_feedback, R.id.rl_logout, R.id.img_switch})
+    @OnClick({R.id.rl_clear, R.id.rl_aboutus, R.id.rl_feedback, R.id.rl_logout})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_clear:
@@ -88,15 +97,6 @@ public class SettingsActivity extends BaseActivity {
             case R.id.rl_logout:
                 logout();
                 break;
-            case R.id.img_switch:
-                if (MyApplication.mPushAgent.isEnabled()) {
-                    MyApplication.mPushAgent.disable();
-                    imgSwitch.setImageResource(R.drawable.switch_close);
-                } else {
-                    MyApplication.mPushAgent.enable();
-                    imgSwitch.setImageResource(R.drawable.switch_open);
-                }
-                break;
         }
     }
 
@@ -106,9 +106,9 @@ public class SettingsActivity extends BaseActivity {
                 .setPositiveButton("确定", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        DataCleanManager.clearAllCache(SettingsActivity.this);
                         showToast("清理了缓存" + DataCleanManager
                                 .getTotalCacheSize(SettingsActivity.this));
+                        DataCleanManager.clearAllCache(SettingsActivity.this);
                         materialDialog.dismiss();
                     }
                 }).setNegativeButton("取消", new View.OnClickListener() {

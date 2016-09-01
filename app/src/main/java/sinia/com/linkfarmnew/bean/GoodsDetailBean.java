@@ -16,6 +16,7 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
     private int allComNum;
     private String id;
     private String goodName;
+    private String merTelephone;
     private String goodImage;
     private String moiveLink;
     private String leastKiloGram;//剩余量
@@ -25,6 +26,14 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
     private List<SendAddressBean> peiitems;//配送地址集合
     private List<SelfGetBean> ziitems;//自提地址集合
     private List<SourceBean> orginitems;//溯源集合
+
+    public String getMerTelephone() {
+        return merTelephone;
+    }
+
+    public void setMerTelephone(String merTelephone) {
+        this.merTelephone = merTelephone;
+    }
 
     public String getLeastKiloGram() {
         return leastKiloGram;

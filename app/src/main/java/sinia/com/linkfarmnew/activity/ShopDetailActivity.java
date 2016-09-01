@@ -1,8 +1,11 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.Manifest;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +27,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.adapter.GoodsRecommendAdapter;
 import sinia.com.linkfarmnew.base.BaseActivity;
@@ -48,18 +52,19 @@ public class ShopDetailActivity extends BaseActivity {
     TextView tvCollectnum;
     //    @Bind(R.id.img_collect)
 //    ImageView imgCollect;
-    @Bind(R.id.ll_collect)
-    LinearLayout llCollect;
     @Bind(R.id.gridView)
     MyGridView gridView;
     @Bind(R.id.tpv)
     ThumbUpView tpv;
+    @Bind(R.id.ll_collect)
+    LinearLayout llCollect;
 
     private GoodsRecommendAdapter adapter;
-    private String shopId, isCollect;//1，收藏，2未收藏
+    private String shopId,merTelephone, isCollect;//1，收藏，2未收藏
     private AsyncHttpClient client = new AsyncHttpClient();
     private List<ShopDetailBean.ShopGoodsBean> list = new ArrayList<>();
     private ShopDetailBean shopBean;
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +72,8 @@ public class ShopDetailActivity extends BaseActivity {
         setContentView(R.layout.activity_shop_detail, "店铺");
         ButterKnife.bind(this);
         getDoingView().setVisibility(View.GONE);
+        getImg_pic().setVisibility(View.VISIBLE);
+        getImg_pic().setImageResource(R.drawable.icon_call);
         shopId = getIntent().getStringExtra("shopId");
         getShopDetail();
         initData();
@@ -109,6 +116,7 @@ public class ShopDetailActivity extends BaseActivity {
     }
 
     private void setShopData(ShopDetailBean bean) {
+        merTelephone = bean.getMerTelephone();
         Glide.with(this).load(bean.getImage()).placeholder(R.drawable.ic_launcher).into(img);
         tvShopname.setText(bean.getName());
         tvBuynum.setText("已有" + bean.getBuyNum() + "人购买");
@@ -191,5 +199,30 @@ public class ShopDetailActivity extends BaseActivity {
                 }
             }
         });
+    }
+
+    @Override
+    public void doing() {
+        super.doing();
+        materialDialog = new MaterialDialog(this);
+        materialDialog.setTitle("联系商家").setMessage(merTelephone)
+                .setPositiveButton("呼叫", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + merTelephone));
+                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission
+                                .CALL_PHONE) !=
+                                PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        startActivity(intent);
+                        materialDialog.dismiss();
+                    }
+                }).setNegativeButton("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                materialDialog.dismiss();
+            }
+        }).show();
     }
 }

@@ -119,25 +119,25 @@ public class MyApplication extends Application {
             public void handleMessage(Context context, UMessage uMessage) {
                 super.handleMessage(context, uMessage);
                 Log.i("tag", "UMessage====" + uMessage);
-                Toast.makeText(context, "handleMessage", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "handleMessage", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void openUrl(Context context, UMessage uMessage) {
                 super.openUrl(context, uMessage);
-                Toast.makeText(context, "openUrl", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "openUrl", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void openActivity(Context context, UMessage uMessage) {
                 super.openActivity(context, uMessage);
-                Toast.makeText(context, "openActivity", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "openActivity", Toast.LENGTH_LONG).show();
             }
 
             @Override
             public void launchApp(Context context, UMessage uMessage) {
                 super.launchApp(context, uMessage);
-                Toast.makeText(context, "launchApp", Toast.LENGTH_LONG).show();
+//                Toast.makeText(context, "launchApp", Toast.LENGTH_LONG).show();
             }
         };
         //使用自定义的NotificationHandler，来结合友盟统计处理消息通知

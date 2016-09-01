@@ -61,9 +61,11 @@ public class VouchersAdapter extends BaseAdapter {
         if (type == 1) {
             //已使用
             tv_type.setText("已使用");
+            ll_jifen.setBackgroundResource(R.drawable.bg_use);
         } else {
             //未使用
             tv_type.setText("未使用");
+            ll_jifen.setBackgroundResource(R.drawable.bg_notuse);
         }
 
         return view;

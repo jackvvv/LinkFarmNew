@@ -11,6 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.ToxicBakery.viewpager.transforms.ABaseTransformer;
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -34,6 +37,7 @@ import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.Utility;
 import sinia.com.linkfarmnew.view.CustScrollView;
+import sinia.com.linkfarmnew.view.NetworkImageHolderView;
 import sinia.com.linkfarmnew.view.slideview.SlideShowView;
 
 /**
@@ -41,8 +45,6 @@ import sinia.com.linkfarmnew.view.slideview.SlideShowView;
  */
 public class GoodsFragment extends BaseFragment {
 
-    @Bind(R.id.mySlideShowView)
-    SlideShowView mySlideShowView;
     @Bind(R.id.tv_goodsname)
     TextView tvGoodsname;
     @Bind(R.id.tv_buynum)
@@ -59,6 +61,8 @@ public class GoodsFragment extends BaseFragment {
     LinearLayout rlStandard;
     @Bind(R.id.tv_commentNum)
     TextView tvCommentNum;
+    @Bind(R.id.convenientBanner)
+    ConvenientBanner convenientBanner;
     private View rootView;
     private List<String> picList = new ArrayList<String>();
     private GoodsCommentAdapter adapter;
@@ -116,14 +120,32 @@ public class GoodsFragment extends BaseFragment {
         tvGoodsname.setText(goodsBean.getGoodName());
         tvBuynum.setText("已" + goodsBean.getBuyNum() + "人购买");
         int h = AppInfoUtil.getScreenWidth(getActivity()) * 560 / 750;
-        mySlideShowView.getLayoutParams().height = h;
+        convenientBanner.getLayoutParams().height = h;
+        String transforemerName = "ZoomOutTranformer";
+        ABaseTransformer transforemer = null;
+        try {
+            Class cls = Class.forName("com.ToxicBakery.viewpager.transforms." + transforemerName);
+            transforemer = (ABaseTransformer) cls.newInstance();
+            convenientBanner.setPageIndicator(new int[]{R.drawable.carousel_point, R.drawable.carousel_point_select})
+                    .getViewPager().setPageTransformer(true, transforemer);
+            //部分3D特效需要调整滑动速度
+            if (transforemerName.equals("StackTransformer")) {
+                convenientBanner.setScrollDuration(1200);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (null != goodsBean && null != goodsBean.getImageitems()) {
             picList = new ArrayList<>();
             for (int i = 0; i < goodsBean.getImageitems().size(); i++) {
                 picList.add(goodsBean.getImageitems().get(i).getImage());
             }
-            mySlideShowView.setImagePath(picList);
-            mySlideShowView.startPlay();
+            convenientBanner.setPages(new CBViewHolderCreator<NetworkImageHolderView>() {
+                @Override
+                public NetworkImageHolderView createHolder() {
+                    return new NetworkImageHolderView();
+                }
+            }, picList).startTurning(4000);
         }
         adapter = new GoodsCommentAdapter(getActivity(), list);
         lvComment.setAdapter(adapter);

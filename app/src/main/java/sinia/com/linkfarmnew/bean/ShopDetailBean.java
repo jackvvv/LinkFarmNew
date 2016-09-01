@@ -11,9 +11,18 @@ public class ShopDetailBean extends JsonBean {
     private int collSize;//收藏数量
     private int buyNum;//购买数量
     private String merId;
+    private String merTelephone;
     private String image;
     private String name;
     private List<ShopGoodsBean> items;
+
+    public String getMerTelephone() {
+        return merTelephone;
+    }
+
+    public void setMerTelephone(String merTelephone) {
+        this.merTelephone = merTelephone;
+    }
 
     public String getCollStauts() {
         return collStauts;
