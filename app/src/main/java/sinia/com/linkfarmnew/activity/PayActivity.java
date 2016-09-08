@@ -136,8 +136,8 @@ public class PayActivity extends BaseActivity {
                 if (choose.equals("2")) {
                     showToast("微信支付接口暂未开通");
                 } else if (choose.equals("1")) {
-//                    payWithAliPay();
-                    paySuccess("1");
+                    payWithAliPay();
+//                    paySuccess("1");
                 }
                 break;
         }

@@ -122,7 +122,6 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_home, null);
         ButterKnife.bind(this, rootView);
         location();
-        initData();
         return rootView;
     }
 
@@ -131,6 +130,12 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         mLocationManagerProxy.setGpsEnable(true);
         mLocationManagerProxy.requestLocationData(
                 LocationProviderProxy.AMapNetwork, 60 * 1000, 15, this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
     }
 
     private void initData() {
@@ -153,7 +158,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
 
         int h = AppInfoUtil.getScreenWidth(getActivity()) * 340 / 750;
         convenientBanner.getLayoutParams().height = h;
-        String transforemerName = "ZoomOutTranformer";
+        String transforemerName = "DefaultTranformer";
         ABaseTransformer transforemer = null;
         try {
             Class cls = Class.forName("com.ToxicBakery.viewpager.transforms." + transforemerName);
@@ -170,7 +175,11 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
 
         RequestParams params = new RequestParams();
         try {
-            params.put("content", URLEncoder.encode(city, "UTF-8"));
+            if (StringUtil.isEmpty(MyApplication.getInstance().getStringValue("city"))) {
+                params.put("content", URLEncoder.encode(city, "UTF-8"));
+            } else {
+                params.put("content", URLEncoder.encode(MyApplication.getInstance().getStringValue("city"), "UTF-8"));
+            }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

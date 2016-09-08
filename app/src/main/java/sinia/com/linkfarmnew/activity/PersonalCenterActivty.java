@@ -1,9 +1,13 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -35,6 +39,7 @@ import cn.bmob.v3.listener.UploadFileListener;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog;
 import sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialogUtils;
+import sinia.com.linkfarmnew.adapter.MyImageFolderAdapter;
 import sinia.com.linkfarmnew.base.BaseActivity;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.bean.LoginBean;
@@ -44,6 +49,7 @@ import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.CacheUtils;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.PictureUtil;
 import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.view.CircleImageView;
 
@@ -257,17 +263,55 @@ public class PersonalCenterActivty extends BaseActivity {
                 case 1:
                     String files = CacheUtils.getCacheDirectory(this,
                             true, "icon") + dateTime + "avatar.jpg";
+                    //裁剪
                     File file = new File(files);
                     if (file.exists() && file.length() > 0) {
                         Uri uri = Uri.fromFile(file);
                         startPhotoZoom(uri);
                     }
+                    //不裁剪
+//                    if (files != null) {
+//                        int degree = readPictureDegree(files);
+//                        /**
+//                         * 把图片旋转为正的方向
+//                         */
+//                        Bitmap temp = PictureUtil.getSmallBitmap(files);
+//                        Bitmap newbitmap = rotaingImageView(degree, temp);
+//                        imgPath = saveToSdCard(newbitmap);
+//                        imgHead.setImageBitmap(newbitmap);
+//                        updateIcon(imgPath);
+//                    }
                     break;
                 case 2:
+                    //裁剪
                     if (data == null) {
                         return;
                     }
                     startPhotoZoom(data.getData());
+                    //不裁剪
+//                    if (data != null) {
+////                        Bundle extras = data.getExtras();
+////                        if (extras != null) {
+////                            Bitmap bitmap = extras.getParcelable("data");
+////                            imgPath = saveToSdCard(bitmap);
+////                            Log.i("tag", "iconUrl---" + imgPath);
+////                            imgHead.setImageBitmap(bitmap);
+////                            updateIcon(imgPath);
+////                        }
+//                        Uri uri = data.getData();
+//                        try {
+//                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+//                            imgHead.setImageBitmap(bitmap);
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                        ContentResolver cr = this.getContentResolver();
+//                        Cursor c = cr.query(uri, null, null, null, null);
+//                        c.moveToFirst();
+//                        imgPath = c.getString(c.getColumnIndex("_data"));
+//                        updateIcon(imgPath);
+//                    }
+
                     break;
                 case 3:
                     if (data != null) {
@@ -342,6 +386,44 @@ public class PersonalCenterActivty extends BaseActivity {
         intent.putExtra("scaleUpIfNeeded", true);// 黑边
         intent.putExtra("return-data", true);// 选择返回数据
         startActivityForResult(intent, 3);
+    }
+
+    public static int readPictureDegree(String path) {
+        int degree = 0;
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
+
+    /*
+     * 旋转图片
+     */
+    public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+        // 旋转图片 动作
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        System.out.println("angle2=" + angle);
+        // 创建新的图片
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return resizedBitmap;
     }
 
     @Override

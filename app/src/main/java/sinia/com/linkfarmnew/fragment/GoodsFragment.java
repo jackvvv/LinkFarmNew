@@ -121,7 +121,7 @@ public class GoodsFragment extends BaseFragment {
         tvBuynum.setText("已" + goodsBean.getBuyNum() + "人购买");
         int h = AppInfoUtil.getScreenWidth(getActivity()) * 560 / 750;
         convenientBanner.getLayoutParams().height = h;
-        String transforemerName = "ZoomOutTranformer";
+        String transforemerName = "DefaultTranformer";
         ABaseTransformer transforemer = null;
         try {
             Class cls = Class.forName("com.ToxicBakery.viewpager.transforms." + transforemerName);

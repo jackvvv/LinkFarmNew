@@ -1,9 +1,13 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -24,6 +28,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
 import com.mobsandgeeks.saripaar.annotation.Password;
@@ -36,6 +41,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.datatype.BmobFile;
@@ -48,6 +54,7 @@ import sinia.com.linkfarmnew.bean.ValidateCodeBean;
 import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.CacheUtils;
 import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.PictureUtil;
 import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.StringUtils;
 import sinia.com.linkfarmnew.utils.ValidationUtils;
@@ -73,15 +80,15 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
     @Bind(R.id.et_password)
     EditText etPassword;
     @NotEmpty(message = "请输入公司名称")
-    @Order(4)
+    @Order(5)
     @Bind(R.id.et_company_name)
     EditText etCompanyName;
     @NotEmpty(message = "请输入公司地址")
-    @Order(4)
+    @Order(6)
     @Bind(R.id.et_company_address)
     EditText etCompanyAddress;
     @NotEmpty(message = "请输入联系人姓名")
-    @Order(4)
+    @Order(7)
     @Bind(R.id.et_contact_name)
     EditText etContactName;
     @Bind(R.id.et_recommend_code)
@@ -90,6 +97,10 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
     ImageView ivAdd;
     @Bind(R.id.tv_submit)
     TextView tvSubmit;
+    @Order(4)
+    @ConfirmPassword(message = "两次输入的密码不一致，请重新输入")
+    @Bind(R.id.et_confirm)
+    EditText etConfirm;
     private Validator validator;
     private LocationManagerProxy mLocationManagerProxy;
     private int i = 60;
@@ -102,6 +113,7 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register, "注册");
+        ButterKnife.bind(this);
         getDoingView().setVisibility(View.GONE);
         Bmob.initialize(this, Constants.BMOB_KEY);
         validator = new Validator(this);
@@ -313,17 +325,51 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
                 case 1:
                     String files = CacheUtils.getCacheDirectory(this,
                             true, "icon") + dateTime + "avatar.jpg";
-                    File file = new File(files);
-                    if (file.exists() && file.length() > 0) {
-                        Uri uri = Uri.fromFile(file);
-                        startPhotoZoom(uri);
+//                    File file = new File(files);
+//                    if (file.exists() && file.length() > 0) {
+//                        Uri uri = Uri.fromFile(file);
+//                        startPhotoZoom(uri);
+//                    }
+                    if (files != null) {
+                        int degree = readPictureDegree(files);
+                        /**
+                         * 把图片旋转为正的方向
+                         */
+                        Bitmap temp = PictureUtil.getSmallBitmap(files);
+                        Bitmap newbitmap = rotaingImageView(degree, temp);
+                        imgPath = saveToSdCard(newbitmap);
+                        ivAdd.setImageBitmap(newbitmap);
+                        updateIcon(imgPath);
                     }
                     break;
                 case 2:
-                    if (data == null) {
-                        return;
+//                    if (data == null) {
+//                        return;
+//                    }
+//                    startPhotoZoom(data.getData());
+                    //不裁剪
+                    if (data != null) {
+//                        Bundle extras = data.getExtras();
+//                        if (extras != null) {
+//                            Bitmap bitmap = extras.getParcelable("data");
+//                            imgPath = saveToSdCard(bitmap);
+//                            Log.i("tag", "iconUrl---" + imgPath);
+//                            imgHead.setImageBitmap(bitmap);
+//                            updateIcon(imgPath);
+//                        }
+                        Uri uri = data.getData();
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                            ivAdd.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        ContentResolver cr = this.getContentResolver();
+                        Cursor c = cr.query(uri, null, null, null, null);
+                        c.moveToFirst();
+                        imgPath = c.getString(c.getColumnIndex("_data"));
+                        updateIcon(imgPath);
                     }
-                    startPhotoZoom(data.getData());
                     break;
                 case 3:
                     if (data != null) {
@@ -448,6 +494,44 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
             // 销毁定位
             mLocationManagerProxy.destroy();
         }
+    }
+
+    public static int readPictureDegree(String path) {
+        int degree = 0;
+        try {
+            ExifInterface exifInterface = new ExifInterface(path);
+            int orientation = exifInterface.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_NORMAL);
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    degree = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    degree = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    degree = 270;
+                    break;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return degree;
+    }
+
+    /*
+     * 旋转图片
+     */
+    public static Bitmap rotaingImageView(int angle, Bitmap bitmap) {
+        // 旋转图片 动作
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        System.out.println("angle2=" + angle);
+        // 创建新的图片
+        Bitmap resizedBitmap = Bitmap.createBitmap(bitmap, 0, 0,
+                bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+        return resizedBitmap;
     }
 
     @Override

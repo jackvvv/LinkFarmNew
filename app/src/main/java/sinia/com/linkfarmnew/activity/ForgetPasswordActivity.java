@@ -13,12 +13,14 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.mobsandgeeks.saripaar.Validator;
+import com.mobsandgeeks.saripaar.annotation.ConfirmPassword;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
 import com.mobsandgeeks.saripaar.annotation.Password;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
@@ -26,7 +28,6 @@ import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.bean.ValidateCodeBean;
 import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.Constants;
-import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.StringUtils;
 import sinia.com.linkfarmnew.utils.ValidationUtils;
 
@@ -52,6 +53,10 @@ public class ForgetPasswordActivity extends BaseActivity {
     EditText etPassword;
     @Bind(R.id.tv_login)
     TextView tvLogin;
+    @Order(4)
+    @ConfirmPassword(message = "两次输入的密码不一致，请重新输入")
+    @Bind(R.id.et_confirm)
+    EditText etConfirm;
 
     private Validator validator;
     private int i = 60;
@@ -62,6 +67,7 @@ public class ForgetPasswordActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgetpwd, "忘记密码");
+        ButterKnife.bind(this);
         getDoingView().setVisibility(View.GONE);
         validator = new Validator(this);
         initView();
