@@ -19,15 +19,12 @@ import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.GoodsListActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ValidationUtils;
 
 public class MenuRightFragment extends BaseFragment {
-    @NotEmpty(message = "请输入出产地")
-    @Order(1)
     @Bind(R.id.et_place_s)
     EditText etPlaceS;
-    @NotEmpty(message = "请输入发货地")
-    @Order(2)
     @Bind(R.id.et_place_e)
     EditText etPlaceE;
     @Bind(R.id.tv_reset)
@@ -36,7 +33,6 @@ public class MenuRightFragment extends BaseFragment {
     TextView tvOk;
     private View rootView;
     private LayoutInflater inflater;
-    private Validator validator;
     private GoodsListActivity activity;
 
     @Override
@@ -44,25 +40,12 @@ public class MenuRightFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_menu_right, null);
         ButterKnife.bind(this, rootView);
-        validator = new Validator(this);
         initView();
         return rootView;
     }
 
     private void initView() {
         activity = (GoodsListActivity) getActivity();
-        validator.setValidationListener(new ValidationUtils.ValidationListener() {
-            @Override
-            public void onValidationSucceeded() {
-                super.onValidationSucceeded();
-                GoodsListActivity.startPlace = etPlaceS.getEditableText().toString().trim();
-                GoodsListActivity.endPlace = etPlaceE.getEditableText().toString().trim();
-                Message msg = new Message();
-                msg.what = 0;
-                activity.handler.sendMessage(msg);
-                GoodsListActivity.drawerLayout.closeDrawer(Gravity.RIGHT);
-            }
-        });
     }
 
     @OnClick({R.id.tv_reset, R.id.tv_ok})
@@ -73,7 +56,17 @@ public class MenuRightFragment extends BaseFragment {
                 etPlaceE.setText("");
                 break;
             case R.id.tv_ok:
-                validator.validate();
+                if (StringUtil.isEmpty(etPlaceS.getEditableText().toString()) && StringUtil.isEmpty(etPlaceE
+                        .getEditableText().toString())) {
+                    showToast("请输入出产地或发货地");
+                } else {
+                    GoodsListActivity.startPlace = etPlaceS.getEditableText().toString().trim();
+                    GoodsListActivity.endPlace = etPlaceE.getEditableText().toString().trim();
+                    Message msg = new Message();
+                    msg.what = 0;
+                    activity.handler.sendMessage(msg);
+                    GoodsListActivity.drawerLayout.closeDrawer(Gravity.RIGHT);
+                }
                 break;
         }
     }

@@ -187,7 +187,7 @@ public class GoodsDetailActivity extends BaseActivity {
                 ActivityManager.getInstance().finishCurrentActivity();
                 break;
             case R.id.img_share:
-                createShareDialog();
+//                createShareDialog();
                 break;
         }
     }

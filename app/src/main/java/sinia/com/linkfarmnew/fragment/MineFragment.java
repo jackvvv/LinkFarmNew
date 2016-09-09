@@ -104,6 +104,8 @@ public class MineFragment extends BaseFragment {
     ImageView ivDingdan6;
     @Bind(R.id.rl_tuiguang)
     RelativeLayout rlTuiguang;
+    @Bind(R.id.rl_settings)
+    RelativeLayout rl_settings;
     @Bind(R.id.rl_login)
     RelativeLayout rl_login;
     @Bind(R.id.tv_level)
@@ -206,7 +208,7 @@ public class MineFragment extends BaseFragment {
             .rl_notpay, R
             .id.rl_delivery, R.id.rl_notcomment, R.id.rl_myorder, R.id.rl_yhq, R.id.rl_tuihuo, R.id.rl_my_collect, R
             .id.rl_foot, R.id
-            .rl_address_manager, R.id.rl_tuiguang})
+            .rl_address_manager, R.id.rl_tuiguang, R.id.rl_settings})
     public void onClick(View view) {
         Intent intent;
         switch (view.getId()) {
@@ -214,6 +216,15 @@ public class MineFragment extends BaseFragment {
                 callService();
                 break;
             case R.id.img_settings:
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    intent = new Intent(getActivity(), SettingsActivity.class);
+                    startActivity(intent);
+                } else {
+                    intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
+                break;
+            case R.id.rl_settings:
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
                     intent = new Intent(getActivity(), SettingsActivity.class);
                     startActivity(intent);
@@ -234,8 +245,8 @@ public class MineFragment extends BaseFragment {
             case R.id.img_mall:
                 if (MyApplication.getInstance().getBoolValue("is_login")) {
                     intent = new Intent(getActivity(), IntegralMallActivity.class);
-                    intent.putExtra("userName",userName);
-                    intent.putExtra("headImage",headImage);
+                    intent.putExtra("userName", userName);
+                    intent.putExtra("headImage", headImage);
                     startActivity(intent);
                 } else {
                     intent = new Intent(getActivity(), LoginActivity.class);

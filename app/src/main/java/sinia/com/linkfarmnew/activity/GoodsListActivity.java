@@ -190,8 +190,16 @@ public class GoodsListActivity extends BaseActivity {
             } else {
                 params.put("name", URLEncoder.encode(etContent.getEditableText().toString().trim(), "UTF-8"));
             }
-            params.put("proArea", URLEncoder.encode(proArea, "UTF-8"));
-            params.put("sendArea", URLEncoder.encode(sendArea, "UTF-8"));
+            if (StringUtil.isEmpty(proArea)) {
+                params.put("proArea", "-1");
+            } else {
+                params.put("proArea", URLEncoder.encode(proArea, "UTF-8"));
+            }
+            if (StringUtil.isEmpty(sendArea)) {
+                params.put("sendArea", "-1");
+            } else {
+                params.put("sendArea", URLEncoder.encode(sendArea, "UTF-8"));
+            }
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

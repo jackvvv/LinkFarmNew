@@ -44,6 +44,11 @@ android {
     dexOptions {
         preDexLibraries = false
     }
+
+    lintOptions{
+        checkReleaseBuilds false
+        abortOnError false
+    }
 }
 
 dependencies {
