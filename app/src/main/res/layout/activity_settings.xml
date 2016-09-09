@@ -158,22 +158,47 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:background="#ccc"
-        android:visibility="gone" />
+        android:background="#ccc" />
 
     <RelativeLayout
         android:id="@+id/rl_pwd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/layout_selector"
-        android:padding="12dp"
-        android:visibility="gone">
+        android:padding="12dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="手势密码"
+            android:text="修改密码"
+            android:textColor="@color/textblackColor"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/right_jian" />
+    </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#ccc" />
+
+    <RelativeLayout
+        android:id="@+id/rl_tel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/layout_selector"
+        android:padding="12dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="更换手机号"
             android:textColor="@color/textblackColor"
             android:textSize="16sp" />
 

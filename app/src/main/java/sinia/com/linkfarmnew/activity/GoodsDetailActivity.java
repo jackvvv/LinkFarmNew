@@ -23,18 +23,22 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.sina.weibo.sdk.WeiboAppManager;
-import com.umeng.socialize.ShareAction;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
+import com.umeng.message.proguard.L;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.adapter.MyFragmentPagerAdapter;
 import sinia.com.linkfarmnew.base.BaseActivity;
@@ -83,6 +87,7 @@ public class GoodsDetailActivity extends BaseActivity {
         //网页中的视频，上屏幕的时候，可能出现闪烁的情况
         getWindow().setFormat(PixelFormat.TRANSLUCENT);
         getGoodsDetail();
+        ShareSDK.initSDK(this, "16fa5a00d752b");
     }
 
     @Override
@@ -187,7 +192,34 @@ public class GoodsDetailActivity extends BaseActivity {
         }
     }
 
+    private void showShare() {
+        ShareSDK.initSDK(this);
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间等使用
+        oks.setTitle("标题");
+        // titleUrl是标题的网络链接，QQ和QQ空间等使用
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("我是分享文本");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+        // url仅在微信（包括好友和朋友圈）中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+        oks.setComment("我是测试评论文本");
+        // site是分享此内容的网站名称，仅在QQ空间使用
+        oks.setSite(getString(R.string.app_name));
+        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+        oks.setSiteUrl("http://sharesdk.cn");
+
+        // 启动分享GUI
+        oks.show(this);
+    }
+
     private Dialog createShareDialog() {
+        ShareSDK.initSDK(this);
         LayoutInflater inflater = LayoutInflater.from(this);
         View v = inflater.inflate(R.layout.dialog_share, null);
         dialog = new Dialog(this, R.style.ActionSheetDialogStyle);
@@ -205,14 +237,26 @@ public class GoodsDetailActivity extends BaseActivity {
         ImageView img_weibo = (ImageView) dialog.findViewById(R.id.img_weibo);
         ImageView img_qq = (ImageView) dialog.findViewById(R.id.img_qq);
         TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
-        final UMImage image = new UMImage(this, "http://7xnmrr.com1.z0.glb.clouddn.com/111jianhse.jpg");
+
+        final Platform.ShareParams sp = new Platform.ShareParams();
+        sp.setText("分享内容测试分享内容测试分享内容测试分享内容测试");
+        sp.setTitleUrl("http://sharesdk.cn");
+        sp.setSite(getString(R.string.app_name));
+        sp.setTitle("分享标题测试");
+        sp.setImageUrl(goodsBean.getGoodImage());
+
+        final Platform qq = ShareSDK.getPlatform(QQ.NAME);
+        final Platform wb = ShareSDK.getPlatform(SinaWeibo.NAME);
+        final Platform wx = ShareSDK.getPlatform(Wechat.NAME);
+        qq.setPlatformActionListener(listener);
+        wx.setPlatformActionListener(listener);
+        wb.setPlatformActionListener(listener);
+
         img_qq.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-//                new ShareAction(GoodsDetailActivity.this).setPlatform(SHARE_MEDIA.QQ).setCallback(umShareListener)
-//                        .withTitle("点击网络分享").withText("分享测试").withTargetUrl("https://www.baidu.com").withMedia(image)
-//                        .share();
+                qq.share(sp);
                 dialog.dismiss();
             }
         });
@@ -220,13 +264,7 @@ public class GoodsDetailActivity extends BaseActivity {
 
             @Override
             public void onClick(View arg0) {
-//                if (WeiboAppManager.getInstance(GoodsDetailActivity.this).getWeiboInfo() == null) {
-//                    showToast("请安装新浪微博客户端");
-//                }
-//                new ShareAction(GoodsDetailActivity.this).setPlatform(SHARE_MEDIA.SINA).setCallback(umShareListener)
-//                        .withTitle
-//                                ("点击网络分享").withText("分享测试").withTargetUrl("https://www.baidu.com").withMedia(image)
-//                        .share();
+                wb.share(sp);
                 dialog.dismiss();
             }
         });
@@ -234,9 +272,7 @@ public class GoodsDetailActivity extends BaseActivity {
 
             @Override
             public void onClick(View arg0) {
-//                new ShareAction(GoodsDetailActivity.this).setPlatform(SHARE_MEDIA.WEIXIN).setCallback(umShareListener)
-//                        .withTitle("点击网络分享").withText("分享测试").withTargetUrl("https://www.baidu.com").withMedia(image)
-//                        .share();
+                wx.share(sp);
                 dialog.dismiss();
             }
         });
@@ -250,20 +286,24 @@ public class GoodsDetailActivity extends BaseActivity {
         return dialog;
     }
 
-    private UMShareListener umShareListener = new UMShareListener() {
+    private PlatformActionListener listener = new PlatformActionListener() {
         @Override
-        public void onResult(SHARE_MEDIA platform) {
-            showToast("分享成功啦");
+        public void onComplete(Platform platform, int i, HashMap<String, Object> hashMap) {
+            showToast("分享成功");
+            //这里需要说明的一个参数就是HashMap<String, Object> arg2
+            //这个参数在你进行登录操作的时候里面会保存有用户的数据，例如用户名之类的。
         }
 
         @Override
-        public void onError(SHARE_MEDIA platform, Throwable t) {
-            showToast("分享失败啦");
+        public void onError(Platform platform, int i, Throwable throwable) {
+            showToast("分享失败");
+            Log.i("tag", "-------分享失败--------" + i);
+            throwable.printStackTrace();
         }
 
         @Override
-        public void onCancel(SHARE_MEDIA platform) {
-            showToast("分享取消了");
+        public void onCancel(Platform platform, int i) {
+            showToast("取消分享");
         }
     };
 

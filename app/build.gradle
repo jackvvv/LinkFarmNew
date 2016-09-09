@@ -60,8 +60,16 @@ dependencies {
     compile 'cn.bmob.android:http-legacy:1.0'
     compile 'cn.bmob.android:bmob-sdk:3.4.7-aar'
     compile 'com.ldoublem.thumbUplib:ThumbUplib:0.2'
-    compile(name: 'myshare-debug', ext: 'aar')
     compile 'com.bigkoo:convenientbanner:2.0.5'
     compile 'com.ToxicBakery.viewpager.transforms:view-pager-transforms:1.2.32@aar'
     compile 'com.zcw:togglebutton-library:1.0.0'
+    compile files('libs/ShareSDK-Wechat-Moments-2.7.7.jar')
+    compile files('libs/ShareSDK-Wechat-Core-2.7.7.jar')
+    compile files('libs/ShareSDK-QZone-2.7.7.jar')
+    compile files('libs/MobTools-2016.0830.1940.jar')
+    compile files('libs/MobCommons-2016.0830.1940.jar')
+    compile files('libs/ShareSDK-SinaWeibo-2.7.7.jar')
+    compile files('libs/ShareSDK-QQ-2.7.7.jar')
+    compile files('libs/ShareSDK-Wechat-2.7.7.jar')
+    compile files('libs/ShareSDK-Core-2.7.7.jar')
 }

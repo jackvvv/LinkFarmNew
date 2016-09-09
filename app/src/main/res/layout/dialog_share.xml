@@ -25,20 +25,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
-            android:src="@drawable/qq_share" />
+            android:src="@drawable/ssdk_oks_classic_qq" />
 
         <ImageView
             android:id="@+id/img_weibo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="15dp"
-            android:src="@drawable/weibo_share" />
+            android:src="@drawable/ssdk_oks_classic_sinaweibo" />
 
         <ImageView
             android:id="@+id/img_wx"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/wx_share" />
+            android:src="@drawable/ssdk_oks_classic_wechat" />
     </LinearLayout>
 
     <TextView

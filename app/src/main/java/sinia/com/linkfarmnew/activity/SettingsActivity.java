@@ -2,7 +2,6 @@ package sinia.com.linkfarmnew.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -50,6 +49,8 @@ public class SettingsActivity extends BaseActivity {
     RelativeLayout rlLogout;
     @Bind(R.id.toggleBtn)
     ToggleButton toggleBtn;
+    @Bind(R.id.rl_tel)
+    RelativeLayout rlTel;
     private MaterialDialog materialDialog;
 
     @Override
@@ -82,7 +83,7 @@ public class SettingsActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.rl_clear, R.id.rl_aboutus, R.id.rl_feedback, R.id.rl_logout})
+    @OnClick({R.id.rl_clear, R.id.rl_aboutus, R.id.rl_feedback, R.id.rl_logout,R.id.rl_pwd, R.id.rl_tel})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_clear:
@@ -96,6 +97,12 @@ public class SettingsActivity extends BaseActivity {
                 break;
             case R.id.rl_logout:
                 logout();
+                break;
+            case R.id.rl_pwd:
+                startActivityForNoIntent(ModifyPasswordActivity.class);
+                break;
+            case R.id.rl_tel:
+                startActivityForNoIntent(ModifyPhoneActivity.class);
                 break;
         }
     }

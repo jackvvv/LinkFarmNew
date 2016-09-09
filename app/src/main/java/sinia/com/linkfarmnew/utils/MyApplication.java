@@ -19,7 +19,6 @@ import com.umeng.message.UmengMessageHandler;
 import com.umeng.message.UmengNotificationClickHandler;
 import com.umeng.message.UmengRegistrar;
 import com.umeng.message.entity.UMessage;
-import com.umeng.socialize.PlatformConfig;
 
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.bean.LoginBean;
@@ -147,9 +146,9 @@ public class MyApplication extends Application {
     }
 
     private void initShareKey() {
-        PlatformConfig.setWeixin("wx72646ac912a1a65a", "df5d7fc9d7f6664038b26ff95b3423b0");
-        PlatformConfig.setQQZone("1105256171", "6xAwTDWTtz08qQFs");
-        PlatformConfig.setSinaWeibo("1382880293", "d165e356f5a75c6c09f46bf8999cebe8");
+//        PlatformConfig.setWeixin("wx72646ac912a1a65a", "df5d7fc9d7f6664038b26ff95b3423b0");
+//        PlatformConfig.setQQZone("1105256171", "6xAwTDWTtz08qQFs");
+//        PlatformConfig.setSinaWeibo("1382880293", "d165e356f5a75c6c09f46bf8999cebe8");
     }
 
     public static synchronized MyApplication getInstance() {
