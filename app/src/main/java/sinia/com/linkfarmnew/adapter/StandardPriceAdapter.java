@@ -30,6 +30,8 @@ public class StandardPriceAdapter extends BaseAdapter {
 
     private List<GoodsDetailBean.NormListBean.NormTypeListBean> list;
 
+    public String unit;
+
     public StandardPriceAdapter(Context context, List<GoodsDetailBean.NormListBean.NormTypeListBean> list) {
         this.context = context;
         this.list = list;
@@ -59,9 +61,9 @@ public class StandardPriceAdapter extends BaseAdapter {
         TextView kg_e = ViewHolder.get(view, R.id.kg_e);
         TextView tv_price = ViewHolder.get(view, R.id.tv_price);
 
-        kg_s.setText(list.get(i).getStKg() + "kg");
-        kg_e.setText(list.get(i).getEnKg() + "kg");
-        tv_price.setText(StringUtil.formatePrice(list.get(i).getPrice()));
+        kg_s.setText(list.get(i).getStKg() + "");
+        kg_e.setText(list.get(i).getEnKg() + "");
+        tv_price.setText(StringUtil.formatePrice(list.get(i).getPrice())+"元/"+unit);
 
         return view;
     }

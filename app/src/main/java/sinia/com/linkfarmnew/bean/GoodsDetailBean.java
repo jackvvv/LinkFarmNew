@@ -16,6 +16,8 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
     private int allComNum;
     private String id;
     private String goodName;
+    private String merchantId;//商铺id
+    private String unit;//规格单位
     private String merTelephone;
     private String goodImage;
     private String moiveLink;
@@ -26,6 +28,22 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
     private List<SendAddressBean> peiitems;//配送地址集合
     private List<SelfGetBean> ziitems;//自提地址集合
     private List<SourceBean> orginitems;//溯源集合
+
+    public String getMerchantId() {
+        return merchantId;
+    }
+
+    public void setMerchantId(String merchantId) {
+        this.merchantId = merchantId;
+    }
+
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
 
     public String getMerTelephone() {
         return merTelephone;
@@ -282,7 +300,25 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
     public static class NormListBean implements Serializable {
         private String normName;
         private String normId;
+        private String unit;//规格单位
+        private String num;//规格数量
         private List<NormTypeListBean> typeItems;
+
+        public String getUnit() {
+            return unit;
+        }
+
+        public void setUnit(String unit) {
+            this.unit = unit;
+        }
+
+        public String getNum() {
+            return num;
+        }
+
+        public void setNum(String num) {
+            this.num = num;
+        }
 
         public String getNormId() {
             return normId;

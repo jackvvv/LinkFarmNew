@@ -62,7 +62,7 @@ public class ShopFootAdapter extends BaseAdapter {
         tv_shopname.setText(list.get(i).getMerName());
 
         final String shopId = list.get(i).getMerchantId();
-        tv_in.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, ShopDetailActivity.class);

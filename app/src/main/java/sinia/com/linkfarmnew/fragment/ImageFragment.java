@@ -39,6 +39,9 @@ public class ImageFragment extends BaseFragment {
     public void initImg(String imgUrl) {
         if (null != webView && !hasInited) {
             hasInited = true;
+            // 自适应屏幕
+            webView.getSettings().setLoadWithOverviewMode(true);
+            webView.getSettings().setUseWideViewPort(true);
             webView.loadUrl(imgUrl);
         }
     }

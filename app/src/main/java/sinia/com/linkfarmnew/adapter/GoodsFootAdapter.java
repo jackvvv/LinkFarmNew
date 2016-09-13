@@ -14,6 +14,7 @@ import java.util.List;
 
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.bean.MyFootBean;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -57,7 +58,7 @@ public class GoodsFootAdapter extends BaseAdapter {
         Glide.with(context).load(list.get(i).getGoodImage()).placeholder(R.drawable.ic_launcher).into(img);
         tv_title.setText(list.get(i).getGoodName());
         tv_comment.setText(list.get(i).getComNum() + "人评论");
-        tv_price.setText(list.get(i).getPrice() + "元/kg");
+        tv_price.setText(StringUtil.formatePrice(Double.parseDouble(list.get(i).getPrice())) + "元/kg");
         final String shopId = list.get(i).getGoodId();
         return view;
     }

@@ -1,5 +1,6 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
@@ -68,6 +69,7 @@ public class MainActivity extends BaseActivity {
     private ClassfyFragment f2;
     private ShopCartFragment f3;
     private MineFragment f4;
+    private String flag = ""; //1.跳转到首页购物车
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +84,22 @@ public class MainActivity extends BaseActivity {
         f2 = new ClassfyFragment();
         f3 = new ShopCartFragment();
         f4 = new MineFragment();
+        homeClicked();
+    }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        flag = getIntent().getStringExtra("flag");
+        if ("1".equals(flag)) {
+            cartClicked();
+        }
+    }
+
+    private void homeClicked() {
         FragmentTransaction fragmentTransaction = this
                 .getSupportFragmentManager().beginTransaction();
-        // fragmentTransaction.replace(R.id.frame_content, f1);
         if (!f1.isAdded()) {
             fragmentTransaction.hide(f2).hide(f3).hide(f4)
                     .add(R.id.frame_content, f1).show(f1);
@@ -106,105 +120,94 @@ public class MainActivity extends BaseActivity {
         imageHelper.setSelected(false);
     }
 
+    private void classfiyClicked() {
+        FragmentTransaction fragmentTransaction = this
+                .getSupportFragmentManager().beginTransaction();
+        // fragmentTransaction.replace(R.id.frame_content, f2);
+        if (!f2.isAdded()) {
+            fragmentTransaction.hide(f1).hide(f3).hide(f4)
+                    .add(R.id.frame_content, f2).show(f2);
+        } else {
+            fragmentTransaction.hide(f1).hide(f3).hide(f4).show(f2);
+        }
+        fragmentTransaction.commit();
+        imageHome.setSelected(false);
+        tvHome.setSelected(false);
+
+        tvManager.setSelected(true);
+        imageManager.setSelected(true);
+
+        tvYw.setSelected(false);
+        imageYw.setSelected(false);
+
+        tvHelper.setSelected(false);
+        imageHelper.setSelected(false);
+    }
+
+    private void cartClicked() {
+        FragmentTransaction fragmentTransaction = this
+                .getSupportFragmentManager().beginTransaction();
+        // fragmentTransaction.replace(R.id.frame_content, f3);
+        if (!f3.isAdded()) {
+            fragmentTransaction.hide(f1).hide(f2).hide(f4)
+                    .add(R.id.frame_content, f3).show(f3);
+        } else {
+            fragmentTransaction.hide(f2).hide(f1).hide(f4).show(f3);
+        }
+        fragmentTransaction.commit();
+        imageHome.setSelected(false);
+        tvHome.setSelected(false);
+
+        tvManager.setSelected(false);
+        imageManager.setSelected(false);
+
+        tvYw.setSelected(true);
+        imageYw.setSelected(true);
+
+        tvHelper.setSelected(false);
+        imageHelper.setSelected(false);
+    }
+
+    private void mineClicked() {
+        FragmentTransaction fragmentTransaction = this
+                .getSupportFragmentManager().beginTransaction();
+        // fragmentTransaction.replace(R.id.frame_content, f4);
+        if (!f4.isAdded()) {
+            fragmentTransaction.hide(f1).hide(f3).hide(f2)
+                    .add(R.id.frame_content, f4).show(f4);
+        } else {
+            fragmentTransaction.hide(f1).hide(f3).hide(f2).show(f4);
+        }
+        fragmentTransaction.commit();
+        imageHome.setSelected(false);
+        tvHome.setSelected(false);
+
+        tvManager.setSelected(false);
+        imageManager.setSelected(false);
+
+        tvYw.setSelected(false);
+        imageYw.setSelected(false);
+
+        tvHelper.setSelected(true);
+        imageHelper.setSelected(true);
+    }
+
+
     @OnClick({R.id.layout_home, R.id.layout_manager, R.id.layout_youwo, R.id.layout_helper})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.layout_home: {
-                FragmentTransaction fragmentTransaction = this
-                        .getSupportFragmentManager().beginTransaction();
-                // fragmentTransaction.replace(R.id.frame_content, f1);
-                if (!f1.isAdded()) {
-                    fragmentTransaction.hide(f2).hide(f3).hide(f4)
-                            .add(R.id.frame_content, f1).show(f1);
-                } else {
-                    fragmentTransaction.hide(f2).hide(f3).hide(f4).show(f1);
-                }
-                fragmentTransaction.commit();
-                imageHome.setSelected(true);
-                tvHome.setSelected(true);
-
-                tvManager.setSelected(false);
-                imageManager.setSelected(false);
-
-                tvYw.setSelected(false);
-                imageYw.setSelected(false);
-
-                tvHelper.setSelected(false);
-                imageHelper.setSelected(false);
-            }
-            break;
-            case R.id.layout_manager: {
-                FragmentTransaction fragmentTransaction = this
-                        .getSupportFragmentManager().beginTransaction();
-                // fragmentTransaction.replace(R.id.frame_content, f2);
-                if (!f2.isAdded()) {
-                    fragmentTransaction.hide(f1).hide(f3).hide(f4)
-                            .add(R.id.frame_content, f2).show(f2);
-                } else {
-                    fragmentTransaction.hide(f1).hide(f3).hide(f4).show(f2);
-                }
-                fragmentTransaction.commit();
-                imageHome.setSelected(false);
-                tvHome.setSelected(false);
-
-                tvManager.setSelected(true);
-                imageManager.setSelected(true);
-
-                tvYw.setSelected(false);
-                imageYw.setSelected(false);
-
-                tvHelper.setSelected(false);
-                imageHelper.setSelected(false);
-            }
-            break;
-            case R.id.layout_youwo: {
-                FragmentTransaction fragmentTransaction = this
-                        .getSupportFragmentManager().beginTransaction();
-                // fragmentTransaction.replace(R.id.frame_content, f3);
-                if (!f3.isAdded()) {
-                    fragmentTransaction.hide(f1).hide(f2).hide(f4)
-                            .add(R.id.frame_content, f3).show(f3);
-                } else {
-                    fragmentTransaction.hide(f2).hide(f1).hide(f4).show(f3);
-                }
-                fragmentTransaction.commit();
-                imageHome.setSelected(false);
-                tvHome.setSelected(false);
-
-                tvManager.setSelected(false);
-                imageManager.setSelected(false);
-
-                tvYw.setSelected(true);
-                imageYw.setSelected(true);
-
-                tvHelper.setSelected(false);
-                imageHelper.setSelected(false);
-            }
-            break;
-            case R.id.layout_helper: {
-                FragmentTransaction fragmentTransaction = this
-                        .getSupportFragmentManager().beginTransaction();
-                // fragmentTransaction.replace(R.id.frame_content, f4);
-                if (!f4.isAdded()) {
-                    fragmentTransaction.hide(f1).hide(f3).hide(f2)
-                            .add(R.id.frame_content, f4).show(f4);
-                } else {
-                    fragmentTransaction.hide(f1).hide(f3).hide(f2).show(f4);
-                }
-                fragmentTransaction.commit();
-                imageHome.setSelected(false);
-                tvHome.setSelected(false);
-
-                tvManager.setSelected(false);
-                imageManager.setSelected(false);
-
-                tvYw.setSelected(false);
-                imageYw.setSelected(false);
-
-                tvHelper.setSelected(true);
-                imageHelper.setSelected(true);
-            }
-            break;
+            case R.id.layout_home:
+                homeClicked();
+                break;
+            case R.id.layout_manager:
+                classfiyClicked();
+                break;
+            case R.id.layout_youwo:
+                cartClicked();
+                break;
+            case R.id.layout_helper:
+                mineClicked();
+                break;
         }
     }
 

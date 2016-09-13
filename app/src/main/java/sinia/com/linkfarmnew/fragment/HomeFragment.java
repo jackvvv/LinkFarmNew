@@ -114,6 +114,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
     private String link, selectCity;
     private List<HomePageBean.RecarrayItemsBean> recommendList = new ArrayList<>();
     private List<HomePageBean.UpActItemsBean> floorList = new ArrayList<>();
+    private String img1 = "", img2 = "", img3 = "", img4 = "", img5 = "", img6 = "";
 
     @Nullable
     @Override
@@ -257,16 +258,19 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgLeftBig);
                     imgLeftBig.setLayoutParams(lpB);
+                    img1 = imgUrl;
                 }
                 if (position == 2) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgRightTop);
                     imgRightTop.setLayoutParams(lpS);
+                    img2 = imgUrl;
                 }
                 if (position == 3) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgRightBottom);
                     imgRightBottom.setLayoutParams(lpS);
+                    img3 = imgUrl;
                 }
             }
             if (2 == floorType) {
@@ -274,16 +278,19 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgLeftTop);
                     imgLeftTop.setLayoutParams(lpS);
+                    img4 = imgUrl;
                 }
                 if (position == 2) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgLeftBottom);
                     imgLeftBottom.setLayoutParams(lpS);
+                    img5 = imgUrl;
                 }
                 if (position == 3) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgRightBig);
                     imgRightBig.setLayoutParams(lpB);
+                    img6 = imgUrl;
                 }
             }
         }
@@ -366,26 +373,32 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                 break;
             case R.id.img_left_big:
                 intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("link", img1);
                 startActivity(intent);
                 break;
             case R.id.img_right_top:
                 intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("link", img2);
                 startActivity(intent);
                 break;
             case R.id.img_right_bottom:
                 intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("link", img3);
                 startActivity(intent);
                 break;
             case R.id.img_right_big:
                 intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("link", img6);
                 startActivity(intent);
                 break;
             case R.id.img_left_top:
                 intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("link", img4);
                 startActivity(intent);
                 break;
             case R.id.img_left_bottom:
                 intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("link", img5);
                 startActivity(intent);
                 break;
         }

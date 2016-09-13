@@ -14,7 +14,16 @@ public class ShopDetailBean extends JsonBean {
     private String merTelephone;
     private String image;
     private String name;
+    private String content;
     private List<ShopGoodsBean> items;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getMerTelephone() {
         return merTelephone;
@@ -84,7 +93,7 @@ public class ShopDetailBean extends JsonBean {
         private String goodId;
         private String goodName;
         private String goodImage;
-        private int buyNum;
+        private String buyNum;
         private String minKilograme;
 
         public String getGoodId() {
@@ -111,11 +120,11 @@ public class ShopDetailBean extends JsonBean {
             this.goodImage = goodImage;
         }
 
-        public int getBuyNum() {
+        public String getBuyNum() {
             return buyNum;
         }
 
-        public void setBuyNum(int buyNum) {
+        public void setBuyNum(String buyNum) {
             this.buyNum = buyNum;
         }
 

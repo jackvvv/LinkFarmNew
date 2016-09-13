@@ -30,7 +30,7 @@ public class MyFootBean extends JsonBean {
     }
 
     public static class DetailBean {
-        private int price;
+        private String price;
         private String hisId;
         private String merName;
         private String merImage;
@@ -40,11 +40,11 @@ public class MyFootBean extends JsonBean {
         private String goodName;
         private String goodImage;
 
-        public int getPrice() {
+        public String getPrice() {
             return price;
         }
 
-        public void setPrice(int price) {
+        public void setPrice(String price) {
             this.price = price;
         }
 

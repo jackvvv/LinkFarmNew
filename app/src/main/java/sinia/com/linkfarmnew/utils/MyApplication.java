@@ -4,20 +4,17 @@ import android.app.Application;
 import android.app.Notification;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
-import com.tencent.bugly.crashreport.CrashReport;
-import com.umeng.message.ALIAS_TYPE;
+import com.tencent.bugly.Bugly;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UTrack;
 import com.umeng.message.UmengMessageHandler;
 import com.umeng.message.UmengNotificationClickHandler;
-import com.umeng.message.UmengRegistrar;
 import com.umeng.message.entity.UMessage;
 
 import sinia.com.linkfarmnew.R;
@@ -40,7 +37,7 @@ public class MyApplication extends Application {
         super.onCreate();
         context = this.getApplicationContext();
         instance = this;
-//        CrashReport.initCrashReport(getApplicationContext(), "900038739", true);
+        Bugly.init(getApplicationContext(), "f40e2555ac", false);
         initShareKey();
         initUMPush();
     }

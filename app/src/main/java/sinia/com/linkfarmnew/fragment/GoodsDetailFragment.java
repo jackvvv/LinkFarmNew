@@ -33,6 +33,8 @@ import butterknife.OnClick;
 import me.drakeet.materialdialog.MaterialDialog;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.FillOrderActivity;
+import sinia.com.linkfarmnew.activity.MainActivity;
+import sinia.com.linkfarmnew.activity.ShopDetailActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
@@ -66,6 +68,8 @@ public class GoodsDetailFragment extends BaseFragment {
     ImageView imgReddot;
     @Bind(R.id.ll_call)
     LinearLayout llCall;
+    @Bind(R.id.ll_shop)
+    LinearLayout llShop;
     @Bind(R.id.ll_cart)
     LinearLayout llCart;
     private View rootView;
@@ -147,13 +151,21 @@ public class GoodsDetailFragment extends BaseFragment {
         draglayout.setNextPageListener(nextPageNotifier);
     }
 
-    @OnClick({R.id.ll_collect, R.id.tv_cart, R.id.tv_ok})
+    @OnClick({R.id.ll_shop, R.id.ll_collect, R.id.tv_cart, R.id.tv_ok})
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.ll_shop:
+                Intent intent = new Intent(getActivity(), ShopDetailActivity.class);
+                intent.putExtra("shopId", goodsBean.getMerchantId());
+                startActivity(intent);
+                break;
             case R.id.ll_collect:
                 collectGoods();
                 break;
             case R.id.tv_cart:
+                Intent intent2 = new Intent(getActivity(), MainActivity.class);
+                intent2.putExtra("flag", "1");
+                startActivity(intent2);
                 break;
             case R.id.tv_ok:
                 if (!StringUtil.isEmpty(MyApplication.getInstance().getStringValue("buy_weight")) && !StringUtil.isEmpty
@@ -185,6 +197,7 @@ public class GoodsDetailFragment extends BaseFragment {
         intent.putExtra("norm", MyApplication.getInstance().getStringValue("buy_type"));
         intent.putExtra("num", MyApplication.getInstance().getStringValue("buy_weight"));
         intent.putExtra("price", MyApplication.getInstance().getStringValue("buy_price"));
+        intent.putExtra("name", MyApplication.getInstance().getStringValue("buy_normId"));
         intent.putExtra("goodId", goodsBean.getId());
         //填写订单显示的购买商品的图片集合
         selectGoodsImage = new ArrayList<>();

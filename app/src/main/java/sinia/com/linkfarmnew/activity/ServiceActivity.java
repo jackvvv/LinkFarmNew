@@ -40,6 +40,9 @@ public class ServiceActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_online:
+                Intent intent = new Intent(this, WebViewActivity.class);
+                intent.putExtra("link","http://kefu.easemob.com/webim/im.html?tenantId=27590");
+                startActivity(intent);
                 break;
             case R.id.tv_call:
                 callService();

@@ -61,7 +61,7 @@ public class SearchShopAdapter extends BaseAdapter {
         tv_shopname.setText(list.get(i).getName());
         final String shopId = list.get(i).getMerId();
 
-        tv_in.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (MyApplication.getInstance().getBoolValue("is_login")) {

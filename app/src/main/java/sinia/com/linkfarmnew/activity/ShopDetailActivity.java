@@ -50,6 +50,8 @@ public class ShopDetailActivity extends BaseActivity {
     TextView tvBuynum;
     @Bind(R.id.tv_collectnum)
     TextView tvCollectnum;
+    @Bind(R.id.tv_content)
+    TextView tv_content;
     //    @Bind(R.id.img_collect)
 //    ImageView imgCollect;
     @Bind(R.id.gridView)
@@ -119,6 +121,7 @@ public class ShopDetailActivity extends BaseActivity {
         merTelephone = bean.getMerTelephone();
         Glide.with(this).load(bean.getImage()).placeholder(R.drawable.ic_launcher).into(img);
         tvShopname.setText(bean.getName());
+        tv_content.setText(bean.getContent());
         tvBuynum.setText("已有" + bean.getBuyNum() + "人购买");
         tvCollectnum.setText(bean.getCollSize() + "人\n 收藏人数");
         if ("1".equals(bean.getCollStauts())) {

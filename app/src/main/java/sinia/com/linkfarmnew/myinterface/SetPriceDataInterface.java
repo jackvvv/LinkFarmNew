@@ -14,5 +14,5 @@ public interface SetPriceDataInterface {
      *
      * @param priceList
      */
-    public void setPriceList(List<GoodsDetailBean.NormListBean.NormTypeListBean> priceList);
+    public void setPriceList(List<GoodsDetailBean.NormListBean.NormTypeListBean> priceList,String unit);
 }

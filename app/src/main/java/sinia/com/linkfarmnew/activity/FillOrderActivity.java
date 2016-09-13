@@ -69,7 +69,8 @@ public class FillOrderActivity extends BaseActivity {
     TextView tvCouponMoney;
 
     private GoodImageAdapter adapter;
-    private String norm, num, price, goodId, otherId, choose, type, addressId, coupleId = "-1", connectPrices, orderId;
+    private String norm, name, num, price, goodId, otherId, choose, type, addressId, coupleId = "-1", connectPrices,
+            orderId;
     private double realMoney, payMoney;
     private List<String> selectGoodsImage = new ArrayList<>();
     private AsyncHttpClient client = new AsyncHttpClient();
@@ -85,6 +86,7 @@ public class FillOrderActivity extends BaseActivity {
 
     private void initView() {
         norm = getIntent().getStringExtra("norm");
+        name = getIntent().getStringExtra("name");
         num = getIntent().getStringExtra("num");
         price = getIntent().getStringExtra("price");
         connectPrices = getIntent().getStringExtra("connectPrices");
@@ -128,6 +130,11 @@ public class FillOrderActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.put("userId", MyApplication.getInstance().getStringValue("userId"));
         params.put("goodId", goodId);
+        if (StringUtil.isEmpty(name)) {
+            params.put("name", "-1");
+        } else {
+            params.put("name", name);
+        }
         params.put("otherId", otherId);
         if (StringUtil.isEmpty(etMessage.getEditableText().toString().trim())) {
             params.put("content", "-1");

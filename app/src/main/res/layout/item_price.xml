@@ -42,11 +42,4 @@
         android:textColor="@color/textblackColor"
         android:textSize="14sp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="元每千克"
-        android:textColor="@color/textblackColor"
-        android:textSize="14sp" />
 </LinearLayout>

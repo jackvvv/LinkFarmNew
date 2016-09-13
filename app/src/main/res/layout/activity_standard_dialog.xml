@@ -32,12 +32,22 @@
                     android:background="#fff">
 
                     <TextView
+                        android:id="@+id/t"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="规格"
                         android:textColor="#888"
                         android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/tv_storeNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/t"
+                        android:layout_centerHorizontal="true"
+                        android:text="库存量：0"
+                        android:textColor="#888"
+                        android:textSize="15sp" />
 
                     <ImageView
                         android:id="@+id/img_colse"

@@ -74,6 +74,8 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
     TextView tvCart;
     @Bind(R.id.tv_ok)
     TextView tvOk;
+    @Bind(R.id.tv_storeNum)
+    TextView tv_storeNum;
     @Bind(R.id.ll_root)
     RelativeLayout ll_root;
     @Bind(R.id.lv_price)
@@ -108,7 +110,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(w, FrameLayout.LayoutParams.WRAP_CONTENT);
         ll_root.setLayoutParams(lp);
 
-        lastNum = goodsBean.getLeastKiloGram();
+//        lastNum = goodsBean.getLeastKiloGram();
         imgList.clear();
         imgList.addAll(goodsBean.getImageitems());
         if (0 != imgList.size()) {
@@ -128,9 +130,12 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         //价格区间list adapter
         priceAdapter = new StandardPriceAdapter(this, priceList);
         if (null != goodsBean.getNormitems() && 0 != goodsBean.getNormitems().size()) {
+            lastNum = goodsBean.getNormitems().get(0).getNum();
+            tv_storeNum.setText("库存量：" + goodsBean.getNormitems().get(0).getNum());
             selectType = goodsBean.getNormitems().get(0).getNormName();
             normId = goodsBean.getNormitems().get(0).getNormId();
-            priceDataInterface.setPriceList(goodsBean.getNormitems().get(0).getTypeItems());
+            priceDataInterface.setPriceList(goodsBean.getNormitems().get(0).getTypeItems(), goodsBean.getNormitems()
+                    .get(0).getUnit());
         }
 
         lvPrice.setAdapter(priceAdapter);
@@ -147,8 +152,11 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 typeAdapter.notifyDataSetChanged();
                 selectType = goodsBean.getNormitems().get(i).getNormName();
                 normId = goodsBean.getNormitems().get(i).getNormId();
+                goodsBean.getNormitems().get(0).getNum();
+                lastNum = goodsBean.getNormitems().get(i).getNum();
                 //根据规格，切换对应的单价区间列表
-                priceDataInterface.setPriceList(goodsBean.getNormitems().get(i).getTypeItems());
+                priceDataInterface.setPriceList(goodsBean.getNormitems().get(i).getTypeItems(), goodsBean
+                        .getNormitems().get(i).getUnit());
             }
         });
         etWeight.addTextChangedListener(watcher);
@@ -231,7 +239,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                     ) - Float
                             .parseFloat(lastNum) > 0) {
                         materialDialog = new MaterialDialog(this);
-                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + "kg,如需大量购买，请联系商家")
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + ",如需大量购买，请联系商家")
                                 .setPositiveButton("知道了", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -253,7 +261,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                     ) - Float
                             .parseFloat(lastNum) > 0) {
                         materialDialog = new MaterialDialog(this);
-                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + "kg,如需大量购买，请联系商家")
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + ",如需大量购买，请联系商家")
                                 .setPositiveButton("知道了", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -321,9 +329,10 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
     }
 
     @Override
-    public void setPriceList(List<GoodsDetailBean.NormListBean.NormTypeListBean> list) {
+    public void setPriceList(List<GoodsDetailBean.NormListBean.NormTypeListBean> list, String unit) {
         priceList.clear();
         priceList.addAll(list);
+        priceAdapter.unit = unit;
         priceAdapter.notifyDataSetChanged();
         Utility.setListViewHeightBasedOnChildren(lvPrice);
     }
