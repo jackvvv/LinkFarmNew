@@ -164,7 +164,8 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         try {
             Class cls = Class.forName("com.ToxicBakery.viewpager.transforms." + transforemerName);
             transforemer = (ABaseTransformer) cls.newInstance();
-            convenientBanner.setPageIndicator(new int[]{R.drawable.carousel_point, R.drawable.carousel_point_select})
+            convenientBanner.startTurning(3000).setPageIndicator(new int[]{R.drawable.carousel_point, R.drawable
+                    .carousel_point_select})
                     .getViewPager().setPageTransformer(true, transforemer);
             //部分3D特效需要调整滑动速度
             if (transforemerName.equals("StackTransformer")) {
@@ -218,7 +219,8 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                     public NetworkImageHolderView createHolder() {
                         return new NetworkImageHolderView();
                     }
-                }, picList).startTurning(3000);
+                }, picList).setPageIndicator(new int[]{R.drawable.carousel_point, R.drawable
+                        .carousel_point_select}).startTurning(3000);
             }
             if (bean.getRecarrayitems() != null) {
                 recommendList.clear();

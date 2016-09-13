@@ -38,6 +38,7 @@ import sinia.com.linkfarmnew.activity.SettingsActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.LoginBean;
 import sinia.com.linkfarmnew.bean.RefreshBean;
+import sinia.com.linkfarmnew.bean.ServiceBean;
 import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
@@ -114,6 +115,7 @@ public class MineFragment extends BaseFragment {
     private MaterialDialog materialDialog;
     private AsyncHttpClient client = new AsyncHttpClient();
     private String userName, headImage;
+    private String tel = "";
 
     @Nullable
     @Override
@@ -121,7 +123,31 @@ public class MineFragment extends BaseFragment {
     Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine, null);
         ButterKnife.bind(this, rootView);
+        getServiceTel();
         return rootView;
+    }
+
+    private void getServiceTel() {
+        RequestParams params = new RequestParams();
+        client.post(Constants.BASE_URL + "someCall", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    ServiceBean bean = gson.fromJson(s, ServiceBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        tel = bean.getTelephone();
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("请求失败");
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -371,11 +397,11 @@ public class MineFragment extends BaseFragment {
 
     private void callService() {
         materialDialog = new MaterialDialog(getActivity());
-        materialDialog.setTitle("联系客服").setMessage("400-888-666")
+        materialDialog.setTitle("联系客服").setMessage(tel)
                 .setPositiveButton("呼叫", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "400-888-666"));
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + tel));
                         startActivity(intent);
                         materialDialog.dismiss();
                     }

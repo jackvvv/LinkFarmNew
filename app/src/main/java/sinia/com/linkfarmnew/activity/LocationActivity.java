@@ -77,6 +77,11 @@ public class LocationActivity extends BaseActivity {
         adapter = new OpenCityAdapter(this, list);
         gridView.setAdapter(adapter);
         adapter.selectPosition = 0;
+        if (0 != list.size()) {
+            selectCity = list.get(0).getCityName();
+        } else {
+            selectCity = "南京";
+        }
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

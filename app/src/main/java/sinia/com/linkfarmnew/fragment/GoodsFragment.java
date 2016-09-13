@@ -145,7 +145,8 @@ public class GoodsFragment extends BaseFragment {
                 public NetworkImageHolderView createHolder() {
                     return new NetworkImageHolderView();
                 }
-            }, picList).startTurning(4000);
+            }, picList).setPageIndicator(new int[]{R.drawable.carousel_point, R.drawable
+                    .carousel_point_select}).startTurning(4000);
         }
         adapter = new GoodsCommentAdapter(getActivity(), list);
         lvComment.setAdapter(adapter);
