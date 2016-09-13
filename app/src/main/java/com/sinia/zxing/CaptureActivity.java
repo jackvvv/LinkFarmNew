@@ -47,12 +47,20 @@ import butterknife.OnClick;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
 import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.GoodsDetailBean;
+import sinia.com.linkfarmnew.bean.ScanResultBean;
+import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.MyApplication;
 
+import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.Result;
 import com.google.zxing.ResultMetadataType;
 import com.google.zxing.ResultPoint;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 import com.sinia.zxing.camera.CameraManager;
 import com.sinia.zxing.decoding.CaptureActivityHandler;
 import com.sinia.zxing.decoding.DecodeFormatManager;
@@ -63,15 +71,6 @@ import com.sinia.zxing.decoding.IntentSource;
 import com.sinia.zxing.decoding.Intents;
 import com.sinia.zxing.view.ViewfinderView;
 
-/**
- * This activity opens the camera and does the actual scanning on a background
- * thread. It draws a viewfinder to help the user place the barcode correctly,
- * shows feedback as the image processing is happening, and then overlays the
- * results when a scan is successful.
- *
- * @author dswitkin@google.com (Daniel Switkin)
- * @author Sean Owen
- */
 public final class CaptureActivity extends BaseActivity implements
         SurfaceHolder.Callback {
 
@@ -103,15 +102,11 @@ public final class CaptureActivity extends BaseActivity implements
     private IntentSource source;
     private TextView shape_code;
 
-    // private ScanFromWebPageManager scanFromWebPageManager;
     private Collection<BarcodeFormat> decodeFormats;
     private Map<DecodeHintType, ?> decodeHints;
-    private String characterSet;
-    // private HistoryManager historyManager;
+    private String characterSet, content;
     private InactivityTimer inactivityTimer;
-
-    // private BeepManager beepManager;
-    // private AmbientLightManager ambientLightManager;
+    private AsyncHttpClient client = new AsyncHttpClient();
 
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -129,22 +124,6 @@ public final class CaptureActivity extends BaseActivity implements
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // super.onCreate(icicle);
-
-        // Window window = getWindow();
-        // window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        // setContentView(R.layout.capture);
-        //
-        // hasSurface = false;
-        // historyManager = new HistoryManager(this);
-        // historyManager.trimHistory();
-        // inactivityTimer = new InactivityTimer(this);
-        // beepManager = new BeepManager(this);
-        // ambientLightManager = new AmbientLightManager(this);
-        //
-        // PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
-        // Jacky 2014-01-07
         setContentView(R.layout.activity_capture, "二维码扫描");
         getDoingView().setVisibility(View.GONE);
         ButterKnife.bind(this);
@@ -152,29 +131,16 @@ public final class CaptureActivity extends BaseActivity implements
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
         hasSurface = false;
         inactivityTimer = new InactivityTimer(this);
-
-        // statusView = (TextView) findViewById(R.id.status_view);
-        // statusView.setOnClickListener(new OnClickListener() {
-        // @Override
-        // public void onClick(View v) {
-        // // Intent intent = new Intent(CaptureActivity.this,
-        // SecondActivity.class);
-        // // startActivity(intent);
-        // }
-        // });
     }
 
     @Override
     protected void onResume() {
-        // Jacky 2014-01-07
         super.onResume();
         System.out
                 .println("CaptureActivity..................onResume..........");
         cameraManager = new CameraManager(getApplication());
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
         viewfinderView.setCameraManager(cameraManager);
-
-        // statusView = (TextView) findViewById(R.id.status_view);
 
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
@@ -197,8 +163,6 @@ public final class CaptureActivity extends BaseActivity implements
             String dataString = intent.getDataString();
 
             if (Intents.Scan.ACTION.equals(action)) {
-                // Scan the formats the intent requested, and return the result
-                // to the calling activity.
                 source = IntentSource.NATIVE_APP_INTENT;
                 decodeFormats = DecodeFormatManager.parseDecodeFormats(intent);
                 decodeHints = DecodeHintManager.parseDecodeHints(intent);
@@ -244,7 +208,6 @@ public final class CaptureActivity extends BaseActivity implements
             handler = null;
         }
         inactivityTimer.onPause();
-        // ambientLightManager.stop();
         cameraManager.closeDriver();
         if (!hasSurface) {
             SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
@@ -279,9 +242,7 @@ public final class CaptureActivity extends BaseActivity implements
                 break;
             case KeyEvent.KEYCODE_FOCUS:
             case KeyEvent.KEYCODE_CAMERA:
-                // Handle these events so they don't launch the Camera app
                 return true;
-            // Use volume up/down to turn on light
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 cameraManager.setTorch(false);
                 return true;
@@ -300,7 +261,6 @@ public final class CaptureActivity extends BaseActivity implements
     }
 
     private void decodeOrStoreSavedBitmap(Bitmap bitmap, Result result) {
-        // Bitmap isn't used yet -- will be used soon
         if (handler == null) {
             savedResultToShow = result;
         } else {
@@ -308,9 +268,6 @@ public final class CaptureActivity extends BaseActivity implements
                 savedResultToShow = result;
             }
             if (savedResultToShow != null) {
-                // Message message = Message.obtain(handler,
-                // R.id.decode_succeeded, savedResultToShow);
-                // handler.sendMessage(message);
             }
             savedResultToShow = null;
         }
@@ -336,20 +293,7 @@ public final class CaptureActivity extends BaseActivity implements
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                int height) {
-
     }
-
-    /**
-     * A valid barcode has been found, so give an indication of success and show
-     * the results.
-     *
-     * @param rawResult
-     *            The contents of the barcode.
-     * @param scaleFactor
-     *            amount by which thumbnail was scaled
-     * @param barcode
-     *            A greyscale bitmap of the camera data which was decoded.
-     */
 
     /**
      * 结果处理
@@ -358,30 +302,48 @@ public final class CaptureActivity extends BaseActivity implements
         inactivityTimer.onActivity();
         viewfinderView.drawResultBitmap(barcode);
         inactivityTimer.onActivity();
-
         // String msg = rawResult.getText();
         // if (msg == null || "".equals(msg)) {
         // msg = "无法识别";
         // }
         //
         // showToast(msg);
-        Intent intent = new Intent();
-        intent.putExtra("goodId", rawResult.toString());
-        startActivityForIntent(GoodsDetailActivity.class, intent);
+        content = rawResult.toString();
+        scanGoods(content);
         Log.e("tag", rawResult.toString());
 
     }
 
-    // 二维码接口
+    private void scanGoods(String content) {
+        showLoad("");
+        RequestParams params = new RequestParams();
+        params.put("content", content);
+        Log.i("tag", Constants.BASE_URL + "scanGood&" + params);
+        client.post(Constants.BASE_URL + "scanGood", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    ScanResultBean resultBean = gson.fromJson(s, ScanResultBean.class);
+                    int state = resultBean.getState();
+                    int isSuccessful = resultBean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        Intent intent = new Intent();
+                        intent.putExtra("goodId", resultBean.getGoodId());
+                        startActivityForIntent(GoodsDetailActivity.class, intent);
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("商品串码不正确");
+                    }
+                } else {
+                    showToast("请求失败");
+                }
+            }
+        });
+    }
 
-    /**
-     * Superimpose a line for 1D or dots for 2D to highlight the key features of
-     * the barcode.
-     *
-     * @param barcode     A bitmap of the captured image.
-     * @param scaleFactor amount by which thumbnail was scaled
-     * @param rawResult   The decoded results which contains the points to draw.
-     */
     private void drawResultPoints(Bitmap barcode, float scaleFactor,
                                   Result rawResult) {
         ResultPoint[] points = rawResult.getResultPoints();
@@ -395,8 +357,6 @@ public final class CaptureActivity extends BaseActivity implements
             } else if (points.length == 4
                     && (rawResult.getBarcodeFormat() == BarcodeFormat.UPC_A || rawResult
                     .getBarcodeFormat() == BarcodeFormat.EAN_13)) {
-                // Hacky special case -- draw two lines, for the barcode and
-                // metadata
                 drawLine(canvas, paint, points[0], points[1], scaleFactor);
                 drawLine(canvas, paint, points[2], points[3], scaleFactor);
             } else {
@@ -441,8 +401,6 @@ public final class CaptureActivity extends BaseActivity implements
         }
         try {
             cameraManager.openDriver(surfaceHolder);
-            // Creating the handler starts the preview, which can also throw a
-            // RuntimeException.
             if (handler == null) {
                 handler = new CaptureActivityHandler(this, decodeFormats,
                         decodeHints, characterSet, cameraManager);
@@ -452,8 +410,6 @@ public final class CaptureActivity extends BaseActivity implements
             Log.w(TAG, ioe);
             displayFrameworkBugMessageAndExit();
         } catch (RuntimeException e) {
-            // Barcode Scanner has seen crashes in the wild of this variety:
-            // java.?lang.?RuntimeException: Fail to connect to camera service
             Log.w(TAG, "Unexpected error initializing camera", e);
             displayFrameworkBugMessageAndExit();
         }
@@ -462,16 +418,12 @@ public final class CaptureActivity extends BaseActivity implements
     private void displayFrameworkBugMessageAndExit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.app_name));
-        // builder.setMessage(getString(R.string.msg_camera_framework_bug));
-        // builder.setPositiveButton(R.string.button_ok, new
-        // FinishListener(this));
         builder.setOnCancelListener(new FinishListener(this));
         builder.show();
     }
 
     public void restartPreviewAfterDelay(long delayMS) {
         if (handler != null) {
-            // handler.sendEmptyMessageDelayed(R.id.restart_preview, delayMS);
         }
         resetStatusView();
     }
