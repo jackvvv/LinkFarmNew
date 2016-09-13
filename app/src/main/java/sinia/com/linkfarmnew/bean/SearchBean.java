@@ -30,7 +30,7 @@ public class SearchBean extends JsonBean {
         /**
          * 商品
          */
-        private int minKilograme;
+        private String minKilograme;
         private String buyNum;
         private String goodId;
         private String goodName;
@@ -66,11 +66,11 @@ public class SearchBean extends JsonBean {
             this.merId = merId;
         }
 
-        public int getMinKilograme() {
+        public String getMinKilograme() {
             return minKilograme;
         }
 
-        public void setMinKilograme(int minKilograme) {
+        public void setMinKilograme(String minKilograme) {
             this.minKilograme = minKilograme;
         }
 
