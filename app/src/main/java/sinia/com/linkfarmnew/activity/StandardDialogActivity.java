@@ -217,6 +217,8 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         setResult(RESULT_OK, intent);
                         finish();
                     }
+                } else {
+                    finish();
                 }
                 break;
             case R.id.img_jian:
