@@ -197,14 +197,27 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 if (!StringUtil.isEmpty(selectType) && !StringUtil.isEmpty(etWeight.getEditableText().toString().trim
                         ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Float.parseFloat
                         (etWeight.getEditableText().toString().trim())) {
-                    Intent intent = new Intent();
-                    intent.putExtra("type", selectType);
-                    intent.putExtra("normId", normId);
-                    intent.putExtra("weight", etWeight.getEditableText().toString().trim());
-                    intent.putExtra("price", tvMoney.getText().toString().trim());
-                    setResult(RESULT_OK, intent);
+                    if (!StringUtil.isEmpty(lastNum) && Float.parseFloat(etWeight.getEditableText().toString().trim()
+                    ) - Float
+                            .parseFloat(lastNum) > 0) {
+                        materialDialog = new MaterialDialog(this);
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + ",如需大量购买，请联系商家")
+                                .setPositiveButton("知道了", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        materialDialog.dismiss();
+                                    }
+                                }).show();
+                    } else {
+                        Intent intent = new Intent();
+                        intent.putExtra("type", selectType);
+                        intent.putExtra("normId", normId);
+                        intent.putExtra("weight", etWeight.getEditableText().toString().trim());
+                        intent.putExtra("price", tvMoney.getText().toString().trim());
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
                 }
-                finish();
                 break;
             case R.id.img_jian:
                 if (!StringUtil.isEmpty(etWeight.getEditableText().toString().trim()) && 1 < Float.parseFloat
@@ -274,6 +287,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         intent.putExtra("num", etWeight.getEditableText().toString().trim());
                         intent.putExtra("price", tvMoney.getText().toString().trim());
                         intent.putExtra("goodId", goodsBean.getId());
+                        intent.putExtra("name", normId);
                         //填写订单显示的购买商品的图片集合
                         selectGoodsImage = new ArrayList<>();
                         selectGoodsImage.add(goodsBean.getGoodImage());

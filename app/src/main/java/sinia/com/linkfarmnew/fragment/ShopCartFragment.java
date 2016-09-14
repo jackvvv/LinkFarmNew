@@ -249,6 +249,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                     showToast("选择了" + allSize() + "件商品，共" + "需要支付" + allPrice() + "元");
                     Intent intent = new Intent(getActivity(), FillOrderActivity.class);
                     intent.putExtra("norm", "-1");
+                    intent.putExtra("name", "-1");
                     intent.putExtra("num", connectBuyNum());
                     intent.putExtra("price", allPrice() + "");
                     intent.putExtra("connectPrices", connectPrice());
