@@ -66,6 +66,8 @@ public class OrderDetailActivity extends BaseActivity {
     TextView btn2;
     @Bind(R.id.btn1)
     TextView btn1;
+    @Bind(R.id.tv_message)
+    TextView tv_message;
     @Bind(R.id.v1)
     View v1;
     @Bind(R.id.tv_couponMoney)
@@ -134,6 +136,7 @@ public class OrderDetailActivity extends BaseActivity {
         tvShopName.setText(bean.getMerName());
         tvTel.setText(bean.getTelephone());
         tvAddress.setText(bean.getAddress());
+        tv_message.setText(bean.getContent());
         orderTime.setText("下单时间：" + bean.getCreateTime());
         tvOldcost.setText("¥ " + StringUtil.formatePrice(bean.getPrice()));
         tvRealmoney.setText("¥ " + StringUtil.formatePrice(bean.getTruePrice()));

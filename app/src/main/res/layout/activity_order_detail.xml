@@ -86,14 +86,14 @@
                 android:background="#ffffff">
 
                 <TextView
+                    android:id="@+id/tv_shopName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
                     android:text="链农荟"
                     android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:id="@+id/tv_shopName" />
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
@@ -157,6 +157,44 @@
                     android:drawableRight="@drawable/right_jian"
                     android:gravity="center_vertical"
                     android:textColor="@color/price_color"
+                    android:textSize="15sp" />
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#E7E7E7" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="10dp"
+                android:background="#E7E7E7" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/layout_selector"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/m"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="买家留言："
+                    android:textColor="#aa000000"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/tv_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/m"
+                    android:gravity="center_vertical"
+                    android:text=""
+                    android:textColor="#aa000000"
                     android:textSize="15sp" />
 
             </RelativeLayout>
@@ -233,6 +271,7 @@
                 android:background="#E7E7E7" />
 
             <TextView
+                android:id="@+id/tv_self_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#fff"
@@ -242,8 +281,7 @@
                 android:singleLine="true"
                 android:text="南京市栖霞区仙隐北路  李先生 10056"
                 android:textColor="@color/price_color"
-                android:textSize="14sp"
-                android:id="@+id/tv_self_tip" />
+                android:textSize="14sp" />
 
             <View
                 android:layout_width="match_parent"

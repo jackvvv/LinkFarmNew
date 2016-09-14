@@ -35,6 +35,7 @@ public class OrderDetailBean extends JsonBean {
     private double price;
     private String address;
     private String merName;
+    private String content;
     private String name;
     private int freight;
     private int payType;
@@ -48,6 +49,14 @@ public class OrderDetailBean extends JsonBean {
      */
 
     private List<GoodItemsBean> goodItems;
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     public String getCreateTime() {
         return createTime;
