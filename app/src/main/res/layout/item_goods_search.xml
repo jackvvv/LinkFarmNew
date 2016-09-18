@@ -46,7 +46,6 @@
             android:layout_alignBottom="@+id/img"
             android:layout_alignParentRight="true"
             android:maxLines="2"
-            android:text="0.5元/kg"
             android:textColor="#DB2220"
             android:textSize="15sp" />
     </RelativeLayout>

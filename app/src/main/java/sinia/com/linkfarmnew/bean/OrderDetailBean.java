@@ -174,9 +174,27 @@ public class OrderDetailBean extends JsonBean {
         private String id;
         private double price;
         private int buyNum;
+        private String num;
+        private String unit;
         private String norm;
         private String goodName;
         private String goodImage;
+
+        public String getUnit() {
+            return unit;
+        }
+
+        public void setUnit(String unit) {
+            this.unit = unit;
+        }
+
+        public String getNum() {
+            return num;
+        }
+
+        public void setNum(String num) {
+            this.num = num;
+        }
 
         public int getBuyNum() {
             return buyNum;

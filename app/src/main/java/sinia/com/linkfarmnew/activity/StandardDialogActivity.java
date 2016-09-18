@@ -92,7 +92,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
     private AsyncHttpClient client = new AsyncHttpClient();
     private List<String> selectGoodsImage = new ArrayList<>();
     private List<GoodsDetailBean.GoodsImageBean> imgList = new ArrayList<>();
-    private String lastNum;//剩余量s
+    public static String lastNum, goodsUnit;//剩余量s
     private MaterialDialog materialDialog;
 
     @Override
@@ -131,7 +131,8 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         priceAdapter = new StandardPriceAdapter(this, priceList);
         if (null != goodsBean.getNormitems() && 0 != goodsBean.getNormitems().size()) {
             lastNum = goodsBean.getNormitems().get(0).getNum();
-            tv_storeNum.setText("库存量：" + goodsBean.getNormitems().get(0).getNum());
+            goodsUnit = goodsBean.getNormitems().get(0).getUnit();
+            tv_storeNum.setText("库存量：" + goodsBean.getNormitems().get(0).getNum() + goodsUnit);
             selectType = goodsBean.getNormitems().get(0).getNormName();
             normId = goodsBean.getNormitems().get(0).getNormId();
             priceDataInterface.setPriceList(goodsBean.getNormitems().get(0).getTypeItems(), goodsBean.getNormitems()
@@ -154,6 +155,8 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 normId = goodsBean.getNormitems().get(i).getNormId();
                 goodsBean.getNormitems().get(0).getNum();
                 lastNum = goodsBean.getNormitems().get(i).getNum();
+                goodsUnit = goodsBean.getNormitems().get(i).getUnit();
+                tv_storeNum.setText("库存量：" + goodsBean.getNormitems().get(i).getNum() + goodsUnit);
                 //根据规格，切换对应的单价区间列表
                 priceDataInterface.setPriceList(goodsBean.getNormitems().get(i).getTypeItems(), goodsBean
                         .getNormitems().get(i).getUnit());
@@ -197,26 +200,13 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 if (!StringUtil.isEmpty(selectType) && !StringUtil.isEmpty(etWeight.getEditableText().toString().trim
                         ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Float.parseFloat
                         (etWeight.getEditableText().toString().trim())) {
-                    if (!StringUtil.isEmpty(lastNum) && Float.parseFloat(etWeight.getEditableText().toString().trim()
-                    ) - Float
-                            .parseFloat(lastNum) > 0) {
-                        materialDialog = new MaterialDialog(this);
-                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + ",如需大量购买，请联系商家")
-                                .setPositiveButton("知道了", new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        materialDialog.dismiss();
-                                    }
-                                }).show();
-                    } else {
-                        Intent intent = new Intent();
-                        intent.putExtra("type", selectType);
-                        intent.putExtra("normId", normId);
-                        intent.putExtra("weight", etWeight.getEditableText().toString().trim());
-                        intent.putExtra("price", tvMoney.getText().toString().trim());
-                        setResult(RESULT_OK, intent);
-                        finish();
-                    }
+                    Intent intent = new Intent();
+                    intent.putExtra("type", selectType);
+                    intent.putExtra("normId", normId);
+                    intent.putExtra("weight", etWeight.getEditableText().toString().trim());
+                    intent.putExtra("price", tvMoney.getText().toString().trim());
+                    setResult(RESULT_OK, intent);
+                    finish();
                 } else {
                     finish();
                 }
@@ -254,7 +244,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                     ) - Float
                             .parseFloat(lastNum) > 0) {
                         materialDialog = new MaterialDialog(this);
-                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + ",如需大量购买，请联系商家")
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + goodsUnit + ",如需大量购买，请联系商家")
                                 .setPositiveButton("知道了", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -276,7 +266,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                     ) - Float
                             .parseFloat(lastNum) > 0) {
                         materialDialog = new MaterialDialog(this);
-                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + ",如需大量购买，请联系商家")
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + goodsUnit + ",如需大量购买，请联系商家")
                                 .setPositiveButton("知道了", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -292,7 +282,9 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         intent.putExtra("name", normId);
                         //填写订单显示的购买商品的图片集合
                         selectGoodsImage = new ArrayList<>();
-                        selectGoodsImage.add(goodsBean.getGoodImage());
+                        if (goodsBean.getImageitems() != null && 0 != goodsBean.getImageitems().size()) {
+                            selectGoodsImage.add(goodsBean.getImageitems().get(0).getImage());
+                        }
                         intent.putExtra("selectGoodsImage", (Serializable) selectGoodsImage);
                         intent.putExtra("otherId", "-1");//购物车
                         intent.putExtra("choose", "-1");//商户id

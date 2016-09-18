@@ -131,7 +131,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         tv_goodsname.setText(goodsBean.getGoodName());
         tv_price.setText("¥ " + StringUtil.formatePrice(goodsBean.getPrice()));
         tv_num.setText(goodsBean.getNum() + "");
-        tv_weight.setText(goodsBean.getNormName() + " " + goodsBean.getGoodNum() + "kg");
+        tv_weight.setText(goodsBean.getNormName() + " " + goodsBean.getGoodNum() + goodsBean.getUnit());
         if (goodsBean.isChecked()) {
             ivCheckChild.setChecked(true);
         } else {

@@ -139,6 +139,7 @@ public class PersonalCenterActivty extends BaseActivity {
         RequestParams params = new RequestParams();
         params.put("userId", MyApplication.getInstance().getStringValue("userId"));
         params.put("type", "1");
+        params.put("content", "-1");
         try {
             if (StringUtil.isEmpty(etName.getText().toString().trim())) {
                 params.put("name", "-1");

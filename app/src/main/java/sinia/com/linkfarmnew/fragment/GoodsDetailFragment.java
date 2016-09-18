@@ -35,6 +35,7 @@ import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.FillOrderActivity;
 import sinia.com.linkfarmnew.activity.MainActivity;
 import sinia.com.linkfarmnew.activity.ShopDetailActivity;
+import sinia.com.linkfarmnew.activity.StandardDialogActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.GoodsDetailBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
@@ -79,7 +80,7 @@ public class GoodsDetailFragment extends BaseFragment {
     private AsyncHttpClient client = new AsyncHttpClient();
     private String goodsId, isCollect;//1，收藏，2未收藏
     private List<String> selectGoodsImage = new ArrayList<>();
-    private String merTelephone, lastNum;//剩余量s
+    private String merTelephone, lastNum, goodsUnit;//剩余量s
     private MaterialDialog materialDialog;
 
     @Nullable
@@ -89,7 +90,8 @@ public class GoodsDetailFragment extends BaseFragment {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_goods_detail, null);
         ButterKnife.bind(this, rootView);
         goodsBean = (GoodsDetailBean) getArguments().get("goodsBean");
-        lastNum = goodsBean.getLeastKiloGram();
+        lastNum = StandardDialogActivity.lastNum;
+        goodsUnit = StandardDialogActivity.goodsUnit;
         merTelephone = goodsBean.getMerTelephone();
         initData();
         return rootView;
@@ -175,7 +177,7 @@ public class GoodsDetailFragment extends BaseFragment {
                     ) - Float
                             .parseFloat(lastNum) > 0) {
                         materialDialog = new MaterialDialog(getActivity());
-                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + "kg,如需大量购买，请联系商家")
+                        materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + goodsUnit + ",如需大量购买，请联系商家")
                                 .setPositiveButton("知道了", new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
@@ -201,7 +203,9 @@ public class GoodsDetailFragment extends BaseFragment {
         intent.putExtra("goodId", goodsBean.getId());
         //填写订单显示的购买商品的图片集合
         selectGoodsImage = new ArrayList<>();
-        selectGoodsImage.add(goodsBean.getGoodImage());
+        if (goodsBean.getImageitems() != null && 0 != goodsBean.getImageitems().size()) {
+            selectGoodsImage.add(goodsBean.getImageitems().get(0).getImage());
+        }
         intent.putExtra("selectGoodsImage", (Serializable) selectGoodsImage);
         intent.putExtra("otherId", "-1");//购物车
         intent.putExtra("choose", "-1");//商户id

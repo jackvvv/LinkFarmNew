@@ -165,7 +165,7 @@ public class PayActivity extends BaseActivity {
                     int state = bean.getState();
                     int isSuccessful = bean.getIsSuccessful();
                     if (0 == state && 0 == isSuccessful) {
-                        showToast("订单支付成功");
+//                        showToast("请求成功");
                         if (norm.equals("1")) {
                             //1 从填写订单页面跳转，支付完成销毁填写订单页面
                             ActivityManager.getInstance().finishActivity(FillOrderActivity.class);

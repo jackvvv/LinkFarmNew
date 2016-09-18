@@ -68,6 +68,7 @@ public class ChangeNameActivity extends BaseActivity {
         RequestParams params = new RequestParams();
         params.put("userId", MyApplication.getInstance().getStringValue("userId"));
         params.put("type", "1");
+        params.put("content", "-1");
         try {
             params.put("name", URLEncoder.encode(et_nickname.getEditableText().toString().trim(), "UTF-8"));
         } catch (UnsupportedEncodingException e) {

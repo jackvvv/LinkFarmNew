@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.LinearLayout;
@@ -66,7 +67,7 @@ public class MyOrderAdapter extends BaseAdapter {
         TextView tv_price = ViewHolder.get(view, R.id.tv_price);
         TextView btn1 = ViewHolder.get(view, R.id.btn1);
         TextView btn2 = ViewHolder.get(view, R.id.btn2);
-        LinearLayout ll_detail = ViewHolder.get(view, R.id.ll_detail);
+        LinearLayout item = ViewHolder.get(view, R.id.item);
         GridView gv_goods = ViewHolder.get(view, R.id.gv_goods);
 
         List<MyOrderListBean.OrderBean.OrderImageitemBean> orderImageList = new ArrayList<>();
@@ -212,6 +213,24 @@ public class MyOrderAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.putExtra("orderId", orderId);
+                intent.putExtra("merImage", merImage);
+                context.startActivity(intent);
+            }
+        });
+        item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.putExtra("orderId", orderId);
+                intent.putExtra("merImage", merImage);
+                context.startActivity(intent);
+            }
+        });
+        gv_goods.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(context, OrderDetailActivity.class);
                 intent.putExtra("orderId", orderId);
                 intent.putExtra("merImage", merImage);
