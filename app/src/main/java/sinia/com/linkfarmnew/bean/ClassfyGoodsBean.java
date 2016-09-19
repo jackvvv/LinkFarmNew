@@ -34,6 +34,15 @@ public class ClassfyGoodsBean extends JsonBean {
         private String goodId;
         private String goodName;
         private String goodImage;
+        private String unit;
+
+        public String getUnit() {
+            return unit;
+        }
+
+        public void setUnit(String unit) {
+            this.unit = unit;
+        }
 
         public double getMinKilograme() {
             return minKilograme;

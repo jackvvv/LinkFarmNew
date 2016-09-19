@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
 import com.umeng.message.PushAgent;
 import com.umeng.message.UTrack;
 import com.umeng.message.UmengMessageHandler;
@@ -38,6 +39,7 @@ public class MyApplication extends Application {
         context = this.getApplicationContext();
         instance = this;
         Bugly.init(getApplicationContext(), "f40e2555ac", false);
+        Beta.checkUpgrade(false, false);
         initShareKey();
         initUMPush();
     }
