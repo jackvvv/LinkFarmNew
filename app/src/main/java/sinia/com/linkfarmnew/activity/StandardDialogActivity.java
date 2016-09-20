@@ -46,6 +46,7 @@ import sinia.com.linkfarmnew.myinterface.CalculatePriceInterface;
 import sinia.com.linkfarmnew.myinterface.SetPriceDataInterface;
 import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.AppInfoUtil;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.StringUtil;
@@ -114,9 +115,9 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         imgList.clear();
         imgList.addAll(goodsBean.getImageitems());
         if (0 != imgList.size()) {
-            Glide.with(this).load(imgList.get(0).getImage()).placeholder(R.drawable.ic_launcher).into(img);
+            BitmapUtilsHelp.getImage(this).display(img, imgList.get(0).getImage());
         } else {
-            Glide.with(this).load("").placeholder(R.drawable.ic_launcher).into(img);
+            BitmapUtilsHelp.getImage(this).display(img, "");
         }
 
         headerView = LayoutInflater.from(this).inflate(R.layout.view_standard_head, null);
@@ -359,7 +360,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
             double kg_end = list.get(i).getEnKg();
             double singlePrice = list.get(i).getPrice();
             double money;
-            if (inputWeight >= kg_start && inputWeight <= kg_end) {
+            if (inputWeight >= kg_start && inputWeight < kg_end) {
                 money = inputWeight * singlePrice;
                 BigDecimal b = new BigDecimal(money);
                 //四舍五入，保留两位小数
@@ -369,7 +370,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
             } else {
                 //如果重量不在第一个区间，那么与下一个区间相比较
                 if (list.size() > i + 1) {
-                    if (inputWeight >= list.get(i + 1).getStKg() && inputWeight <= list.get(i + 1).getEnKg()) {
+                    if (inputWeight >= list.get(i + 1).getStKg() && inputWeight < list.get(i + 1).getEnKg()) {
                         money = inputWeight * list.get(i + 1).getPrice();
                         BigDecimal b = new BigDecimal(money);
                         //表明四舍五入，保留两位小数
@@ -377,7 +378,14 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         tvMoney.setText(StringUtil.formatePrice(money));
                         return;
                     } else if (list.size() > i + 2) {
-                        if (inputWeight >= list.get(i + 2).getStKg() && inputWeight <= list.get(i + 2).getEnKg()) {
+                        if (inputWeight >= list.get(i + 2).getStKg() && inputWeight < list.get(i + 2).getEnKg()) {
+                            money = inputWeight * list.get(i + 2).getPrice();
+                            BigDecimal b = new BigDecimal(money);
+                            //表明四舍五入，保留两位小数
+                            money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                            tvMoney.setText(StringUtil.formatePrice(money));
+                            return;
+                        } else if (inputWeight >= list.get(i + 2).getEnKg()) {
                             money = inputWeight * list.get(i + 2).getPrice();
                             BigDecimal b = new BigDecimal(money);
                             //表明四舍五入，保留两位小数
@@ -385,7 +393,14 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                             tvMoney.setText(StringUtil.formatePrice(money));
                             return;
                         } else if (list.size() > i + 3) {
-                            if (inputWeight >= list.get(i + 3).getStKg() && inputWeight <= list.get(i + 3).getEnKg()) {
+                            if (inputWeight >= list.get(i + 3).getStKg() && inputWeight < list.get(i + 3).getEnKg()) {
+                                money = inputWeight * list.get(i + 3).getPrice();
+                                BigDecimal b = new BigDecimal(money);
+                                //表明四舍五入，保留两位小数
+                                money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                tvMoney.setText(StringUtil.formatePrice(money));
+                                return;
+                            } else if (inputWeight >= list.get(i + 3).getEnKg()) {
                                 money = inputWeight * list.get(i + 3).getPrice();
                                 BigDecimal b = new BigDecimal(money);
                                 //表明四舍五入，保留两位小数
@@ -393,7 +408,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                                 tvMoney.setText(StringUtil.formatePrice(money));
                                 return;
                             } else if (list.size() > i + 4) {
-                                if (inputWeight >= list.get(i + 4).getStKg() && inputWeight <= list.get(i + 4)
+                                if (inputWeight >= list.get(i + 4).getStKg() && inputWeight < list.get(i + 4)
                                         .getEnKg()) {
                                     money = inputWeight * list.get(i + 4).getPrice();
                                     BigDecimal b = new BigDecimal(money);
@@ -401,13 +416,37 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                                     money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                                     tvMoney.setText(StringUtil.formatePrice(money));
                                     return;
-                                } else {
-                                    money = inputWeight * list.get(list.size() - 1).getPrice();
+                                } else if (inputWeight >= list.get(i + 4).getEnKg()) {
+                                    money = inputWeight * list.get(i + 4).getPrice();
                                     BigDecimal b = new BigDecimal(money);
                                     //表明四舍五入，保留两位小数
                                     money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
                                     tvMoney.setText(StringUtil.formatePrice(money));
                                     return;
+                                } else if (list.size() > i + 5) {
+                                    if (inputWeight >= list.get(i + 5).getStKg() && inputWeight < list.get(i + 5)
+                                            .getEnKg()) {
+                                        money = inputWeight * list.get(i + 5).getPrice();
+                                        BigDecimal b = new BigDecimal(money);
+                                        //表明四舍五入，保留两位小数
+                                        money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                        tvMoney.setText(StringUtil.formatePrice(money));
+                                        return;
+                                    } else if (inputWeight >= list.get(i + 5).getEnKg()) {
+                                        money = inputWeight * list.get(i + 5).getPrice();
+                                        BigDecimal b = new BigDecimal(money);
+                                        //表明四舍五入，保留两位小数
+                                        money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                        tvMoney.setText(StringUtil.formatePrice(money));
+                                        return;
+                                    } else {
+                                        money = inputWeight * list.get(list.size() - 1).getPrice();
+                                        BigDecimal b = new BigDecimal(money);
+                                        //表明四舍五入，保留两位小数
+                                        money = b.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
+                                        tvMoney.setText(StringUtil.formatePrice(money));
+                                        return;
+                                    }
                                 }
                             }
                         }

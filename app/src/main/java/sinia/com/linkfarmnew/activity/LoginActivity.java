@@ -110,6 +110,7 @@ public class LoginActivity extends BaseActivity {
                             MyApplication.getInstance().setStringValue(
                                     "userId", bean.getId());
                             MyApplication.getInstance().setLoginBean(bean);
+                            startActivityForNoIntent(MainActivity.class);
                             ActivityManager.getInstance()
                                     .finishCurrentActivity();
                             setAlias(bean.getId(), "ALIAS_TYPE.SINA_WEIBO");

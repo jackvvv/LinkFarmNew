@@ -24,6 +24,7 @@
             android:id="@+id/img_goods"
             android:layout_width="70dp"
             android:layout_height="70dp"
+            android:scaleType="fitXY"
             android:src="@drawable/class_grid_g" />
 
         <TextView

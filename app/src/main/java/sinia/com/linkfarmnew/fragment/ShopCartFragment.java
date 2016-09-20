@@ -3,6 +3,7 @@ package sinia.com.linkfarmnew.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,6 @@ import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -31,13 +31,10 @@ import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.FillOrderActivity;
 import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
 import sinia.com.linkfarmnew.activity.LoginActivity;
-import sinia.com.linkfarmnew.activity.StandardDialogActivity;
 import sinia.com.linkfarmnew.adapter.CartRecommendAdapter;
 import sinia.com.linkfarmnew.adapter.MyExpandableListAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.CartBean;
-import sinia.com.linkfarmnew.bean.GoodsBean;
-import sinia.com.linkfarmnew.bean.GroupBean;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.myinterface.CheckInterface;
 import sinia.com.linkfarmnew.myinterface.ModifyCountInterface;
@@ -82,6 +79,8 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     LinearLayout llLogin;
     @Bind(R.id.rl_cart)
     RelativeLayout rlCart;
+    @Bind(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
     private MyGridView gridView;
     private CartRecommendAdapter recommendAdapter;
     private View rootView, footView;
@@ -127,6 +126,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
             public void onSuccess(int i, String s) {
                 super.onSuccess(i, s);
                 dismiss();
+                swipeRefreshLayout.setRefreshing(false);
                 Gson gson = new Gson();
                 if (s.contains("isSuccessful")
                         && s.contains("state")) {
@@ -186,6 +186,19 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     }
 
     private void inintData() {
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
+                R.color.themeColor,
+                R.color.colorPrimary,
+                R.color.possible_result_points);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    getCartListData();
+                }
+            }
+        });
+
         footView = LayoutInflater.from(getActivity()).inflate(R.layout.view_cart_recommend, null);
         gridView = (MyGridView) footView.findViewById(R.id.gridView);
         recommendAdapter = new CartRecommendAdapter(getActivity(), recommendList);
@@ -449,7 +462,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
             for (CartBean.MerchantitemsBean.GoodsItemsBean bean : goodsList) {
                 if (bean.isChecked()) {
                     flag = true;
-                    prices = prices + bean.getGoodNum() * bean.getPrice() + ";";
+                    prices = prices + bean.getNum() * bean.getPrice() + ";";
                 }
             }
             if (flag) {

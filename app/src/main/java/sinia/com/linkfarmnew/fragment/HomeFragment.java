@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -56,7 +57,6 @@ import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.view.MyGridView;
 import sinia.com.linkfarmnew.view.NetworkImageHolderView;
-import sinia.com.linkfarmnew.view.slideview.SlideShowView;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
@@ -105,6 +105,8 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
     ConvenientBanner convenientBanner;
     @Bind(R.id.viewFlipper)
     ViewFlipper viewFlipper;
+    @Bind(R.id.swipeRefreshLayout)
+    SwipeRefreshLayout swipeRefreshLayout;
     private View rootView;
     private List<String> picList = new ArrayList<String>();
     private HomeRecommendAdapter adapter;
@@ -123,40 +125,11 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_home, null);
         ButterKnife.bind(this, rootView);
         location();
+        initData();
         return rootView;
     }
 
     private void location() {
-        mLocationManagerProxy = LocationManagerProxy.getInstance(getActivity());
-        mLocationManagerProxy.setGpsEnable(true);
-        mLocationManagerProxy.requestLocationData(
-                LocationProviderProxy.AMapNetwork, 60 * 1000, 15, this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        initData();
-    }
-
-    private void initData() {
-        adapter = new HomeRecommendAdapter(getActivity(), recommendList);
-        gridView.setAdapter(adapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (MyApplication.getInstance().getBoolValue("is_login")) {
-                    String goodId = recommendList.get(i).getGoodId();
-                    Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
-                    intent.putExtra("goodId", goodId);
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
-
         int h = AppInfoUtil.getScreenWidth(getActivity()) * 340 / 750;
         convenientBanner.getLayoutParams().height = h;
         String transforemerName = "DefaultTranformer";
@@ -175,6 +148,19 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
             e.printStackTrace();
         }
 
+        mLocationManagerProxy = LocationManagerProxy.getInstance(getActivity());
+        mLocationManagerProxy.setGpsEnable(true);
+        mLocationManagerProxy.requestLocationData(
+                LocationProviderProxy.AMapNetwork, 60 * 1000, 15, this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getHomeData();
+    }
+
+    private void getHomeData(){
         RequestParams params = new RequestParams();
         try {
             if (StringUtil.isEmpty(MyApplication.getInstance().getStringValue("city"))) {
@@ -191,6 +177,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
             public void onSuccess(int i, String s) {
                 super.onSuccess(i, s);
                 dismiss();
+                swipeRefreshLayout.setRefreshing(false);
                 Gson gson = new Gson();
                 if (s.contains("isSuccessful")
                         && s.contains("state")) {
@@ -205,6 +192,36 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                 }
             }
         });
+    }
+
+    private void initData() {
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorAccent,
+                R.color.themeColor,
+                R.color.colorPrimary,
+                R.color.possible_result_points);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getHomeData();
+            }
+        });
+        adapter = new HomeRecommendAdapter(getActivity(), recommendList);
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (MyApplication.getInstance().getBoolValue("is_login")) {
+                    String goodId = recommendList.get(i).getGoodId();
+                    Intent intent = new Intent(getActivity(), GoodsDetailActivity.class);
+                    intent.putExtra("goodId", goodId);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
     }
 
     private void setData(HomePageBean bean) {

@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.umeng.message.proguard.B;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import sinia.com.linkfarmnew.activity.GoodsDetailActivity;
 import sinia.com.linkfarmnew.activity.LoginActivity;
 import sinia.com.linkfarmnew.bean.ClassfyGoodsBean;
 import sinia.com.linkfarmnew.bean.SearchBean;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ViewHolder;
@@ -61,7 +63,7 @@ public class ClassfyGoodsAdapter extends BaseAdapter {
         TextView tv_price = ViewHolder.get(view, R.id.tv_price);
         ImageView img = ViewHolder.get(view, R.id.img);
 
-        Glide.with(context).load(list.get(i).getGoodImage()).placeholder(R.drawable.ic_launcher).into(img);
+        BitmapUtilsHelp.getImage(context).display(img, list.get(i).getGoodImage());
         tv_title.setText(list.get(i).getGoodName());
         tv_buynum.setText(list.get(i).getComNum() + "人评论");
         tv_price.setText(StringUtil.formatePrice(list.get(i).getMinKilograme()) + "元/" + list.get(i).getUnit());

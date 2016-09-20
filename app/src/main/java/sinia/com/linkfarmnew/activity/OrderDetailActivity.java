@@ -139,6 +139,7 @@ public class OrderDetailActivity extends BaseActivity {
         tv_message.setText(bean.getContent());
         orderTime.setText("下单时间：" + bean.getCreateTime());
         tvOldcost.setText("¥ " + StringUtil.formatePrice(bean.getPrice()));
+        realMoney = bean.getTruePrice();
         tvRealmoney.setText("¥ " + StringUtil.formatePrice(bean.getTruePrice()));
         price = bean.getPrice();
         if (1 == bean.getPayType()) {
