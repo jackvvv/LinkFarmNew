@@ -88,6 +88,7 @@
         <activity android:name=".activity.ModifyPasswordActivity" />
         <activity android:name=".activity.ModifyPhoneActivity" />
         <activity android:name=".activity.QuetionDetailActivity" />
+        <activity android:name=".activity.HelpDocActivity" />
         <activity
             android:name="com.sinia.zxing.CaptureActivity"
             android:clearTaskOnLaunch="true"

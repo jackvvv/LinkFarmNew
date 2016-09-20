@@ -210,9 +210,13 @@ public class FillOrderActivity extends BaseActivity {
                 String coupons_money = data.getStringExtra("coupons_money");
                 if (!StringUtil.isEmpty(coupons_money)) {
                     tvCouponMoney.setText("¥ " + StringUtil.formatePrice(Double.parseDouble(coupons_money)));
+                    realMoney = MoneyCalculate.substract(Double.parseDouble(price), Double.parseDouble
+                            (coupons_money));
+                } else {
+                    //不使用优惠券
+                    tvCouponMoney.setText("");
+                    realMoney = Double.parseDouble(price);
                 }
-                realMoney = MoneyCalculate.substract(Double.parseDouble(price), Double.parseDouble
-                        (coupons_money));
                 tvRealmoney.setText("¥ " + StringUtil.formatePrice(realMoney));
             }
         }

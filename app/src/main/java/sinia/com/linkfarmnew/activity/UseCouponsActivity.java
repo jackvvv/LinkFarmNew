@@ -109,7 +109,11 @@ public class UseCouponsActivity extends BaseActivity {
             case R.id.btn_ok:
                 if (ckUse.isChecked()) {
                     //不使用优惠券
-                    ActivityManager.getInstance().finishCurrentActivity();
+                    Intent intent = new Intent();
+                    intent.putExtra("coupons_money", "");
+                    intent.putExtra("coupons_id", "-1");
+                    setResult(RESULT_OK, intent);
+                    finish();
                 } else {
                     if (0 != list.size()) {
                         Intent intent = new Intent();

@@ -1,5 +1,6 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -37,8 +38,14 @@ public class AboutUsActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_shengming:
+                Intent intent = new Intent();
+                intent.putExtra("title", "特别声明");
+                startActivityForIntent(HelpDocActivity.class, intent);
                 break;
             case R.id.rl_help:
+                Intent intent1 = new Intent();
+                intent1.putExtra("title", "使用帮助");
+                startActivityForIntent(HelpDocActivity.class, intent1);
                 break;
         }
     }
