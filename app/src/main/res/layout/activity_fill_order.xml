@@ -111,6 +111,7 @@
 
     <View
         android:layout_width="match_parent"
+        android:visibility="gone"
         android:layout_height="10dp" />
 
     <RelativeLayout
@@ -118,6 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/layout_selector"
+        android:visibility="gone"
         android:padding="12dp">
 
         <TextView
