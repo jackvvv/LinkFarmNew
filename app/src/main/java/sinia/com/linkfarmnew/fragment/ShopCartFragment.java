@@ -218,16 +218,21 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
         switch (view.getId()) {
             case R.id.tv_edit:
                 if (isEdit) {
+                    adapter.isEdit = false;
+                    adapter.notifyDataSetChanged();
                     isEdit = false;
                     tvEdit.setText("编辑");
                     rlDelete.setVisibility(View.INVISIBLE);
                     rlBottomBar.setVisibility(View.VISIBLE);
-                    if (ivDeleteAll.isChecked()) {
-                        ivSelectAll.setChecked(true);
-                        doCheckAll();
-                    }
+
+                    ivSelectAll.setChecked(false);
+                    doCheckAll2();
+                    doDeleteAll2();
+                    ivDeleteAll.setChecked(false);
                     footView.setVisibility(View.VISIBLE);
                 } else {
+                    adapter.isEdit = true;
+                    adapter.notifyDataSetChanged();
                     isEdit = true;
                     tvEdit.setText("完成");
                     rlDelete.setVisibility(View.VISIBLE);
@@ -236,6 +241,10 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
 //                        ivDeleteAll.setChecked(true);
 //                        doDeleteAll();
 //                    }
+                    doDeleteAll2();
+                    ivSelectAll.setChecked(false);
+                    ivDeleteAll.setChecked(false);
+                    doCheckAll2();
                     footView.setVisibility(View.GONE);
                 }
                 break;
@@ -461,11 +470,34 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 CartBean.MerchantitemsBean group = adapter.groups.get(i);
                 List<CartBean.MerchantitemsBean.GoodsItemsBean> childs = adapter.childs.get(group.getMerName());
                 for (int j = 0; j < childs.size(); j++) {
-                    childs.get(j).setChecked(ivSelectAll.isChecked());
+                    //选中上架商品
+                    if ("1".equals(childs.get(j).getGoodStatus())) {
+                        childs.get(j).setChecked(ivSelectAll.isChecked());
+                    }
                 }
             }
             tvCountMoney.setText(allPrice() + "");
             btnSettle.setText("去结算" + "(" + allSize() + ")");
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * 全选与反选---结算
+     */
+    private void doCheckAll2() {
+        if (null != adapter.groups && 0 != adapter.groups.size() && null != adapter.childs && 0
+                != adapter.childs.size()) {
+            for (int i = 0; i < adapter.groups.size(); i++) {
+                adapter.groups.get(i).setChecked(ivSelectAll.isChecked());
+                CartBean.MerchantitemsBean group = adapter.groups.get(i);
+                List<CartBean.MerchantitemsBean.GoodsItemsBean> childs = adapter.childs.get(group.getMerName());
+                for (int j = 0; j < childs.size(); j++) {
+                    childs.get(j).setChecked(false);
+                }
+            }
+            tvCountMoney.setText(0.0 + "");
+            btnSettle.setText("去结算" + "(" + 0 + ")");
             adapter.notifyDataSetChanged();
         }
     }
@@ -482,6 +514,25 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(group.getMerName());
                 for (int j = 0; j < goodsList.size(); j++) {
                     goodsList.get(j).setChecked(ivDeleteAll.isChecked());
+                    CartBean.MerchantitemsBean.GoodsItemsBean goods = goodsList.get(j);
+                    if (goods.isChecked()) {
+                        totalCount++;
+                    }
+                }
+            }
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    private void doDeleteAll2() {
+        if (null != adapter.groups && 0 != adapter.groups.size() && null != adapter.childs && 0
+                != adapter.childs.size()) {
+            for (int i = 0; i < adapter.groups.size(); i++) {
+                adapter.groups.get(i).setChecked(false);
+                CartBean.MerchantitemsBean group = adapter.groups.get(i);
+                List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(group.getMerName());
+                for (int j = 0; j < goodsList.size(); j++) {
+                    goodsList.get(j).setChecked(false);
                     CartBean.MerchantitemsBean.GoodsItemsBean goods = goodsList.get(j);
                     if (goods.isChecked()) {
                         totalCount++;
@@ -562,7 +613,11 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
         CartBean.MerchantitemsBean groupBean = adapter.groups.get(groupPosition);
         List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(groupBean.getMerName());
         for (int i = 0; i < goodsList.size(); i++) {
-            goodsList.get(i).setChecked(isChecked);
+            if ("1".equals(goodsList.get(i).getGoodStatus()) && !isEdit) {
+                goodsList.get(i).setChecked(isChecked);
+            } else if (isEdit) {
+                goodsList.get(i).setChecked(isChecked);
+            }
         }
         if (isAllCheck()) {
             ivSelectAll.setChecked(true);

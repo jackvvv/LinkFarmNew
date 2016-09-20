@@ -26,6 +26,7 @@ import sinia.com.linkfarmnew.fragment.HomeFragment;
 import sinia.com.linkfarmnew.fragment.MineFragment;
 import sinia.com.linkfarmnew.fragment.ShopCartFragment;
 import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.MyApplication;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
@@ -84,7 +85,13 @@ public class MainActivity extends BaseActivity {
         f2 = new ClassfyFragment();
         f3 = new ShopCartFragment();
         f4 = new MineFragment();
-        homeClicked();
+        if (MyApplication.getInstance().getBoolValue("is_login")) {
+            homeClicked();
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("flag", "1");
+            startActivityForIntent(LoginActivity.class, intent);
+        }
     }
 
     @Override
@@ -94,6 +101,8 @@ public class MainActivity extends BaseActivity {
         flag = getIntent().getStringExtra("flag");
         if ("1".equals(flag)) {
             cartClicked();
+        } else {
+            homeClicked();
         }
     }
 

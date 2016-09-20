@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_goods_bg"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#fff"
@@ -37,6 +38,18 @@
             android:textSize="15sp" />
 
         <TextView
+            android:id="@+id/tv_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/tv_goodsname"
+            android:singleLine="true"
+            android:text="(已下架)"
+            android:textColor="@color/price_color"
+            android:textSize="14sp"
+            android:visibility="gone" />
+
+        <TextView
             android:id="@+id/tv_weight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -62,6 +75,7 @@
             android:textSize="15sp" />
 
         <LinearLayout
+            android:id="@+id/ll_jiajian"
             android:layout_width="wrap_content"
             android:layout_height="33dp"
             android:layout_alignBottom="@+id/img_goods"

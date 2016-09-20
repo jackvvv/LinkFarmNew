@@ -58,6 +58,7 @@ public class LoginActivity extends BaseActivity {
 
     private Validator validator;
     private AsyncHttpClient client = new AsyncHttpClient();
+    private String flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +72,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
+        flag = getIntent().getStringExtra("flag");
         validator.setValidationListener(new ValidationUtils.ValidationListener() {
             @Override
             public void onValidationSucceeded() {
@@ -175,6 +177,14 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.tv_weibo:
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if ("1".equals(flag)) {
+            ActivityManager.getInstance().finishAllActivity();
         }
     }
 }

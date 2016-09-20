@@ -1,6 +1,7 @@
 package sinia.com.linkfarmnew.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -39,6 +41,16 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
             List<CartBean.MerchantitemsBean.GoodsItemsBean>>();
     private ModifyCountInterface modifyCountInterface;
     private CheckInterface checkInterface;
+
+    public boolean isEdit = false;
+
+    public boolean isEdit() {
+        return isEdit;
+    }
+
+    public void setEdit(boolean edit) {
+        isEdit = edit;
+    }
 
     public void setCheckInterface(CheckInterface checkInterface) {
         this.checkInterface = checkInterface;
@@ -121,7 +133,10 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         RelativeLayout rl_jia = ViewHolder.get(view, R.id.rl_jia);
         RelativeLayout rl_jian = ViewHolder.get(view, R.id.rl_jian);
         TextView tv_goodsname = ViewHolder.get(view, R.id.tv_goodsname);
+        TextView tv_down = ViewHolder.get(view, R.id.tv_down);
         TextView tv_weight = ViewHolder.get(view, R.id.tv_weight);
+        LinearLayout ll_goods_bg = ViewHolder.get(view, R.id.ll_goods_bg);
+        LinearLayout ll_jiajian = ViewHolder.get(view, R.id.ll_jiajian);
         final TextView tv_price = ViewHolder.get(view, R.id.tv_price);
         final TextView tv_num = ViewHolder.get(view, R.id.tv_num);
 
@@ -132,6 +147,24 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         tv_price.setText("¥ " + StringUtil.formatePrice(goodsBean.getPrice()));
         tv_num.setText(goodsBean.getNum() + "");
         tv_weight.setText(goodsBean.getNormName() + " " + goodsBean.getGoodNum() + goodsBean.getUnit());
+
+        //商品上架
+        if ("1".equals(goodsBean.getGoodStatus())) {
+            ll_goods_bg.setBackgroundColor(Color.parseColor("#ffffff"));
+            ll_jiajian.setBackgroundResource(R.drawable.black_round_edit);
+            tv_down.setVisibility(View.GONE);
+            rl_jian.setBackgroundResource(R.drawable.layout_selector);
+            rl_jia.setBackgroundResource(R.drawable.layout_selector);
+        }
+        //商品已下架
+        if ("2".equals(goodsBean.getGoodStatus())) {
+            ll_goods_bg.setBackgroundColor(Color.parseColor("#dddde5"));
+            ll_jiajian.setBackgroundResource(R.drawable.black_round_edit2);
+            tv_down.setVisibility(View.VISIBLE);
+            rl_jian.setBackgroundColor(Color.parseColor("#dddde5"));
+            rl_jia.setBackgroundColor(Color.parseColor("#dddde5"));
+        }
+
         if (goodsBean.isChecked()) {
             ivCheckChild.setChecked(true);
         } else {
@@ -140,24 +173,48 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
         rl_jian.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modifyCountInterface.doDecrease(i, i1, tv_num, ivCheckChild.isChecked());
+                if ("1".equals(goodsBean.getGoodStatus())) {
+                    modifyCountInterface.doDecrease(i, i1, tv_num, ivCheckChild.isChecked());
+                }
             }
         });
         rl_jia.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                modifyCountInterface.doIncrease(i, i1, tv_num, ivCheckChild.isChecked());
+                if ("1".equals(goodsBean.getGoodStatus())) {
+                    modifyCountInterface.doIncrease(i, i1, tv_num, ivCheckChild.isChecked());
+                }
             }
         });
+
+        if ("1".equals(goodsBean.getGoodStatus())) {
+            ivCheckChild.setClickable(true);
+        } else if ("2".equals(goodsBean.getGoodStatus())) {
+            if (!isEdit) {
+                ivCheckChild.setClickable(false);
+            }
+        }
         ivCheckChild.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goodsBean.setChecked(((CheckBox) v).isChecked());
-                ivCheckChild.setChecked(((CheckBox) v).isChecked());
-                checkInterface.checkChild(i, i1,
-                        ((CheckBox) v).isChecked());// 暴露子选接口
-            }
-        });
+                                            @Override
+                                            public void onClick(View v) {
+                                                if (isEdit) {
+                                                    goodsBean.setChecked(((CheckBox) v).isChecked());
+                                                    ivCheckChild.setChecked(((CheckBox) v).isChecked());
+                                                    checkInterface.checkChild(i, i1,
+                                                            ((CheckBox) v).isChecked());// 暴露子选接口
+                                                } else {
+                                                    if ("1".equals(goodsBean.getGoodStatus())) {
+                                                        ivCheckChild.setClickable(true);
+                                                        goodsBean.setChecked(((CheckBox) v).isChecked());
+                                                        ivCheckChild.setChecked(((CheckBox) v).isChecked());
+                                                        checkInterface.checkChild(i, i1,
+                                                                ((CheckBox) v).isChecked());// 暴露子选接口
+                                                    }
+                                                }
+                                            }
+                                        }
+
+        );
         return view;
     }
 

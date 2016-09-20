@@ -93,11 +93,20 @@ public class CartBean extends JsonBean {
             private double price;
             private int goodNum;//商品重量
             private int num;//商品数量
+            private String goodStatus;//1.上架 2，下架 3.删除
             private String unit;
             private String goodName;
             private String goodImage;
             private String normName;
             private boolean isChecked = false;
+
+            public String getGoodStatus() {
+                return goodStatus;
+            }
+
+            public void setGoodStatus(String goodStatus) {
+                this.goodStatus = goodStatus;
+            }
 
             public String getUnit() {
                 return unit;
