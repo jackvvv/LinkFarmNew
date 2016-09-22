@@ -183,7 +183,7 @@ public class FillOrderActivity extends BaseActivity {
                         intent.putExtra("norm", "1");
                         startActivityForIntent(PayActivity.class, intent);
                     } else if (0 == state && 1 == isSuccessful) {
-                        showToast("请求失败");
+                        showToast(bean.getReturnResult());
                     }
                 }
             }

@@ -96,7 +96,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
-    Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_cart, null);
         ButterKnife.bind(this, rootView);
         inintData();
@@ -268,7 +268,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 if (allSize() == 0) {
                     showToast("请选择要结算的商品");
                 } else {
-                    showToast("选择了" + allSize() + "件商品，共" + "需要支付" + allPrice() + "元");
+//                    showToast("选择了" + allSize() + "件商品，共" + "需要支付" + allPrice() + "元");
                     Intent intent = new Intent(getActivity(), FillOrderActivity.class);
                     intent.putExtra("norm", "-1");
                     intent.putExtra("name", "-1");
@@ -294,8 +294,11 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 if (totalCount == 0) {
                     showToast("请选择要删除的商品");
                 } else {
-//                    deleteGoods();
-                    deleteCart();
+                    if (!StringUtil.isEmpty(connectGoodsId())) {
+                        deleteCart();
+                    } else {
+                        showToast("请选择要删除的商品");
+                    }
                 }
                 break;
         }
@@ -372,20 +375,34 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
 
     private String connectGoodsId() {
         List<String> toConnectGoodsIdsList = new ArrayList<>();
-        for (int i = 0; i < adapter.childs.size(); i++) {
-            String key = adapter.groups.get(i).getMerName();
-            List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
-            for (CartBean.MerchantitemsBean.GoodsItemsBean goodsBean : data) {
-                if (goodsBean.isChecked()) {
-                    toConnectGoodsIdsList.add(goodsBean.getId());
+        if (0 != adapter.childs.size() && 0 != adapter.groups.size()) {
+            for (int i = 0; i < adapter.groups.size(); i++) {
+                String key = adapter.groups.get(i).getMerName();
+                List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
+                for (CartBean.MerchantitemsBean.GoodsItemsBean goodsBean : data) {
+                    if (goodsBean.isChecked()) {
+                        toConnectGoodsIdsList.add(goodsBean.getId());
+                    }
                 }
             }
+//            for (int i = 0; i < adapter.childs.size(); i++) {
+//                String key = adapter.groups.get(i).getMerName();
+//                List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
+//                for (CartBean.MerchantitemsBean.GoodsItemsBean goodsBean : data) {
+//                    if (goodsBean.isChecked()) {
+//                        toConnectGoodsIdsList.add(goodsBean.getId());
+//                    }
+//                }
+//            }
         }
         StringBuffer sb = new StringBuffer();
-        for (int s = 0; s < toConnectGoodsIdsList.size(); s++) {
-            sb.append(toConnectGoodsIdsList.get(s)).append(";");
+        if (0 != toConnectGoodsIdsList.size()) {
+            for (int s = 0; s < toConnectGoodsIdsList.size(); s++) {
+                sb.append(toConnectGoodsIdsList.get(s)).append(";");
+            }
+            return sb.toString().substring(0, sb.toString().length() - 1);
         }
-        return sb.toString().substring(0, sb.toString().length() - 1);
+        return "";
     }
 
     private String connectShopIds() {
@@ -579,16 +596,25 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
         int allSize = 0;
         if (null != adapter.childs && 0 != adapter.childs.size() && null != adapter.groups && 0
                 != adapter.groups.size()) {
-            for (int i = 0; i < adapter.childs.size(); i++) {
+            for (int i = 0; i < adapter.groups.size(); i++) {
                 String key = adapter.groups.get(i).getMerName();
                 List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
-                for (CartBean.MerchantitemsBean.GoodsItemsBean bean : data) {
-                    if (bean.isChecked()) {
-//                        allSize = allSize + bean.getGoodNum();
+                for (CartBean.MerchantitemsBean.GoodsItemsBean goodsBean : data) {
+                    if (goodsBean.isChecked()) {
                         allSize++;
                     }
                 }
             }
+
+//            for (int i = 0; i < adapter.childs.size(); i++) {
+//                String key = adapter.groups.get(i).getMerName();
+//                List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
+//                for (CartBean.MerchantitemsBean.GoodsItemsBean bean : data) {
+//                    if (bean.isChecked()) {
+//                        allSize++;
+//                    }
+//                }
+//            }
         }
         return allSize;
     }

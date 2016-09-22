@@ -7,6 +7,15 @@ public class JsonBean {
 
     private int isSuccessful;
     private int state;
+    private String returnResult;
+
+    public String getReturnResult() {
+        return returnResult;
+    }
+
+    public void setReturnResult(String returnResult) {
+        this.returnResult = returnResult;
+    }
 
     public int getIsSuccessful() {
         return isSuccessful;
