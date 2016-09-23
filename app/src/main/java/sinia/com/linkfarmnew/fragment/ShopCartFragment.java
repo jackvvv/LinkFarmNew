@@ -453,20 +453,36 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
 
     private String connectBuyNum() {
         String nums = "";
-        for (int i = 0; i < adapter.childs.size(); i++) {
-            String key = adapter.groups.get(i).getMerName();
-            List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(key);
-            boolean flag = false;
-            for (CartBean.MerchantitemsBean.GoodsItemsBean bean : goodsList) {
-                if (bean.isChecked()) {
-                    flag = true;
-                    nums = nums + bean.getGoodNum() + ";";
+        if (0 != adapter.childs.size() && 0 != adapter.groups.size()) {
+            for (int i = 0; i < adapter.groups.size(); i++) {
+                String key = adapter.groups.get(i).getMerName();
+                List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(key);
+                boolean flag = false;
+                for (CartBean.MerchantitemsBean.GoodsItemsBean bean : goodsList) {
+                    if (bean.isChecked()) {
+                        flag = true;
+                        nums = nums + bean.getNum() + ";";
+                    }
+                }
+                if (flag) {
+                    nums = nums + "-";
                 }
             }
-            if (flag) {
-                nums = nums + "-";
-            }
         }
+//        for (int i = 0; i < adapter.childs.size(); i++) {
+//            String key = adapter.groups.get(i).getMerName();
+//            List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(key);
+//            boolean flag = false;
+//            for (CartBean.MerchantitemsBean.GoodsItemsBean bean : goodsList) {
+//                if (bean.isChecked()) {
+//                    flag = true;
+//                    nums = nums + bean.getNum() + ";";
+//                }
+//            }
+//            if (flag) {
+//                nums = nums + "-";
+//            }
+//        }
         return nums;
     }
 

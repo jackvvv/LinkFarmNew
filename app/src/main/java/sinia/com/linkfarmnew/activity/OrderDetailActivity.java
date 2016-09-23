@@ -222,6 +222,7 @@ public class OrderDetailActivity extends BaseActivity {
         list.clear();
         list.addAll(bean.getGoodItems());
         adapter.notifyDataSetChanged();
+        Utility.setListViewHeightBasedOnChildren(lvGoods);
     }
 
     @OnClick({R.id.rl_yhq, R.id.btn2, R.id.btn1})
