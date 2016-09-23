@@ -187,7 +187,7 @@ public class GoodsDetailActivity extends BaseActivity {
                 ActivityManager.getInstance().finishCurrentActivity();
                 break;
             case R.id.img_share:
-//                createShareDialog();
+                createShareDialog();
                 break;
         }
     }
@@ -252,30 +252,30 @@ public class GoodsDetailActivity extends BaseActivity {
         wx.setPlatformActionListener(listener);
         wb.setPlatformActionListener(listener);
 
-        img_qq.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                qq.share(sp);
-                dialog.dismiss();
-            }
-        });
-        img_weibo.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                wb.share(sp);
-                dialog.dismiss();
-            }
-        });
-        img_wx.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                wx.share(sp);
-                dialog.dismiss();
-            }
-        });
+//        img_qq.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View arg0) {
+//                qq.share(sp);
+//                dialog.dismiss();
+//            }
+//        });
+//        img_weibo.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View arg0) {
+//                wb.share(sp);
+//                dialog.dismiss();
+//            }
+//        });
+//        img_wx.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View arg0) {
+//                wx.share(sp);
+//                dialog.dismiss();
+//            }
+//        });
         tv_cancel.setOnClickListener(new View.OnClickListener() {
 
             @Override

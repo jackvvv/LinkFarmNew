@@ -105,6 +105,7 @@ public class ServiceActivity extends BaseActivity {
             case R.id.tv_online:
                 Intent intent = new Intent(this, WebViewActivity.class);
                 intent.putExtra("link", "http://kefu.easemob.com/webim/im.html?tenantId=27590");
+                intent.putExtra("title", "联系客服");
                 startActivity(intent);
                 break;
             case R.id.tv_call:

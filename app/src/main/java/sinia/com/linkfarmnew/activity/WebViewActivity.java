@@ -17,12 +17,13 @@ public class WebViewActivity extends BaseActivity {
     @Bind(R.id.webView)
     com.tencent.smtt.sdk.WebView webView;
 
-    private String link;
+    private String link, title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webview, "链接详情");
+        title = getIntent().getStringExtra("title");
+        setContentView(R.layout.activity_webview, title);
         ButterKnife.bind(this);
         getDoingView().setVisibility(View.GONE);
         initData();

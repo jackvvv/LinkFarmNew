@@ -149,7 +149,7 @@ public class OrderDetailActivity extends BaseActivity {
         }
         if (1 == bean.getDeType()) {
             tvSendType.setText("配送");
-            tvSelfTip.setVisibility(View.GONE);
+            tvSelfTip.setText("具体运费请与商家线下协商");
         } else {
             tvSendType.setText("自提");
             tvSelfTip.setText("自提运费和商家线下结算");

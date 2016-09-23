@@ -66,7 +66,7 @@ public class ClassfyGoodsAdapter extends BaseAdapter {
         BitmapUtilsHelp.getImage(context).display(img, list.get(i).getGoodImage());
         tv_title.setText(list.get(i).getGoodName());
         tv_buynum.setText(list.get(i).getComNum() + "人评论");
-        tv_price.setText(StringUtil.formatePrice(list.get(i).getMinKilograme()) + "元/" + list.get(i).getUnit() + "起");
+        tv_price.setText(StringUtil.formatePrice(list.get(i).getMinKilograme()) + "元" + "起");
 
         final String goodId = list.get(i).getGoodId();
         view.setOnClickListener(new View.OnClickListener() {

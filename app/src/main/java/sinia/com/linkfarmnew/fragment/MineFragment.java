@@ -34,6 +34,7 @@ import sinia.com.linkfarmnew.activity.MyExpandActivity;
 import sinia.com.linkfarmnew.activity.MyFootPrintActivity;
 import sinia.com.linkfarmnew.activity.MyOrderActivity;
 import sinia.com.linkfarmnew.activity.PersonalCenterActivty;
+import sinia.com.linkfarmnew.activity.ServiceActivity;
 import sinia.com.linkfarmnew.activity.SettingsActivity;
 import sinia.com.linkfarmnew.activity.WebViewActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
@@ -241,8 +242,7 @@ public class MineFragment extends BaseFragment {
         switch (view.getId()) {
             case R.id.img_kefu:
 //                callService();
-                intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("link", "http://kefu.easemob.com/webim/im.html?tenantId=27590");
+                intent = new Intent(getActivity(), ServiceActivity.class);
                 startActivity(intent);
                 break;
             case R.id.img_settings:

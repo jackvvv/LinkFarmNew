@@ -121,7 +121,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
-    Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_home, null);
         ButterKnife.bind(this, rootView);
         location();
@@ -160,7 +160,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
         getHomeData();
     }
 
-    private void getHomeData(){
+    private void getHomeData() {
         RequestParams params = new RequestParams();
         try {
             if (StringUtil.isEmpty(MyApplication.getInstance().getStringValue("city"))) {
@@ -393,31 +393,37 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
             case R.id.img_left_big:
                 intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra("link", img1);
+                intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_right_top:
                 intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra("link", img2);
+                intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_right_bottom:
                 intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra("link", img3);
+                intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_right_big:
                 intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra("link", img6);
+                intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_left_top:
                 intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra("link", img4);
+                intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_left_bottom:
                 intent = new Intent(getActivity(), WebViewActivity.class);
                 intent.putExtra("link", img5);
+                intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
         }

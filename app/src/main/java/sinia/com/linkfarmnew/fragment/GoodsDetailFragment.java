@@ -153,7 +153,7 @@ public class GoodsDetailFragment extends BaseFragment {
         draglayout.setNextPageListener(nextPageNotifier);
     }
 
-    @OnClick({R.id.ll_shop, R.id.ll_collect, R.id.tv_cart, R.id.tv_ok})
+    @OnClick({R.id.ll_shop, R.id.ll_collect, R.id.ll_cart, R.id.tv_ok})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ll_shop:
@@ -164,7 +164,7 @@ public class GoodsDetailFragment extends BaseFragment {
             case R.id.ll_collect:
                 collectGoods();
                 break;
-            case R.id.tv_cart:
+            case R.id.ll_cart:
                 Intent intent2 = new Intent(getActivity(), MainActivity.class);
                 intent2.putExtra("flag", "1");
                 startActivity(intent2);

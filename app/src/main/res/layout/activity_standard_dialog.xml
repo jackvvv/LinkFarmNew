@@ -46,7 +46,7 @@
                         android:layout_below="@+id/t"
                         android:layout_centerHorizontal="true"
                         android:text="库存量：0"
-                        android:textColor="#888"
+                        android:textColor="@color/themeColor"
                         android:textSize="15sp" />
 
                     <ImageView
