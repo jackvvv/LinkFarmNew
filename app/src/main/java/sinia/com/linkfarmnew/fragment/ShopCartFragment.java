@@ -408,7 +408,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
     private String connectShopIds() {
         List<String> tempList = new ArrayList<>();//待拼接的商户id
         List<String> toConnectShopIdList = new ArrayList<>();
-        for (int i = 0; i < adapter.childs.size(); i++) {
+        for (int i = 0; i < adapter.groups.size(); i++) {
             String key = adapter.groups.get(i).getMerName();
             List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
             for (CartBean.MerchantitemsBean.GoodsItemsBean goodsBean : data) {
@@ -423,6 +423,21 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 }
             }
         }
+//        for (int i = 0; i < adapter.childs.size(); i++) {
+//            String key = adapter.groups.get(i).getMerName();
+//            List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
+//            for (CartBean.MerchantitemsBean.GoodsItemsBean goodsBean : data) {
+//                if (goodsBean.isChecked()) {
+//                    tempList.add(adapter.groups.get(i).getMerchantId());
+//                }
+//            }
+//            //去重
+//            for (String s : tempList) {
+//                if (!toConnectShopIdList.contains(s)) {
+//                    toConnectShopIdList.add(s);
+//                }
+//            }
+//        }
 
         StringBuffer sb = new StringBuffer();
         for (int s = 0; s < toConnectShopIdList.size(); s++) {
@@ -433,7 +448,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
 
     private String connectCartIds() {
         String ids = "";
-        for (int i = 0; i < adapter.childs.size(); i++) {
+        for (int i = 0; i < adapter.groups.size(); i++) {
             String key = adapter.groups.get(i).getMerName();
             List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(key);
             boolean flag = false;
@@ -447,6 +462,20 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 ids = ids + "-";
             }
         }
+//        for (int i = 0; i < adapter.childs.size(); i++) {
+//            String key = adapter.groups.get(i).getMerName();
+//            List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(key);
+//            boolean flag = false;
+//            for (CartBean.MerchantitemsBean.GoodsItemsBean bean : goodsList) {
+//                if (bean.isChecked()) {
+//                    flag = true;
+//                    ids = ids + bean.getId() + ";";
+//                }
+//            }
+//            if (flag) {
+//                ids = ids + "-";
+//            }
+//        }
         ids.substring(0, ids.length() - 1);
         return ids;
     }
@@ -488,7 +517,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
 
     private String connectPrice() {
         String prices = "";
-        for (int i = 0; i < adapter.childs.size(); i++) {
+        for (int i = 0; i < adapter.groups.size(); i++) {
             String key = adapter.groups.get(i).getMerName();
             List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(key);
             boolean flag = false;
@@ -502,6 +531,20 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 prices = prices + "-";
             }
         }
+//        for (int i = 0; i < adapter.childs.size(); i++) {
+//            String key = adapter.groups.get(i).getMerName();
+//            List<CartBean.MerchantitemsBean.GoodsItemsBean> goodsList = adapter.childs.get(key);
+//            boolean flag = false;
+//            for (CartBean.MerchantitemsBean.GoodsItemsBean bean : goodsList) {
+//                if (bean.isChecked()) {
+//                    flag = true;
+//                    prices = prices + bean.getNum() * bean.getPrice() + ";";
+//                }
+//            }
+//            if (flag) {
+//                prices = prices + "-";
+//            }
+//        }
         return prices;
     }
 
@@ -594,7 +637,7 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
         double allPrice = 0;
         if (null != adapter.childs && 0 != adapter.childs.size() && null != adapter.groups && 0
                 != adapter.groups.size()) {
-            for (int i = 0; i < adapter.childs.size(); i++) {
+            for (int i = 0; i <adapter.groups.size() ; i++) {
                 String key = adapter.groups.get(i).getMerName();
                 List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
                 for (CartBean.MerchantitemsBean.GoodsItemsBean bean : data) {
@@ -603,6 +646,15 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                     }
                 }
             }
+//            for (int i = 0; i < adapter.childs.size(); i++) {
+//                String key = adapter.groups.get(i).getMerName();
+//                List<CartBean.MerchantitemsBean.GoodsItemsBean> data = adapter.childs.get(key);
+//                for (CartBean.MerchantitemsBean.GoodsItemsBean bean : data) {
+//                    if (bean.isChecked()) {
+//                        allPrice = allPrice + bean.getPrice() * bean.getNum();
+//                    }
+//                }
+//            }
         }
         return allPrice;
     }

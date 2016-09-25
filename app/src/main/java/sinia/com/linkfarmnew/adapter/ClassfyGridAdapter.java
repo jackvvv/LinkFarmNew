@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,7 +54,7 @@ public class ClassfyGridAdapter extends BaseAdapter {
         }
         TextView tv_name = ViewHolder.get(view, R.id.tv_name);
         ImageView img = ViewHolder.get(view, R.id.img);
-        BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img, list.get(i).getSmallImage());
+        Glide.with(context).load(list.get(i).getSmallImage()).crossFade().into(img);
         tv_name.setText(list.get(i).getSmallTypeName());
         return view;
     }

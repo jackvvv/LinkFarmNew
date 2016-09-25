@@ -63,7 +63,7 @@ public class ClassfyGoodsAdapter extends BaseAdapter {
         TextView tv_price = ViewHolder.get(view, R.id.tv_price);
         ImageView img = ViewHolder.get(view, R.id.img);
 
-        BitmapUtilsHelp.getImage(context).display(img, list.get(i).getGoodImage());
+        Glide.with(context).load(list.get(i).getGoodImage()).crossFade().into(img);
         tv_title.setText(list.get(i).getGoodName());
         tv_buynum.setText(list.get(i).getComNum() + "人评论");
         tv_price.setText(StringUtil.formatePrice(list.get(i).getMinKilograme()) + "元" + "起");

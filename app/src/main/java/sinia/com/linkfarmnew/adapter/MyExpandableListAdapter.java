@@ -30,6 +30,9 @@ import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
+import static android.R.id.list;
+import static sinia.com.linkfarmnew.R.id.img;
+
 /**
  * Created by 忧郁的眼神 on 2016/8/11.
  */
@@ -142,7 +145,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter {
 
         final CartBean.MerchantitemsBean.GoodsItemsBean goodsBean = childs.get(groups.get(i).getMerName()).get(i1);
 
-        BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img_goods, goodsBean.getGoodImage());
+        Glide.with(context).load(goodsBean.getGoodImage()).placeholder(R.drawable.ic_launcher).into(img_goods);
         tv_goodsname.setText(goodsBean.getGoodName());
         tv_price.setText("¥ " + StringUtil.formatePrice(goodsBean.getPrice()));
         tv_num.setText(goodsBean.getNum() + "");

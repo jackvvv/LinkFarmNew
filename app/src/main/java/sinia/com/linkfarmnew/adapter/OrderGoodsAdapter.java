@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import sinia.com.linkfarmnew.R;
@@ -55,7 +57,7 @@ public class OrderGoodsAdapter extends BaseAdapter {
         TextView tv_price = ViewHolder.get(view, R.id.tv_price);
         ImageView img = ViewHolder.get(view, R.id.img);
 
-        BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img, list.get(i).getGoodImage());
+        Glide.with(context).load(list.get(i).getGoodImage()).placeholder(R.drawable.load_failed_left).into(img);
         tv_name.setText(list.get(i).getGoodName());
         tv_num.setText("× " + list.get(i).getBuyNum());
         tv_weight.setText(list.get(i).getNorm() + " " + list.get(i).getNum() + list.get(i).getUnit());

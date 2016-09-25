@@ -9,11 +9,15 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.ViewHolder;
+
+import static sinia.com.linkfarmnew.R.id.img;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/5.
@@ -50,7 +54,7 @@ public class GoodImageAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.item_order_goodimg, null);
         }
         ImageView img_goods = ViewHolder.get(view, R.id.img_goods);
-        BitmapUtilsHelp.getImage(context, R.drawable.ic_launcher).display(img_goods, list.get(i));
+        Glide.with(context).load(list.get(i)).crossFade().into(img_goods);
         return view;
     }
 }

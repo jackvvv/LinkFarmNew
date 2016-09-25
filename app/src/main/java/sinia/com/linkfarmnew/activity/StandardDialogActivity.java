@@ -181,7 +181,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         public void afterTextChanged(Editable editable) {
             if (!StringUtil.isEmpty(etWeight.getEditableText().toString().trim()) && !".".equals(etWeight
                     .getEditableText().toString().trim())) {
-                float inputWeight = Float.parseFloat(etWeight.getEditableText().toString().trim());
+                int inputWeight = Integer.parseInt(etWeight.getEditableText().toString().trim());
                 //当输入的重量小于1的时候，不能再减了
                 if (inputWeight <= 1) {
 //                    imgJian.setImageResource(R.drawable.img_jian_n);
@@ -201,7 +201,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         switch (view.getId()) {
             case R.id.img_colse:
                 if (!StringUtil.isEmpty(selectType) && !StringUtil.isEmpty(etWeight.getEditableText().toString().trim
-                        ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Float.parseFloat
+                        ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Integer.parseInt
                         (etWeight.getEditableText().toString().trim())) {
                     Intent intent = new Intent();
                     intent.putExtra("type", selectType);
@@ -215,12 +215,12 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 }
                 break;
             case R.id.img_jian:
-                if (!StringUtil.isEmpty(etWeight.getEditableText().toString().trim()) && 1 <= Float.parseFloat
+                if (!StringUtil.isEmpty(etWeight.getEditableText().toString().trim()) && 1 <= Integer.parseInt
                         (etWeight.getEditableText().toString().trim())) {
-                    float inputWeight = Float.parseFloat(etWeight.getEditableText().toString().trim()) - 1;
+                    int inputWeight = Integer.parseInt(etWeight.getEditableText().toString().trim()) - 1;
                     etWeight.setText(inputWeight + "");
-                    calculatePrice(priceList, Float.parseFloat(etWeight.getEditableText().toString().trim()), tvMoney);
-                    float inputWeight2 = Float.parseFloat(etWeight.getEditableText().toString().trim());
+                    calculatePrice(priceList, Integer.parseInt(etWeight.getEditableText().toString().trim()), tvMoney);
+                    int inputWeight2 = Integer.parseInt(etWeight.getEditableText().toString().trim());
                     if (inputWeight2 < 1) {
                         imgJian.setImageResource(R.drawable.img_jian_n);
                     } else {
@@ -231,24 +231,24 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 }
                 break;
             case R.id.img_jia:
-                if (!StringUtil.isEmpty(etWeight.getEditableText().toString().trim()) && 0 != Float.parseFloat
+                if (!StringUtil.isEmpty(etWeight.getEditableText().toString().trim()) && 0 != Integer.parseInt
                         (etWeight.getEditableText().toString().trim())) {
-                    float inputWeight = Float.parseFloat(etWeight.getEditableText().toString().trim()) + 1;
+                    int inputWeight = Integer.parseInt(etWeight.getEditableText().toString().trim()) + 1;
                     etWeight.setText(inputWeight + "");
-                    calculatePrice(priceList, Float.parseFloat(etWeight.getEditableText().toString().trim()), tvMoney);
+                    calculatePrice(priceList, Integer.parseInt(etWeight.getEditableText().toString().trim()), tvMoney);
                     imgJian.setImageResource(R.drawable.img_jian);
                 } else {
-                    float inputWeight = 1;
+                    int inputWeight = 1;
                     etWeight.setText(inputWeight + "");
-                    calculatePrice(priceList, Float.parseFloat(etWeight.getEditableText().toString().trim()), tvMoney);
+                    calculatePrice(priceList, Integer.parseInt(etWeight.getEditableText().toString().trim()), tvMoney);
                     imgJian.setImageResource(R.drawable.img_jian);
                 }
                 break;
             case R.id.tv_cart:
                 if (!StringUtil.isEmpty(selectType) && !StringUtil.isEmpty(etWeight.getEditableText().toString().trim
-                        ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Float.parseFloat
+                        ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Integer.parseInt
                         (etWeight.getEditableText().toString().trim())) {
-                    if (!StringUtil.isEmpty(lastNum) && Float.parseFloat(etWeight.getEditableText().toString().trim()
+                    if (!StringUtil.isEmpty(lastNum) && Integer.parseInt(etWeight.getEditableText().toString().trim()
                     ) - Float
                             .parseFloat(lastNum) > 0) {
                         materialDialog = new MaterialDialog(this);
@@ -268,11 +268,10 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                 break;
             case R.id.tv_ok:
                 if (!StringUtil.isEmpty(selectType) && !StringUtil.isEmpty(etWeight.getEditableText().toString().trim
-                        ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Float.parseFloat
+                        ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Integer.parseInt
                         (etWeight.getEditableText().toString().trim())) {
-                    if (!StringUtil.isEmpty(lastNum) && Float.parseFloat(etWeight.getEditableText().toString().trim()
-                    ) - Float
-                            .parseFloat(lastNum) > 0) {
+                    if (!StringUtil.isEmpty(lastNum) && Integer.parseInt(etWeight.getEditableText().toString().trim()
+                    ) - Integer.parseInt(lastNum) > 0) {
                         materialDialog = new MaterialDialog(this);
                         materialDialog.setTitle("提示").setMessage("本商品库存剩余量" + lastNum + goodsUnit + ",如需大量购买，请联系商家")
                                 .setPositiveButton("知道了", new View.OnClickListener() {
@@ -360,7 +359,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
      * @param inputWeight 输入的重量
      * @param tvMoney     计算的价格
      */
-    public static void calculatePrice(List<GoodsDetailBean.NormListBean.NormTypeListBean> list, float inputWeight,
+    public static void calculatePrice(List<GoodsDetailBean.NormListBean.NormTypeListBean> list, int inputWeight,
                                       TextView tvMoney) {
         double money = 0;
         for (int i = 0; i < list.size(); i++) {
@@ -384,7 +383,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
     @Override
     public void onBackPressed() {
         if (!StringUtil.isEmpty(selectType) && !StringUtil.isEmpty(etWeight.getEditableText().toString().trim
-                ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Float.parseFloat
+                ()) && 0 != Float.parseFloat(tvMoney.getText().toString().trim()) && 0 != Integer.parseInt
                 (etWeight.getEditableText().toString().trim())) {
             Intent intent = new Intent();
             intent.putExtra("type", selectType);

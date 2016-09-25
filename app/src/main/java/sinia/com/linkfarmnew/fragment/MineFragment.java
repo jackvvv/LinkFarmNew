@@ -46,6 +46,9 @@ import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.view.CircleImageView;
 
+import static android.R.id.list;
+import static sinia.com.linkfarmnew.R.id.img;
+
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
  */
@@ -122,7 +125,7 @@ public class MineFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable
-    Bundle savedInstanceState) {
+            Bundle savedInstanceState) {
         rootView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_mine, null);
         ButterKnife.bind(this, rootView);
         getServiceTel();
