@@ -79,4 +79,14 @@
         android:textColor="#999"
         android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/tv_goods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:text="规格：    数量："
+        android:textColor="#999"
+        android:textSize="15sp" />
+
 </LinearLayout>

@@ -7,10 +7,19 @@ public class RefreshBean extends JsonBean {
 
     private String imageUrl;
     private String nickName;
+    private String password;
     private String sex;
     private int comNum;
     private int waitShouNum;
     private int waitPayNum;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public int getComNum() {
         return comNum;

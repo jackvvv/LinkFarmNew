@@ -60,6 +60,7 @@ public class CommentAdapter extends BaseAdapter {
         TextView tv_name = ViewHolder.get(view, R.id.tv_name);
         TextView tv_commenttime = ViewHolder.get(view, R.id.tv_commenttime);
         TextView tv_buytime = ViewHolder.get(view, R.id.tv_buytime);
+        TextView tv_goods = ViewHolder.get(view, R.id.tv_goods);
         TextView tv_content = ViewHolder.get(view, R.id.tv_content);
         ImageView img_head = ViewHolder.get(view, R.id.img_head);
         final GridView gv_img = ViewHolder.get(view, R.id.gv_img);
@@ -68,6 +69,7 @@ public class CommentAdapter extends BaseAdapter {
         tv_commenttime.setText(list.get(i).getCreateTime());
         tv_buytime.setText(list.get(i).getBuyTime());
         tv_content.setText(list.get(i).getContent());
+        tv_goods.setText("规格：" + list.get(i).getNorm() + "    " + "数量：" + list.get(i).getNum() + list.get(i).getUnit());
         Glide.with(context).load(list.get(i).getUserImage()).placeholder(R.drawable.ic_launcher).into(img_head);
 
         imgList.clear();

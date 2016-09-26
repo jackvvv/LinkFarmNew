@@ -29,6 +29,7 @@ import sinia.com.linkfarmnew.bean.ValidateCodeBean;
 import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.utils.StringUtils;
 import sinia.com.linkfarmnew.utils.ValidationUtils;
 
@@ -37,24 +38,15 @@ import sinia.com.linkfarmnew.utils.ValidationUtils;
  */
 public class ModifyPasswordActivity extends BaseActivity {
 
-    @NotEmpty(message = "请输入旧密码")
-    @Order(3)
     @Bind(R.id.et_oldpassword)
     EditText et_oldpassword;
-    @Password(sequence = 1, message = "请输入新密码")
-    @Order(4)
     @Bind(R.id.et_newpwd)
     EditText et_newpwd;
     @Bind(R.id.tv_login)
     TextView tvLogin;
-    @Order(5)
-    @ConfirmPassword(message = "两次输入的密码不一致，请重新输入")
     @Bind(R.id.et_confirm)
     EditText etConfirm;
 
-    private Validator validator;
-    private int i = 60;
-    private String code;
     private AsyncHttpClient client = new AsyncHttpClient();
 
     @Override
@@ -63,18 +55,6 @@ public class ModifyPasswordActivity extends BaseActivity {
         setContentView(R.layout.activity_modifypwd, "修改密码");
         ButterKnife.bind(this);
         getDoingView().setVisibility(View.GONE);
-        validator = new Validator(this);
-        initView();
-    }
-
-    private void initView() {
-        validator.setValidationListener(new ValidationUtils.ValidationListener() {
-            @Override
-            public void onValidationSucceeded() {
-                super.onValidationSucceeded();
-                findPassword();
-            }
-        });
     }
 
     private void findPassword() {
@@ -99,9 +79,11 @@ public class ModifyPasswordActivity extends BaseActivity {
                     int isSuccessful = bean.getIsSuccessful();
                     if (0 == state && 0 == isSuccessful) {
                         showToast("密码修改成功");
+                        MyApplication.getInstance().setPwdValue(
+                                "password", et_newpwd.getEditableText().toString().trim());
                         ActivityManager.getInstance().finishCurrentActivity();
                     } else if (0 == state && 1 == isSuccessful) {
-                        showToast("请求失败");
+                        showToast("密码修改失败");
                     } else {
                     }
                 }
@@ -113,7 +95,19 @@ public class ModifyPasswordActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_login:
-                validator.validate();
+                if (StringUtil.isEmpty(et_oldpassword.getEditableText().toString().trim())) {
+                    showToast("请输入旧密码");
+                } else if (StringUtil.isEmpty(et_newpwd.getEditableText().toString().trim())) {
+                    showToast("请输入新密码");
+                } else if (!et_newpwd.getEditableText().toString().trim().equals(etConfirm.getEditableText()
+                        .toString().trim())) {
+                    showToast("两次输入的密码不一致，请重新输入");
+                } else if (!et_oldpassword.getEditableText().toString().trim().equals(MyApplication.getInstance()
+                        .getPwdValue("password"))) {
+                    showToast("旧密码错误");
+                } else {
+                    findPassword();
+                }
                 break;
         }
     }

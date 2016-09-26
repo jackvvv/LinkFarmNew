@@ -59,8 +59,35 @@ public class GoodsCommentBean extends JsonBean {
         private String userImage;
         private String userName;
         private String buyTime;
+        private String num;
+        private String unit;
+        private String norm;
         private String createTime;
         private List<CommentImage> comimageitems;
+
+        public String getNum() {
+            return num;
+        }
+
+        public void setNum(String num) {
+            this.num = num;
+        }
+
+        public String getUnit() {
+            return unit;
+        }
+
+        public void setUnit(String unit) {
+            this.unit = unit;
+        }
+
+        public String getNorm() {
+            return norm;
+        }
+
+        public void setNorm(String norm) {
+            this.norm = norm;
+        }
 
         public String getComId() {
             return comId;

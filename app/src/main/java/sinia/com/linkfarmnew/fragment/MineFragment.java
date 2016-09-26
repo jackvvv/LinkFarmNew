@@ -194,6 +194,7 @@ public class MineFragment extends BaseFragment {
                         tvUsername.setText(bean.getNickName());
                         userName = bean.getNickName();
                         headImage = bean.getImageUrl();
+                        MyApplication.getInstance().setPwdValue("password",bean.getPassword());
                         if (0 != bean.getWaitPayNum()) {
                             tvDaizhifucount.setVisibility(View.VISIBLE);
                             tvDaizhifucount.setText(bean.getWaitPayNum() + "");

@@ -182,6 +182,24 @@ public class MyApplication extends Application {
         return ret;
     }
 
+    public void setPwdValue(String in_settingName, String in_val) {
+        SharedPreferences sp = context.getSharedPreferences("password",
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putString(in_settingName, in_val);
+        ed.commit();
+        ed = null;
+        sp = null;
+    }
+
+    public String getPwdValue(String in_settingName) {
+        SharedPreferences sp = context.getSharedPreferences("password",
+                Context.MODE_PRIVATE);
+        String ret = sp.getString(in_settingName, "");
+        sp = null;
+        return ret;
+    }
+
     public Boolean getBoolValue(String in_settingName) {
         SharedPreferences sp = context.getSharedPreferences("is_login",
                 Context.MODE_PRIVATE);
