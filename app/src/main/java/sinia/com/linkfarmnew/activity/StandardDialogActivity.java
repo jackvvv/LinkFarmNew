@@ -219,6 +219,7 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         (etWeight.getEditableText().toString().trim())) {
                     int inputWeight = Integer.parseInt(etWeight.getEditableText().toString().trim()) - 1;
                     etWeight.setText(inputWeight + "");
+                    etWeight.setSelection(etWeight.getText().length());
                     calculatePrice(priceList, Integer.parseInt(etWeight.getEditableText().toString().trim()), tvMoney);
                     int inputWeight2 = Integer.parseInt(etWeight.getEditableText().toString().trim());
                     if (inputWeight2 < 1) {
@@ -235,11 +236,13 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         (etWeight.getEditableText().toString().trim())) {
                     int inputWeight = Integer.parseInt(etWeight.getEditableText().toString().trim()) + 1;
                     etWeight.setText(inputWeight + "");
+                    etWeight.setSelection(etWeight.getText().length());
                     calculatePrice(priceList, Integer.parseInt(etWeight.getEditableText().toString().trim()), tvMoney);
                     imgJian.setImageResource(R.drawable.img_jian);
                 } else {
                     int inputWeight = 1;
                     etWeight.setText(inputWeight + "");
+                    etWeight.setSelection(etWeight.getText().length());
                     calculatePrice(priceList, Integer.parseInt(etWeight.getEditableText().toString().trim()), tvMoney);
                     imgJian.setImageResource(R.drawable.img_jian);
                 }

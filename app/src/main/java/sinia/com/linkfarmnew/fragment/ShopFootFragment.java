@@ -1,9 +1,12 @@
 package sinia.com.linkfarmnew.fragment;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
@@ -20,16 +23,24 @@ import butterknife.ButterKnife;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.adapter.ShopFootAdapter;
 import sinia.com.linkfarmnew.base.BaseFragment;
+import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.bean.MyFootBean;
 import sinia.com.linkfarmnew.bean.RefreshBean;
+import sinia.com.linkfarmnew.utils.AppInfoUtil;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.view.swipmenulistview.SwipeMenu;
+import sinia.com.linkfarmnew.view.swipmenulistview.SwipeMenuCreator;
+import sinia.com.linkfarmnew.view.swipmenulistview.SwipeMenuItem;
+import sinia.com.linkfarmnew.view.swipmenulistview.SwipeMenuListView;
+
+import static cn.bmob.v3.Bmob.getApplicationContext;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
  */
 public class ShopFootFragment extends BaseFragment {
-    private ListView listView;
+    private SwipeMenuListView listView;
     private View rootView;
     private ShopFootAdapter adapter;
     private AsyncHttpClient client = new AsyncHttpClient();
@@ -47,7 +58,7 @@ public class ShopFootFragment extends BaseFragment {
     }
 
     private void initData() {
-        listView = (ListView) rootView.findViewById(R.id.listView);
+        listView = (SwipeMenuListView) rootView.findViewById(R.id.listView);
         adapter = new ShopFootAdapter(getActivity(), list);
         listView.setAdapter(adapter);
     }
@@ -76,6 +87,77 @@ public class ShopFootFragment extends BaseFragment {
                         adapter.notifyDataSetChanged();
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("请求失败");
+                    }
+                }
+            }
+        });
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                        getActivity());
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+                        0x42, 0x41)));
+                deleteItem.setWidth(AppInfoUtil.dip2px(getActivity(), 90));
+                deleteItem.setTitle("删除");
+                deleteItem.setTitleSize(16);
+                deleteItem.setTitleColor(Color.WHITE);
+                menu.addMenuItem(deleteItem);
+            }
+        };
+        // set creator
+        listView.setMenuCreator(creator);
+        listView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu,
+                                           int index) {
+                switch (index) {
+                    case 0:
+                        String id = list.get(position).getHisId();
+                        deleteAddress(id, position);
+                }
+                return false;
+            }
+        });
+        listView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP)
+                    listView.getParent().requestDisallowInterceptTouchEvent(false);
+                else
+                    listView.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+    }
+
+    private void deleteAddress(String addressId, final int p) {
+        showLoad("");
+        RequestParams params = new RequestParams();
+        params.put("otherId", addressId);
+        Log.i("tag", Constants.BASE_URL + "delHis&" + params);
+        client.post(Constants.BASE_URL + "delHis", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Log.i("tag", s);
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    JsonBean bean = gson.fromJson(s, JsonBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        showToast("删除成功");
+                        list.remove(p);
+                        adapter.notifyDataSetChanged();
+                    } else if (0 == state && 1 == isSuccessful) {
+                        showToast("删除失败");
                     }
                 }
             }

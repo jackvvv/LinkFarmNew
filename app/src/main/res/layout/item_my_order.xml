@@ -46,7 +46,7 @@
     <LinearLayout
         android:id="@+id/ll_detail"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:background="@color/grayBgColor"
         android:gravity="center_vertical"
         android:orientation="horizontal"

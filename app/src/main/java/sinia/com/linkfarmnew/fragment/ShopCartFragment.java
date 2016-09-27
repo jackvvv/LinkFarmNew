@@ -203,6 +203,12 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
         gridView = (MyGridView) footView.findViewById(R.id.gridView);
         recommendAdapter = new CartRecommendAdapter(getActivity(), recommendList);
         gridView.setAdapter(recommendAdapter);
+        adapter = new MyExpandableListAdapter(getActivity());
+        adapter.setCheckInterface(this);
+        adapter.setModifyCountInterface(this);
+        expandableListView.setAdapter(adapter);
+        expandableListView.setGroupIndicator(null);
+        expandableListView.addFooterView(footView);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -212,12 +218,6 @@ public class ShopCartFragment extends BaseFragment implements CheckInterface, Mo
                 startActivity(intent);
             }
         });
-        adapter = new MyExpandableListAdapter(getActivity());
-        adapter.setCheckInterface(this);
-        adapter.setModifyCountInterface(this);
-        expandableListView.setAdapter(adapter);
-        expandableListView.setGroupIndicator(null);
-        expandableListView.addFooterView(footView);
     }
 
     private void expandAllGroup() {

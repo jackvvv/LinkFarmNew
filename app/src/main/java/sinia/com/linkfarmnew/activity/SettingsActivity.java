@@ -69,7 +69,7 @@ public class SettingsActivity extends BaseActivity {
         } else {
             toggleBtn.setToggleOff();
         }
-        tvVersion.setText("v" + AppInfoUtil.getVersionCode(this) + ".0");
+        tvVersion.setText("v" + AppInfoUtil.getVersionName(this) + ".0");
         toggleBtn.setOnToggleChanged(new ToggleButton.OnToggleChanged() {
             @Override
             public void onToggle(boolean on) {
