@@ -32,7 +32,7 @@
 
     </LinearLayout>
 
-    <GridView
+    <sinia.com.linkfarmnew.view.MyGridView
         android:id="@+id/gv_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

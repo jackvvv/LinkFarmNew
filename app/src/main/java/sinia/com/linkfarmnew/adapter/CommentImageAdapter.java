@@ -16,6 +16,7 @@ import java.util.List;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.activity.PreViewImageActivity;
 import sinia.com.linkfarmnew.bean.GoodsCommentBean;
+import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.ViewHolder;
 
 /**
@@ -53,7 +54,7 @@ public class CommentImageAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.item_order_goodimg, null);
         }
         ImageView img_goods = ViewHolder.get(view, R.id.img_goods);
-        Glide.with(context).load(imgList.get(i).getComImage()).placeholder(R.drawable.ic_launcher).into(img_goods);
+        BitmapUtilsHelp.getImage(context).display(img_goods,imgList.get(i).getComImage());
 
         final String url = imgList.get(i).getComImage();
         img_goods.setOnClickListener(new View.OnClickListener() {
