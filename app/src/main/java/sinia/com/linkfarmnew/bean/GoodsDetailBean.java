@@ -345,23 +345,23 @@ public class GoodsDetailBean extends JsonBean implements Serializable {
         }
 
         public static class NormTypeListBean implements Serializable {
-            private double stKg;
-            private double enKg;
+            private String stKg;
+            private String enKg;
             private double price;
 
-            public double getStKg() {
+            public String getStKg() {
                 return stKg;
             }
 
-            public void setStKg(double stKg) {
+            public void setStKg(String stKg) {
                 this.stKg = stKg;
             }
 
-            public double getEnKg() {
+            public String getEnKg() {
                 return enKg;
             }
 
-            public void setEnKg(double enKg) {
+            public void setEnKg(String enKg) {
                 this.enKg = enKg;
             }
 

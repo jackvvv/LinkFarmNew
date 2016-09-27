@@ -367,9 +367,9 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         double money = 0;
         for (int i = 0; i < list.size(); i++) {
             GoodsDetailBean.NormListBean.NormTypeListBean priceBean = list.get(i);
-            double kg_start = priceBean.getStKg();
-            double kg_end = priceBean.getEnKg();
-            if (inputWeight >= kg_start && inputWeight < kg_end) {
+            String kg_start = priceBean.getStKg();
+            String kg_end = priceBean.getEnKg();
+            if (inputWeight >= Integer.parseInt(kg_start) && inputWeight < Integer.parseInt(kg_end)) {
                 money = inputWeight * priceBean.getPrice();
                 tvMoney.setText(StringUtil.formatePrice(money));
                 return;
