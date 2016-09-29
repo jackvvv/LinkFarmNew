@@ -17,8 +17,8 @@ android {
         applicationId "sinia.com.linkfarmnew"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 3
-        versionName "1.11"
+        versionCode 4
+        versionName "1.12"
 
         //腾讯bugly
         ndk {

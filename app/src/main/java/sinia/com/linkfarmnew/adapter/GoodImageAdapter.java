@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.umeng.message.proguard.B;
 
 import java.util.List;
 
@@ -54,7 +55,8 @@ public class GoodImageAdapter extends BaseAdapter {
             view = LayoutInflater.from(context).inflate(R.layout.item_order_goodimg, null);
         }
         ImageView img_goods = ViewHolder.get(view, R.id.img_goods);
-        Glide.with(context).load(list.get(i)).crossFade().into(img_goods);
+//        Glide.with(context).load(list.get(i)).cossFade().into(img_goods);
+        BitmapUtilsHelp.getImage(context).display(img_goods,list.get(i));
         return view;
     }
 }

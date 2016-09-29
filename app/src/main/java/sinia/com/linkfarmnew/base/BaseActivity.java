@@ -292,4 +292,11 @@ public class BaseActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
 }
