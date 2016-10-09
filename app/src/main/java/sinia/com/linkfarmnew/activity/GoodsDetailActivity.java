@@ -188,6 +188,7 @@ public class GoodsDetailActivity extends BaseActivity {
                 break;
             case R.id.img_share:
                 createShareDialog();
+                // showShare();
                 break;
         }
     }
@@ -198,11 +199,11 @@ public class GoodsDetailActivity extends BaseActivity {
         //关闭sso授权
         oks.disableSSOWhenAuthorize();
         // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间等使用
-        oks.setTitle("标题");
+        oks.setTitle("链农荟");
         // titleUrl是标题的网络链接，QQ和QQ空间等使用
-        oks.setTitleUrl("http://sharesdk.cn");
+        oks.setTitleUrl("https://www.baidu.com/");
         // text是分享文本，所有平台都需要这个字段
-        oks.setText("我是分享文本");
+        oks.setText(goodsBean.getGoodName());
         // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
         //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
         // url仅在微信（包括好友和朋友圈）中使用
@@ -212,8 +213,8 @@ public class GoodsDetailActivity extends BaseActivity {
         // site是分享此内容的网站名称，仅在QQ空间使用
         oks.setSite(getString(R.string.app_name));
         // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://sharesdk.cn");
-
+        oks.setSiteUrl("https://www.baidu.com/");
+        oks.setImageUrl(goodsBean.getGoodImage());
         // 启动分享GUI
         oks.show(this);
     }
@@ -238,44 +239,47 @@ public class GoodsDetailActivity extends BaseActivity {
         ImageView img_qq = (ImageView) dialog.findViewById(R.id.img_qq);
         TextView tv_cancel = (TextView) dialog.findViewById(R.id.tv_cancel);
 
-        final Platform.ShareParams sp = new Platform.ShareParams();
-        sp.setText("分享内容测试分享内容测试分享内容测试分享内容测试");
-        sp.setTitleUrl("http://sharesdk.cn");
-        sp.setSite(getString(R.string.app_name));
-        sp.setTitle("分享标题测试");
-        sp.setImageUrl(goodsBean.getGoodImage());
+        img_qq.setOnClickListener(new View.OnClickListener() {
 
-        final Platform qq = ShareSDK.getPlatform(QQ.NAME);
-        final Platform wb = ShareSDK.getPlatform(SinaWeibo.NAME);
-        final Platform wx = ShareSDK.getPlatform(Wechat.NAME);
-        qq.setPlatformActionListener(listener);
-        wx.setPlatformActionListener(listener);
-        wb.setPlatformActionListener(listener);
+            @Override
+            public void onClick(View arg0) {
+                QQ.ShareParams qs = new QQ.ShareParams();
+                qs.setTitle("链农荟");
+                qs.setTitleUrl("http://android.myapp.com/myapp/detail.htm?apkName=sinia.com.linkfarmnew"); // 标题的超链接
+                qs.setText(goodsBean.getGoodName());
+                qs.setImageUrl(goodsBean.getGoodImage());
+                Platform qq = ShareSDK.getPlatform(QQ.NAME);
+                qq.setPlatformActionListener(listener);
+                dialog.dismiss();
+                qq.share(qs);
+            }
+        });
+        img_weibo.setOnClickListener(new View.OnClickListener() {
 
-//        img_qq.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View arg0) {
-//                qq.share(sp);
-//                dialog.dismiss();
-//            }
-//        });
-//        img_weibo.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View arg0) {
-//                wb.share(sp);
-//                dialog.dismiss();
-//            }
-//        });
-//        img_wx.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View arg0) {
-//                wx.share(sp);
-//                dialog.dismiss();
-//            }
-//        });
+            @Override
+            public void onClick(View arg0) {
+                // wb.share(sp);
+                showToast("功能开发中");
+                dialog.dismiss();
+            }
+        });
+        img_wx.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Wechat.ShareParams sp = new Wechat.ShareParams();
+                sp.setTitle("链农荟");
+                sp.setUrl("http://android.myapp.com/myapp/detail.htm?apkName=sinia.com.linkfarmnew");
+                sp.setText(goodsBean.getGoodName());
+                sp.setImageUrl(goodsBean.getGoodImage());
+                sp.setShareType(Platform.SHARE_WEBPAGE);
+
+                Platform weChat = ShareSDK.getPlatform(Wechat.NAME);
+                weChat.setPlatformActionListener(listener);
+                dialog.dismiss();
+                weChat.share(sp);
+            }
+        });
         tv_cancel.setOnClickListener(new View.OnClickListener() {
 
             @Override

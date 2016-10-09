@@ -1,11 +1,9 @@
 package sinia.com.linkfarmnew.fragment;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
@@ -36,7 +33,6 @@ import sinia.com.linkfarmnew.activity.MyOrderActivity;
 import sinia.com.linkfarmnew.activity.PersonalCenterActivty;
 import sinia.com.linkfarmnew.activity.ServiceActivity;
 import sinia.com.linkfarmnew.activity.SettingsActivity;
-import sinia.com.linkfarmnew.activity.WebViewActivity;
 import sinia.com.linkfarmnew.base.BaseFragment;
 import sinia.com.linkfarmnew.bean.LoginBean;
 import sinia.com.linkfarmnew.bean.RefreshBean;
@@ -44,10 +40,8 @@ import sinia.com.linkfarmnew.bean.ServiceBean;
 import sinia.com.linkfarmnew.utils.BitmapUtilsHelp;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
+import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.view.CircleImageView;
-
-import static android.R.id.list;
-import static sinia.com.linkfarmnew.R.id.img;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
@@ -116,6 +110,16 @@ public class MineFragment extends BaseFragment {
     RelativeLayout rl_login;
     @Bind(R.id.tv_level)
     TextView tvLevel;
+    @Bind(R.id.tv_curent)
+    TextView tvCurent;
+    @Bind(R.id.tv_next)
+    TextView tvNext;
+    @Bind(R.id.iv)
+    CircleImageView iv;
+    @Bind(R.id.rl_myorder)
+    RelativeLayout rlMyorder;
+    @Bind(R.id.iv_dingdan7)
+    ImageView ivDingdan7;
     private View rootView;
     private MaterialDialog materialDialog;
     private AsyncHttpClient client = new AsyncHttpClient();
@@ -194,7 +198,15 @@ public class MineFragment extends BaseFragment {
                         tvUsername.setText(bean.getNickName());
                         userName = bean.getNickName();
                         headImage = bean.getImageUrl();
-                        MyApplication.getInstance().setPwdValue("password",bean.getPassword());
+                        tvLevel.setText("LV" + bean.getLeavel());
+                        if (StringUtil.isEmpty(bean.getEnce())) {
+                            tvCurent.setText("0");
+                        } else {
+                            tvCurent.setText(bean.getEnce());
+                        }
+                        tvNext.setText(bean.getLeavelPoint());
+
+                        MyApplication.getInstance().setPwdValue("password", bean.getPassword());
                         if (0 != bean.getWaitPayNum()) {
                             tvDaizhifucount.setVisibility(View.VISIBLE);
                             tvDaizhifucount.setText(bean.getWaitPayNum() + "");

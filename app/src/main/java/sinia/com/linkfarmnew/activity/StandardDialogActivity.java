@@ -181,7 +181,8 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
         public void afterTextChanged(Editable editable) {
             if (!StringUtil.isEmpty(etWeight.getEditableText().toString().trim()) && !".".equals(etWeight
                     .getEditableText().toString().trim())) {
-                int inputWeight = Integer.parseInt(etWeight.getEditableText().toString().trim());
+                long inputWeight = Long.parseLong(etWeight.getEditableText().toString().trim());
+
                 //当输入的重量小于1的时候，不能再减了
                 if (inputWeight <= 1) {
 //                    imgJian.setImageResource(R.drawable.img_jian_n);
@@ -362,14 +363,14 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
      * @param inputWeight 输入的重量
      * @param tvMoney     计算的价格
      */
-    public static void calculatePrice(List<GoodsDetailBean.NormListBean.NormTypeListBean> list, int inputWeight,
+    public static void calculatePrice(List<GoodsDetailBean.NormListBean.NormTypeListBean> list, long inputWeight,
                                       TextView tvMoney) {
         double money = 0;
         for (int i = 0; i < list.size(); i++) {
             GoodsDetailBean.NormListBean.NormTypeListBean priceBean = list.get(i);
             String kg_start = priceBean.getStKg();
             String kg_end = priceBean.getEnKg();
-            if (inputWeight >= Integer.parseInt(kg_start) && inputWeight < Integer.parseInt(kg_end)) {
+            if (inputWeight >= Long.parseLong(kg_start) && inputWeight < Long.parseLong(kg_end)) {
                 money = inputWeight * priceBean.getPrice();
                 tvMoney.setText(StringUtil.formatePrice(money));
                 return;

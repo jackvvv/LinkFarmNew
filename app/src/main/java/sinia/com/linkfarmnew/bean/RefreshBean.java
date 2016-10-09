@@ -9,9 +9,45 @@ public class RefreshBean extends JsonBean {
     private String nickName;
     private String password;
     private String sex;
+    private String leave;//等级名
+    private String point;
+    private String leavelPoint;//下一个等级积分
+    private String ence;
     private int comNum;
     private int waitShouNum;
     private int waitPayNum;
+
+    public String getLeavel() {
+        return leave;
+    }
+
+    public void setLeavel(String leavelName) {
+        this.leave = leavelName;
+    }
+
+    public String getPoint() {
+        return point;
+    }
+
+    public void setPoint(String point) {
+        this.point = point;
+    }
+
+    public String getLeavelPoint() {
+        return leavelPoint;
+    }
+
+    public void setLeavelPoint(String leavelPoint) {
+        this.leavelPoint = leavelPoint;
+    }
+
+    public String getEnce() {
+        return ence;
+    }
+
+    public void setEnce(String ence) {
+        this.ence = ence;
+    }
 
     public String getPassword() {
         return password;

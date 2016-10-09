@@ -178,7 +178,7 @@ public class MyOrderAdapter extends BaseAdapter {
                     intent.putExtra("orderId", orderId);
                     intent.putExtra("payMoney", list.get(i).getPrice() + "");
                     intent.putExtra("coupleId", "-1");
-                    intent.putExtra("norm", "2");
+                    intent.putExtra("flag", "2");
                     context.startActivity(intent);
                 }
                 if (orderStatus == 2) {

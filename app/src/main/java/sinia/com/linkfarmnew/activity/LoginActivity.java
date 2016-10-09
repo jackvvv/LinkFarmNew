@@ -35,7 +35,7 @@ import sinia.com.linkfarmnew.utils.ValidationUtils;
  */
 public class LoginActivity extends BaseActivity {
 
-    @Pattern(regex = "^(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$", message = "请输入正确的手机号码")
+    @Pattern(regex = "^(13[0-9]|15[0-9]|17[0-9]|18[0-9]|14[0-9])[0-9]{8}$", message = "请输入正确的手机号码")
     @Order(1)
     @Bind(R.id.et_phone)
     EditText etPhone;

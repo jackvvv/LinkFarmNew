@@ -6,10 +6,44 @@
     android:background="#00000000">
 
     <LinearLayout
+        android:id="@+id/b"
+        android:layout_width="fill_parent"
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true"
+        android:background="#fff"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_cart"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/btn_cart"
+            android:gravity="center"
+            android:text="加入购物车"
+            android:textColor="@color/textblackColor"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_ok"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/themeColor"
+            android:gravity="center"
+            android:text="立即支付"
+            android:textColor="#fff"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_above="@+id/b"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_above="@+id/b"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -40,16 +74,6 @@
                         android:textColor="#888"
                         android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/tv_storeNum"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/t"
-                        android:layout_centerHorizontal="true"
-                        android:text="库存量：0"
-                        android:textColor="@color/themeColor"
-                        android:textSize="15sp" />
-
                     <ImageView
                         android:id="@+id/img_colse"
                         android:layout_width="wrap_content"
@@ -58,6 +82,16 @@
                         android:layout_centerVertical="true"
                         android:padding="12dp"
                         android:src="@drawable/ic_close_d" />
+
+                    <TextView
+                        android:id="@+id/tv_storeNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="库存量：0"
+                        android:textColor="@color/themeColor"
+                        android:textSize="15sp"
+                        android:layout_below="@+id/t"
+                        android:layout_centerHorizontal="true" />
                 </RelativeLayout>
             </LinearLayout>
 
@@ -174,37 +208,5 @@
             </LinearLayout>
         </ScrollView>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/b"
-        android:layout_width="fill_parent"
-        android:layout_height="42dp"
-        android:layout_alignParentBottom="true"
-        android:background="#fff"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_cart"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/btn_cart"
-            android:gravity="center"
-            android:text="加入购物车"
-            android:textColor="@color/textblackColor"
-            android:textSize="15sp" />
-
-        <TextView
-            android:id="@+id/tv_ok"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/themeColor"
-            android:gravity="center"
-            android:text="立即支付"
-            android:textColor="#fff"
-            android:textSize="16sp" />
     </LinearLayout>
 </RelativeLayout>

@@ -1,226 +1,165 @@
-//package sinia.com.linkfarmnew.wxapi;
-//
-//import android.content.Intent;
-//import android.os.Bundle;
-//import android.util.Log;
-//import android.view.View;
-//
-//import com.avast.android.butterknifezelezny.common.Utils;
-//import com.google.gson.Gson;
-//import com.loopj.android.http.AsyncHttpClient;
-//import com.loopj.android.http.AsyncHttpResponseHandler;
-//import com.loopj.android.http.RequestParams;
-//import com.tencent.mm.sdk.constants.ConstantsAPI;
-//import com.tencent.mm.sdk.modelbase.BaseReq;
-//import com.tencent.mm.sdk.modelbase.BaseResp;
-//import com.tencent.mm.sdk.openapi.IWXAPI;
-//import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
-//import com.tencent.mm.sdk.openapi.WXAPIFactory;
-//
-//import sinia.com.linkfarmnew.R;
-//import sinia.com.linkfarmnew.base.BaseActivity;
-//import sinia.com.linkfarmnew.bean.JsonBean;
-//import sinia.com.linkfarmnew.utils.ActivityManager;
-//import sinia.com.linkfarmnew.utils.Constants;
-//import sinia.com.linkfarmnew.utils.MyApplication;
-//
-//public class WXPayEntryActivity extends BaseActivity implements
-//		IWXAPIEventHandler {
-//
-//	private IWXAPI api;
-//	private String orderid, voucherid, isFromOther, tradeno, dingjinMoney,
-//			paydingjin, method;
-//	private AsyncHttpClient client = new AsyncHttpClient();
-//
-//	@Override
-//	protected void onCreate(Bundle savedInstanceState) {
-//		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.pay_result, "微信支付");
-//		hideHeadView();
-//		getDoingView().setVisibility(View.GONE);
-//		orderid = SharedPreferencesUtils.getShareString(this, "WX_orderid");
-//		voucherid = SharedPreferencesUtils.getShareString(this, "WX_voucherid");
-//		tradeno = SharedPreferencesUtils.getShareString(this, "WX_tradeno");
-//		dingjinMoney = SharedPreferencesUtils.getShareString(this,
-//				"dingjinMoney");
-//		paydingjin = SharedPreferencesUtils.getShareString(this, "paydingjin");
-//		isFromOther = SharedPreferencesUtils
-//				.getShareString(this, "isFromOther");
-//		api = WXAPIFactory.createWXAPI(this, Constants.WX_APPID);
-//		api.handleIntent(getIntent(), this);
-//	}
-//
-//	@Override
-//	protected void onNewIntent(Intent intent) {
-//		super.onNewIntent(intent);
-//		setIntent(intent);
-//		api.handleIntent(intent, this);
-//	}
-//
-//	@Override
-//	public void onReq(BaseReq req) {
-//	}
-//
-//	@Override
-//	public void onResp(BaseResp resp) {
-//		if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
-//			SharedPreferencesUtils.removeShareValue(this, "WX_orderid");
-//			SharedPreferencesUtils.removeShareValue(this, "WX_voucherid");
-//			SharedPreferencesUtils.removeShareValue(this, "isFromOther");
-//			SharedPreferencesUtils.removeShareValue(this, "WX_tradeno");
-//			SharedPreferencesUtils.removeShareValue(this, "dingjinMoney");
-//			SharedPreferencesUtils.removeShareValue(this, "paydingjin");
-//			if (resp.errCode == 0) {
-//				if ("1".equals(isFromOther)) {
-//					// 学院支付
-//					collegePay();
-//				} else if ("2".equals(isFromOther)) {
-//					// vip支付
-//					VipPay();
-//				} else if ("3".equals(isFromOther)) {
-//					// 商城支付
-//					MallPay();
-//				} else {
-//					paySuccess();
-//				}
-//			} else if (resp.errCode == -1) {
-//				showToast(resp.toString());
-//				Log.d("msg",
-//						"onPayFinish, errCode = " + resp.errCode
-//								+ resp.toString());
-//				this.finish();
-//			} else if (resp.errCode == -2) {
-//				showToast("取消支付");
-//				this.finish();
-//			}
-//		}
-//	}
-//
-//	private void MallPay() {
-//		RequestParams params = new RequestParams();
-//		params.put("orderid", orderid);
-//		params.put("userid", MyApplication.getInstance().getUserBean()
-//				.getMemberid());
-//		params.put("paytype", "2");
-//		params.put("payno", tradeno);
-//		client.post(Constants.BASE_URL + "goodpaysuccess", params,
-//				new AsyncHttpResponseHandler() {
-//
-//					@Override
-//					public void onSuccess(int arg0, String response) {
-//						super.onSuccess(arg0, response);
-//						String resultStr = Utils
-//								.getStrVal(new String(response));
-//						JsonBean json = JsonUtil.getJsonBean(resultStr);
-//						int rescode = json.getRescode();
-//						if (rescode == 0) {
-//							showToast((String) json.getRescnt());
-//						} else {
-//							showToast((String) json.getRescnt());
-//						}
-//						startActivityForNoIntent(MainActivity.class);
-//						ActivityManager.getInstance().finishCurrentActivity();
-//					}
-//				});
-//	}
-//
-//	private void VipPay() {
-//		RequestParams params = new RequestParams();
-//		params.put("orderid", orderid);
-//		params.put("voucherid", voucherid);
-//		params.put("paytype", "2");
-//		params.put("payno", tradeno);
-//		client.post(Constants.BASE_URL + "servicepaysuccess", params,
-//				new AsyncHttpResponseHandler() {
-//
-//					@Override
-//					public void onSuccess(int arg0, String response) {
-//						super.onSuccess(arg0, response);
-//						String resultStr = Utils
-//								.getStrVal(new String(response));
-//						JsonBean json = JsonUtil.getJsonBean(resultStr);
-//						Gson gson = new Gson();
-//						int rescode = json.getRescode();
-//						if (rescode == 0) {
-//							VoucherBean jsonBean = gson.fromJson(resultStr,
-//									VoucherBean.class);
-//							Intent it = new Intent();
-//							it.putExtra("VoucherBean", jsonBean.getRescnt());
-//							it.putExtra("types", "2");
-//							startActivityForIntent(CertificateActivity.class,
-//									it);
-//							ActivityManager.getInstance()
-//									.finishCurrentActivity();
-//						}
-//					}
-//				});
-//	}
-//
-//	private void collegePay() {
-//		RequestParams params = new RequestParams();
-//		params.put("orderid", orderid);
-//		params.put("voucherid", voucherid);
-//		params.put("paytype", "2");
-//		params.put("payno", tradeno);
-//		client.post(Constants.BASE_URL + "collegepaysuccess", params,
-//				new AsyncHttpResponseHandler() {
-//
-//					@Override
-//					public void onSuccess(int arg0, String response) {
-//						super.onSuccess(arg0, response);
-//						String resultStr = Utils
-//								.getStrVal(new String(response));
-//						JsonBean json = JsonUtil.getJsonBean(resultStr);
-//						Gson gson = new Gson();
-//						int rescode = json.getRescode();
-//						if (rescode == 0) {
-//							VoucherBean jsonBean = gson.fromJson(resultStr,
-//									VoucherBean.class);
-//							Intent it = new Intent();
-//							it.putExtra("VoucherBean", jsonBean.getRescnt());
-//							startActivityForIntent(CertificateActivity.class,
-//									it);
-//							ActivityManager.getInstance()
-//									.finishCurrentActivity();
-//						}
-//					}
-//				});
-//	}
-//
-//	private void paySuccess() {
-//		RequestParams params = new RequestParams();
-//		if ("1".equals(paydingjin)) {
-//			// 支付定金
-//			params.put("orderid", orderid);
-//			params.put("payno", tradeno);
-//			params.put("paytype", "2");
-//			params.put("dinjing", dingjinMoney);
-//			method = "depositpayment";
-//		} else {
-//			params.put("orderid", orderid);
-//			params.put("payno", tradeno);
-//			params.put("paytype", "2");
-//			method = "paySuccess";
-//		}
-//		client.post(Constants.BASE_URL + method, params,
-//				new AsyncHttpResponseHandler() {
-//
-//					@Override
-//					public void onSuccess(int arg0, String response) {
-//						super.onSuccess(arg0, response);
-//						String resultStr = Utils
-//								.getStrVal(new String(response));
-//						JsonBean json = JsonUtil.getJsonBean(resultStr);
-//						int rescode = json.getRescode();
-//						if (rescode == 0) {
-//							showToast((String) json.getRescnt());
-//						} else {
-//							showToast((String) json.getRescnt());
-//						}
-//						startActivityForNoIntent(MainActivity.class);
-//						ActivityManager.getInstance().finishCurrentActivity();
-//					}
-//				});
-//	}
-//
-//}
+package sinia.com.linkfarmnew.wxapi;
+
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Display;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.tencent.mm.sdk.constants.ConstantsAPI;
+import com.tencent.mm.sdk.modelbase.BaseReq;
+import com.tencent.mm.sdk.modelbase.BaseResp;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
+
+import sinia.com.linkfarmnew.R;
+import sinia.com.linkfarmnew.activity.FillOrderActivity;
+import sinia.com.linkfarmnew.activity.MyOrderActivity;
+import sinia.com.linkfarmnew.activity.PayActivity;
+import sinia.com.linkfarmnew.activity.StandardDialogActivity;
+import sinia.com.linkfarmnew.base.BaseActivity;
+import sinia.com.linkfarmnew.bean.JsonBean;
+import sinia.com.linkfarmnew.utils.ActivityManager;
+import sinia.com.linkfarmnew.utils.Constants;
+import sinia.com.linkfarmnew.utils.SharedPreferencesUtils;
+import sinia.com.linkfarmnew.utils.StringUtil;
+import sinia.com.linkfarmnew.view.loadingview.LoadingView;
+
+public class WXPayEntryActivity extends Activity implements
+        IWXAPIEventHandler {
+
+    private IWXAPI api;
+    private String orderId, coupleId, norm;
+    private AsyncHttpClient client = new AsyncHttpClient();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.pay_result);
+        ActivityManager.getInstance().addActivity(this);
+        orderId = SharedPreferencesUtils.getShareString(this, "WX_orderid");
+        coupleId = SharedPreferencesUtils.getShareString(this, "WX_coupleId");
+        norm = SharedPreferencesUtils.getShareString(this, "WX_norm");
+        api = WXAPIFactory.createWXAPI(this, Constants.WX_APPID);
+        api.registerApp(Constants.WX_APPID);
+        api.handleIntent(getIntent(), this);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        api.registerApp(Constants.WX_APPID);
+        api.handleIntent(intent, this);
+    }
+
+    @Override
+    public void onReq(BaseReq req) {
+
+    }
+
+    @Override
+    public void onResp(BaseResp resp) {
+        Log.i("tag", "微信回调errCode-------" + resp.errCode);
+        Log.i("tag", "微信回调getType()-------" + resp.getType());
+        if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
+            SharedPreferencesUtils.removeShareValue(this, "WX_orderid");
+            SharedPreferencesUtils.removeShareValue(this, "WX_coupleId");
+            SharedPreferencesUtils.removeShareValue(this, "WX_norm");
+            Log.i("tag", "微信回调-------------" + resp.errCode);
+            if (resp.errCode == 0) {
+                paySuccess("1");
+            } else if (resp.errCode == -1) {
+                Log.d("msg",
+                        "onPayFinish, errCode = " + resp.errCode
+                                + resp.toString());
+                paySuccess("2");
+                this.finish();
+            } else if (resp.errCode == -2) {
+                Toast.makeText(WXPayEntryActivity.this, "取消支付", Toast.LENGTH_SHORT).show();
+                paySuccess("2");
+                this.finish();
+            }
+        }
+    }
+
+    private void paySuccess(String s) {
+        showLoad("加载中...");
+        RequestParams params = new RequestParams();
+        params.put("otherId", orderId);
+        params.put("coupleId", coupleId);
+        params.put("norm", norm);
+        params.put("choose", "2");
+        params.put("type", s);
+        Log.i("tag", Constants.BASE_URL + "payOrder&" + params);
+        client.post(Constants.BASE_URL + "payOrder", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    JsonBean bean = gson.fromJson(s, JsonBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        if (norm.equals("1")) {
+                            //1 从填写订单页面跳转，支付完成销毁填写订单页面
+                            ActivityManager.getInstance().finishActivity(FillOrderActivity.class);
+                        }
+                        ActivityManager.getInstance().finishActivity(PayActivity.class);
+                        Intent intent = new Intent(WXPayEntryActivity.this, MyOrderActivity.class);
+                        intent.putExtra("title", "我的订单");
+                        intent.putExtra("type", "4");
+                        startActivity(intent);
+                        ActivityManager.getInstance().finishCurrentActivity();
+                    } else {
+                        Toast.makeText(WXPayEntryActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+    }
+
+    private View mDialogContentView;
+    private LoadingView mLoadingView;
+    private Dialog dialog;
+
+    public void showLoad(String text) {
+        dialog = new Dialog(this, R.style.custom_dialog);
+        mDialogContentView = LayoutInflater.from(this).inflate(
+                R.layout.layout_loading_dialog, null);
+        mLoadingView = (LoadingView) mDialogContentView
+                .findViewById(R.id.loadView);
+        if (StringUtil.isEmpty(text)) {
+            mLoadingView.setLoadingText("加载中...");
+        } else {
+            mLoadingView.setLoadingText(text);
+        }
+        Display d = getWindowManager().getDefaultDisplay();
+        dialog.show();
+        dialog.setContentView(mDialogContentView, new ViewGroup.LayoutParams((int) (d.getWidth() * 0.5),
+                (int) (d.getHeight() * 0.3)));
+        dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialog.setCanceledOnTouchOutside(false);
+    }
+
+    public void dismiss() {
+        if (dialog != null && dialog.isShowing()) {
+            dialog.dismiss();
+        }
+    }
+
+}

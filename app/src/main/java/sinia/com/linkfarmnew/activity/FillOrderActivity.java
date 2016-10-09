@@ -180,7 +180,7 @@ public class FillOrderActivity extends BaseActivity {
                         intent.putExtra("orderId", orderId);
                         intent.putExtra("payMoney", realMoney + "");
                         intent.putExtra("coupleId", coupleId);
-                        intent.putExtra("norm", "1");
+                        intent.putExtra("flag", "1");
                         startActivityForIntent(PayActivity.class, intent);
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast(bean.getReturnResult());

@@ -5,7 +5,7 @@ package sinia.com.linkfarmnew.utils;
  */
 public class Constants {
 
-//    public static String BASE_URL = "http://192.168.0.116:8080/farmer/xiNaiInterfaceController" +
+    //    public static String BASE_URL = "http://192.168.0.116:8080/farmer/xiNaiInterfaceController" +
 //            ".do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
     public static String BASE_URL = "http://114.55.91.34:8080/farmer/xiNaiInterfaceController" +
             ".do?interface&sign=123&messageFormat=json/xml&locale=zh_CN&appKey=001&method=";
@@ -24,4 +24,9 @@ public class Constants {
                     "/RPiyQ3Nh5E0FTIaScNAgMBAAECgYA763O4lnvlsluuRyeSRpqbOnQwFGg7We79PVgqV3SWLBUyvLn0UFq3ZmvMzTELGi" +
                     "+0lT3Imb7KNNEgK+cHnFisgwNrvaezqPchW4R+UKLZbsHf6zRgCyVms77wh" +
                     "+wRHs1C1J3pVAFzOdh5WNri6IPOc47bjY9aIORWQpEwgX3kjQJBAMvd9EkFV2MhmUp10RIfCnCUAPrlPEGdkXvIDlMrECib0LFCpelC/0XrNdSPGSVZ5aS3i6MUI89AmcH7wO7BcMsCQQDHgUT7SmElxfpma70Ay+wfrVE62JFh2fovLbM4kObqom614GscB1prMUxGO8/hTX7L8VJexrGF1brLW4V0+oSHAkAooD6CHrJfat6lW/0h41WtQZFAblYnrULErAVOxZIexY49BM8TQOqmAE1l4m5cZyHARWNqSCUqs/DwGz9DVQEpAkBfBsPErfj39QUAI/Eyn+8oZ3V5gg49fYYdUrc7CknzGMuC9hIOl7IJvMGH8pVhy3fJzHhfjGSiStteYYl/3pOhAkBHMeheJ/K6kcpDQafF3PuekzQiBegLf5vcKsdo4tzrKs/Z9lR4h9/gIEb788nTTHnpp59Mdxlcs4M9jpFQ3DXJ";
+
+    public final static String WX_APPID = "wxfdf28e3f6b7951f2";
+    public final static String WX_APPSECRET = "5dbf08f8354a7833fffb6791ae889ec1";
+    public final static String WX_APIKEY = "NUlgLurAUwwhPyo15BmzlnZuxLDyCOar";
+    public final static String WX_PARTNER_ID = "1396018202";
 }
