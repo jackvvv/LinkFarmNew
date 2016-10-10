@@ -224,6 +224,7 @@ public class LoginActivity extends BaseActivity {
                 }
                 break;
             case R.id.tv_weibo:
+                showToast("功能正在开发中，敬请期待...");
                 break;
         }
     }
@@ -300,11 +301,11 @@ public class LoginActivity extends BaseActivity {
         plat.showUser(null);//授权并获取用户信息
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        if ("1".equals(flag)) {
-            ActivityManager.getInstance().finishAllActivity();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        if ("1".equals(flag)) {
+//            ActivityManager.getInstance().finishAllActivity();
+//        }
+//    }
 }

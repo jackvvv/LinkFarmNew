@@ -85,26 +85,27 @@ public class MainActivity extends BaseActivity {
         f2 = new ClassfyFragment();
         f3 = new ShopCartFragment();
         f4 = new MineFragment();
-        if (MyApplication.getInstance().getBoolValue("is_login")) {
-            homeClicked();
-        } else {
-            Intent intent = new Intent();
-            intent.putExtra("flag", "1");
-            startActivityForIntent(LoginActivity.class, intent);
-        }
+        homeClicked();
+//        if (MyApplication.getInstance().getBoolValue("is_login")) {
+//            homeClicked();
+//        } else {
+//            Intent intent = new Intent();
+//            intent.putExtra("flag", "1");
+//            startActivityForIntent(LoginActivity.class, intent);
+//        }
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        flag = getIntent().getStringExtra("flag");
-        if ("1".equals(flag)) {
-            cartClicked();
-        } else {
-            homeClicked();
-        }
-    }
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        setIntent(intent);
+//        flag = getIntent().getStringExtra("flag");
+//        if ("1".equals(flag)) {
+//            cartClicked();
+//        } else {
+//            homeClicked();
+//        }
+//    }
 
     private void homeClicked() {
         FragmentTransaction fragmentTransaction = this
