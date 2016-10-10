@@ -46,11 +46,14 @@ import butterknife.OnClick;
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.listener.UploadFileListener;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.ShareSDK;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.actionsheetdialog.ActionSheetDialog;
 import sinia.com.linkfarmnew.base.BaseActivity;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.bean.ValidateCodeBean;
+import sinia.com.linkfarmnew.myinterface.OnLoginListener;
 import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.CacheUtils;
 import sinia.com.linkfarmnew.utils.Constants;
@@ -101,6 +104,10 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
     @ConfirmPassword(message = "两次输入的密码不一致，请重新输入")
     @Bind(R.id.et_confirm)
     EditText etConfirm;
+    @Bind(R.id.tv_bind)
+    TextView tvBind;
+    @Bind(R.id.tv_protecol)
+    TextView tvProtecol;
     private Validator validator;
     private LocationManagerProxy mLocationManagerProxy;
     private int i = 60;
@@ -108,6 +115,30 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
     private String imgUrl = "";
     private AsyncHttpClient client = new AsyncHttpClient();
     private String city = "南京";
+    private String thirdId, userIcon;
+    private boolean isThridRegister;
+
+    private static final int INTENT_ACTION_PICTURE = 0;
+    private static final int INTENT_ACTION_CAREMA = 1;
+    private static final int INTENT_ACTION_CROP = 2;
+    private static final int LOAD_USER_ICON = 3;
+
+    private static final String PICTURE_NAME = "UserIcon.jpg";
+
+    private static OnLoginListener tmpRegisterListener;
+    private static String tmpPlatform;
+
+    private OnLoginListener registerListener;
+    private Platform platform;
+    private String platType;//1.QQ,2.WEXIN,3.WEIBO
+
+    public static final void setOnLoginListener(OnLoginListener login) {
+        tmpRegisterListener = login;
+    }
+
+    public static final void setPlatform(String platName) {
+        tmpPlatform = platName;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +153,31 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
     }
 
     private void location() {
+        platform = ShareSDK.getPlatform(tmpPlatform);
+        tmpRegisterListener = null;
+        tmpPlatform = null;
+
+        if (platform != null) {
+            thirdId = platform.getDb().getUserId();
+            if ("QQ".equals(platform.getName())) {
+                platType = "1";
+            }
+            if ("Wechat".equals(platform.getName())) {
+                platType = "2";
+            }
+            if ("SinaWeibo".equals(platform.getName())) {
+                platType = "3";
+            }
+        }
+        isThridRegister = getIntent().getBooleanExtra("isThridRegister", false);
+        if (isThridRegister) {
+            tvBind.setVisibility(View.VISIBLE);
+        } else {
+            tvBind.setVisibility(View.GONE);
+        }
+//        thirdId = getIntent().getStringExtra("thirdId");
+//        userIcon = getIntent().getStringExtra("userIcon");
+
         mLocationManagerProxy = LocationManagerProxy.getInstance(this);
         mLocationManagerProxy.setGpsEnable(true);
         mLocationManagerProxy.requestLocationData(
@@ -161,7 +217,9 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
             params.put("content", etRecommendCode.getEditableText().toString().trim());
         }
         params.put("image", imgUrl);
+        params.put("userId", "-1");
         params.put("type", "1");
+        params.put("choose", "-1");
         Log.i("tag", Constants.BASE_URL + "register&" + params);
         client.post(Constants.BASE_URL + "register", params, new AsyncHttpResponseHandler() {
             @Override
@@ -187,7 +245,7 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
         });
     }
 
-    @OnClick({R.id.tv_get_code, R.id.tv_submit, R.id.iv_add})
+    @OnClick({R.id.tv_get_code, R.id.tv_submit, R.id.iv_add, R.id.tv_bind, R.id.tv_protecol})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_get_code:
@@ -222,6 +280,15 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
             case R.id.iv_add:
                 selectHeadImage();
                 break;
+            case R.id.tv_bind:
+                Intent intent = new Intent();
+                intent.putExtra("platType", platType);
+                intent.putExtra("thirdId", thirdId);
+                startActivityForIntent(BindActivity.class, intent);
+//                ActivityManager.getInstance().finishCurrentActivity();
+                break;
+            case R.id.tv_protecol:
+                break;
         }
     }
 
@@ -246,7 +313,7 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
                     if (0 == state && 0 == isSuccessful) {
                         showToast("验证码已发送");
                         code = bean.getValidateCode();
-//                        showToast(code);
+                        showToast(code);
                     } else if (0 == state && 1 == isSuccessful) {
                         showToast("该手机号已经被注册");
                     } else {
@@ -538,4 +605,5 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
+
 }

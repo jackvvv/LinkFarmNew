@@ -1,11 +1,17 @@
 package sinia.com.linkfarmnew.activity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -16,14 +22,25 @@ import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
 import com.mobsandgeeks.saripaar.annotation.Pattern;
 import com.umeng.message.ALIAS_TYPE;
+import com.umeng.message.proguard.L;
+
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.tencent.qq.QQ;
+import cn.sharesdk.wechat.friends.Wechat;
 import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.bean.LoginBean;
+import sinia.com.linkfarmnew.myinterface.LoginApi;
+import sinia.com.linkfarmnew.myinterface.OnLoginListener;
+import sinia.com.linkfarmnew.myinterface.UserInfo;
 import sinia.com.linkfarmnew.utils.ActivityManager;
 import sinia.com.linkfarmnew.utils.Constants;
 import sinia.com.linkfarmnew.utils.MyApplication;
@@ -60,6 +77,15 @@ public class LoginActivity extends BaseActivity {
     private AsyncHttpClient client = new AsyncHttpClient();
     private String flag;
 
+    private static final int MSG_AUTH_CANCEL = 1;
+    private static final int MSG_AUTH_ERROR = 2;
+    private static final int MSG_AUTH_COMPLETE = 3;
+
+    private String platform;
+    private Context context;
+
+    private Handler handler = new Handler();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +95,7 @@ public class LoginActivity extends BaseActivity {
         getDoingView().setVisibility(View.GONE);
         validator = new Validator(this);
         initView();
+        ShareSDK.initSDK(this);
     }
 
     private void initView() {
@@ -77,17 +104,19 @@ public class LoginActivity extends BaseActivity {
             @Override
             public void onValidationSucceeded() {
                 super.onValidationSucceeded();
-                login();
+                login(etPhone.getEditableText().toString().trim(), etPassword.getEditableText().toString().trim(),
+                        "-1", "-1");
             }
         });
     }
 
-    private void login() {
+    private void login(String tel, String pwd, String thirdId, String thirdType) {
         showLoad("登录中...");
         RequestParams params = new RequestParams();
-        params.put("telephone", etPhone.getEditableText().toString().trim());
-        params.put("password", etPassword.getEditableText().toString().trim());
-        params.put("content", "-1");
+        params.put("telephone", tel);
+        params.put("password", pwd);
+        params.put("content", thirdId);
+        params.put("choose", thirdType);
         params.put("type", "1");
         Log.i("tag", Constants.BASE_URL + "login&" + params);
         client.post(Constants.BASE_URL + "login", params, new AsyncHttpResponseHandler() {
@@ -120,7 +149,7 @@ public class LoginActivity extends BaseActivity {
                             showToast("审核失败，请重新注册并提交审核");
                         }
                     } else if (0 == state && 1 == isSuccessful) {
-                        showToast("第一次登陆，请先第三方通过后，进行手机号号和密码登录");
+                        showToast("第一次登陆，请先第三方通过后，进行手机号和密码登录");
                     } else {
                         showToast("手机号或密码输入有误");
                     }
@@ -165,7 +194,9 @@ public class LoginActivity extends BaseActivity {
                 validator.validate();
                 break;
             case R.id.tv_register:
-                startActivityForNoIntent(RegisterActivity.class);
+                Intent intent = new Intent();
+                intent.putExtra("isThridRegister", false);
+                startActivityForIntent(RegisterActivity.class, intent);
                 break;
             case R.id.tv_find_pwd:
                 startActivityForNoIntent(ForgetPasswordActivity.class);
@@ -173,12 +204,100 @@ public class LoginActivity extends BaseActivity {
                         .finishCurrentActivity();
                 break;
             case R.id.tv_qq:
+                Platform qq = ShareSDK.getPlatform(QQ.NAME);
+                if (!qq.isAuthValid()) {
+//                    thirdLogin(qq);
+                    login(qq.getName());
+                } else {
+                    login("-1", "-1", qq.getDb().getUserId(), "1");
+//                    qq.removeAccount();
+                }
                 break;
             case R.id.tv_wechat:
+                Platform weChat = ShareSDK.getPlatform(Wechat.NAME);
+                if (!weChat.isAuthValid()) {
+//                    thirdLogin(weChat);
+                    login(weChat.getName());
+                } else {
+                    login("-1", "-1", weChat.getDb().getUserId(), "2");
+//                    weChat.removeAccount();
+                }
                 break;
             case R.id.tv_weibo:
                 break;
         }
+    }
+
+    private void login(String platformName) {
+        LoginApi api = new LoginApi();
+        //设置登陆的平台后执行登陆的方法
+        api.setPlatform(platformName);
+        api.setOnLoginListener(new OnLoginListener() {
+            public boolean onLogin(String platform, HashMap<String, Object> res) {
+                // 在这个方法填写尝试的代码，返回true表示还不能登录，需要注册
+                // 此处全部给回需要注册
+                return true;
+            }
+
+            public boolean onRegister(UserInfo info) {
+                // 填写处理注册信息的代码，返回true表示数据合法，注册页面可以关闭
+                return true;
+            }
+        });
+        api.login(this);
+    }
+
+    private void thirdLogin(Platform plat) {
+        plat.SSOSetting(false);//设置false表示使用SSO授权方式
+        plat.setPlatformActionListener(new PlatformActionListener() {
+            @Override
+            public void onComplete(Platform plat, int action, HashMap<String, Object> res) {
+                showToast("授权成功");
+                Log.i("tag", "授权成功------授权成功");
+                if (action == Platform.ACTION_USER_INFOR) {
+                    Message msg = new Message();
+                    msg.what = MSG_AUTH_COMPLETE;
+                    msg.arg2 = action;
+//                    msg.obj =  new Object[] {plat.getName(), res};
+                    msg.obj = plat;
+                    handler.sendMessage(msg);
+
+//                    String openId = plat.getDb().getUserId();
+//                    String userIcon = plat.getDb().getUserIcon();
+//                    Intent intent = new Intent();
+//                    intent.putExtra("thirdId", openId);
+//                    intent.putExtra("userIcon", userIcon);
+//                    intent.putExtra("isThirdRegister", true);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    startActivityForIntent(RegisterActivity.class, intent);
+                }
+            }
+
+            public void onError(Platform plat, int action, Throwable t) {
+                showToast("授权失败");
+                Log.i("tag", "授权失败------" + t);
+                if (action == Platform.ACTION_USER_INFOR) {
+                    Message msg = new Message();
+                    msg.what = MSG_AUTH_ERROR;
+                    msg.arg2 = action;
+                    msg.obj = t;
+                    handler.sendMessage(msg);
+                }
+                t.printStackTrace();
+            }
+
+            public void onCancel(Platform plat, int action) {
+                showToast("授权取消");
+                if (action == Platform.ACTION_USER_INFOR) {
+                    Message msg = new Message();
+                    msg.what = MSG_AUTH_CANCEL;
+                    msg.arg2 = action;
+                    msg.obj = plat;
+                    handler.sendMessage(msg);
+                }
+            }
+        });
+        plat.showUser(null);//授权并获取用户信息
     }
 
     @Override

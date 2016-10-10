@@ -46,6 +46,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.BindActivity" />
         <activity
             android:name=".activity.RegisterActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

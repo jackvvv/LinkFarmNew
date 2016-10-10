@@ -32,11 +32,6 @@
             android:textSize="18sp" />
     </RelativeLayout>
 
-    <View
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:background="#30d6d5d1" />
-
     <sinia.com.linkfarmnew.city.CityPicker
         android:id="@+id/citypicker"
         android:layout_width="fill_parent"
@@ -44,5 +39,10 @@
         android:layout_gravity="center"
         android:gravity="center"
         android:orientation="vertical" />
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="#30d6d5d1" />
 
 </LinearLayout>
