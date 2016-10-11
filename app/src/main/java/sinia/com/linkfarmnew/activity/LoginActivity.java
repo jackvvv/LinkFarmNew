@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.mob.commons.SHARESDK;
 import com.mobsandgeeks.saripaar.Validator;
 import com.mobsandgeeks.saripaar.annotation.NotEmpty;
 import com.mobsandgeeks.saripaar.annotation.Order;
@@ -38,6 +39,7 @@ import sinia.com.linkfarmnew.R;
 import sinia.com.linkfarmnew.base.BaseActivity;
 import sinia.com.linkfarmnew.bean.JsonBean;
 import sinia.com.linkfarmnew.bean.LoginBean;
+import sinia.com.linkfarmnew.myinterface.IsThirdBindPhoneInterface;
 import sinia.com.linkfarmnew.myinterface.LoginApi;
 import sinia.com.linkfarmnew.myinterface.OnLoginListener;
 import sinia.com.linkfarmnew.myinterface.UserInfo;
@@ -50,7 +52,7 @@ import sinia.com.linkfarmnew.utils.ValidationUtils;
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements IsThirdBindPhoneInterface {
 
     @Pattern(regex = "^(13[0-9]|15[0-9]|17[0-9]|18[0-9]|14[0-9])[0-9]{8}$", message = "请输入正确的手机号码")
     @Order(1)
@@ -74,15 +76,10 @@ public class LoginActivity extends BaseActivity {
     TextView tvWeibo;
 
     private Validator validator;
-    private AsyncHttpClient client = new AsyncHttpClient();
+    private static AsyncHttpClient client = new AsyncHttpClient();
     private String flag;
 
-    private static final int MSG_AUTH_CANCEL = 1;
-    private static final int MSG_AUTH_ERROR = 2;
-    private static final int MSG_AUTH_COMPLETE = 3;
-
-    private String platform;
-    private Context context;
+    private String platType;
 
     private Handler handler = new Handler();
 
@@ -162,7 +159,77 @@ public class LoginActivity extends BaseActivity {
         new AddAliasTask(alias, aliasType).execute();
     }
 
-    class AddAliasTask extends AsyncTask<Void, Void, Boolean> {
+    @Override
+    public void isBind(Platform platform) {
+        if ("QQ".equals(platform.getName())) {
+            platType = "1";
+        }
+        if ("Wechat".equals(platform.getName())) {
+            platType = "2";
+        }
+        if ("SinaWeibo".equals(platform.getName())) {
+            platType = "3";
+        }
+        bindAndLogin(platform, platType);
+    }
+
+    private void bindAndLogin(final Platform platform, String platType) {
+        showLoad("加载中...");
+        RequestParams params = new RequestParams();
+        params.put("telephone", "-1");
+        params.put("password", "-1");
+        params.put("content", platform.getDb().getUserId());
+        params.put("choose", platType);//第三方平台类型
+        params.put("type", "1");
+        Log.i("tag", platform.getDb().getUserId());
+        showToast("-------" + platform.getDb().getUserId());
+        Log.i("tag", Constants.BASE_URL + "login&" + params);
+        client.post(Constants.BASE_URL + "login", params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int i, String s) {
+                super.onSuccess(i, s);
+                dismiss();
+                Log.i("tag", s);
+                Gson gson = new Gson();
+                if (s.contains("isSuccessful")
+                        && s.contains("state")) {
+                    LoginBean bean = gson.fromJson(s, LoginBean.class);
+                    int state = bean.getState();
+                    int isSuccessful = bean.getIsSuccessful();
+                    if (0 == state && 0 == isSuccessful) {
+                        if ("1".equals(bean.getCheakStatus())) {
+                            MyApplication.getInstance().setBooleanValue(
+                                    "is_login", true);
+                            MyApplication.getInstance().setStringValue(
+                                    "userId", bean.getId());
+                            MyApplication.getInstance().setLoginBean(bean);
+                            startActivityForNoIntent(MainActivity.class);
+                            ActivityManager.getInstance()
+                                    .finishCurrentActivity();
+                            setAlias(bean.getId(), "ALIAS_TYPE.SINA_WEIBO");
+                        } else if ("2".equals(bean.getCheakStatus())) {
+                            startActivityForNoIntent(CheckingActivity.class);
+                        } else if ("3".equals(bean.getCheakStatus())) {
+                            showToast(bean.getReturnResult());
+                        }
+                    } else if (0 == state && 1 == isSuccessful) {
+//                        showToast(bean.getReturnResult());
+                        //没有绑定手机号，跳转注册绑定页面
+                        RegisterActivity.setPlatform(platform.getName());
+                        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                        intent.putExtra("isThridRegister", true);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+
+                    } else {
+                        showToast("手机号或密码输入有误");
+                    }
+                }
+            }
+        });
+    }
+
+    static class AddAliasTask extends AsyncTask<Void, Void, Boolean> {
 
         String alias;
         String aliasType;
@@ -205,23 +272,25 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.tv_qq:
                 Platform qq = ShareSDK.getPlatform(QQ.NAME);
-                if (!qq.isAuthValid()) {
-//                    thirdLogin(qq);
-                    login(qq.getName());
-                } else {
-                    login("-1", "-1", qq.getDb().getUserId(), "1");
-//                    qq.removeAccount();
-                }
+                login(qq.getName());
+//                if (!qq.isAuthValid()) {
+////                    thirdLogin(qq);
+//                    login(qq.getName());
+//                } else {
+//                    login("-1", "-1", qq.getDb().getUserId(), "1");
+////                    qq.removeAccount();
+//                }
                 break;
             case R.id.tv_wechat:
                 Platform weChat = ShareSDK.getPlatform(Wechat.NAME);
-                if (!weChat.isAuthValid()) {
-//                    thirdLogin(weChat);
-                    login(weChat.getName());
-                } else {
-                    login("-1", "-1", weChat.getDb().getUserId(), "2");
-//                    weChat.removeAccount();
-                }
+                login(weChat.getName());
+//                if (!weChat.isAuthValid()) {
+////                    thirdLogin(weChat);
+//                    login(weChat.getName());
+//                } else {
+//                    login("-1", "-1", weChat.getDb().getUserId(), "2");
+////                    weChat.removeAccount();
+//                }
                 break;
             case R.id.tv_weibo:
                 showToast("功能正在开发中，敬请期待...");
@@ -235,70 +304,14 @@ public class LoginActivity extends BaseActivity {
         api.setPlatform(platformName);
         api.setOnLoginListener(new OnLoginListener() {
             public boolean onLogin(String platform, HashMap<String, Object> res) {
-                // 在这个方法填写尝试的代码，返回true表示还不能登录，需要注册
-                // 此处全部给回需要注册
                 return true;
             }
 
             public boolean onRegister(UserInfo info) {
-                // 填写处理注册信息的代码，返回true表示数据合法，注册页面可以关闭
                 return true;
             }
         });
         api.login(this);
-    }
-
-    private void thirdLogin(Platform plat) {
-        plat.SSOSetting(false);//设置false表示使用SSO授权方式
-        plat.setPlatformActionListener(new PlatformActionListener() {
-            @Override
-            public void onComplete(Platform plat, int action, HashMap<String, Object> res) {
-                showToast("授权成功");
-                Log.i("tag", "授权成功------授权成功");
-                if (action == Platform.ACTION_USER_INFOR) {
-                    Message msg = new Message();
-                    msg.what = MSG_AUTH_COMPLETE;
-                    msg.arg2 = action;
-//                    msg.obj =  new Object[] {plat.getName(), res};
-                    msg.obj = plat;
-                    handler.sendMessage(msg);
-
-//                    String openId = plat.getDb().getUserId();
-//                    String userIcon = plat.getDb().getUserIcon();
-//                    Intent intent = new Intent();
-//                    intent.putExtra("thirdId", openId);
-//                    intent.putExtra("userIcon", userIcon);
-//                    intent.putExtra("isThirdRegister", true);
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                    startActivityForIntent(RegisterActivity.class, intent);
-                }
-            }
-
-            public void onError(Platform plat, int action, Throwable t) {
-                showToast("授权失败");
-                Log.i("tag", "授权失败------" + t);
-                if (action == Platform.ACTION_USER_INFOR) {
-                    Message msg = new Message();
-                    msg.what = MSG_AUTH_ERROR;
-                    msg.arg2 = action;
-                    msg.obj = t;
-                    handler.sendMessage(msg);
-                }
-                t.printStackTrace();
-            }
-
-            public void onCancel(Platform plat, int action) {
-                showToast("授权取消");
-                if (action == Platform.ACTION_USER_INFOR) {
-                    Message msg = new Message();
-                    msg.what = MSG_AUTH_CANCEL;
-                    msg.arg2 = action;
-                    msg.obj = plat;
-                    handler.sendMessage(msg);
-                }
-            }
-        });
-        plat.showUser(null);//授权并获取用户信息
     }
 
 //    @Override

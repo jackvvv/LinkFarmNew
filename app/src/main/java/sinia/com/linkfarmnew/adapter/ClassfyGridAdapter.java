@@ -54,7 +54,7 @@ public class ClassfyGridAdapter extends BaseAdapter {
         }
         TextView tv_name = ViewHolder.get(view, R.id.tv_name);
         ImageView img = ViewHolder.get(view, R.id.img);
-        Glide.with(context).load(list.get(i).getSmallImage()).crossFade().into(img);
+        Glide.with(context).load(list.get(i).getSmallImage()).placeholder(R.drawable.ic_launcher).crossFade().into(img);
         tv_name.setText(list.get(i).getSmallTypeName());
         return view;
     }

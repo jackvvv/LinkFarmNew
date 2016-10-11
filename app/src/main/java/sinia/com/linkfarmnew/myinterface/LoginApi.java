@@ -13,6 +13,7 @@ import java.util.HashMap;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
+import sinia.com.linkfarmnew.activity.LoginActivity;
 import sinia.com.linkfarmnew.activity.RegisterActivity;
 
 public class LoginApi implements Callback {
@@ -38,7 +39,7 @@ public class LoginApi implements Callback {
 	}
 
 	public void login(Context context) {
-		this.context = context.getApplicationContext();
+		this.context = context;
 		if (platform == null) {
 			return;
 		}
@@ -52,7 +53,7 @@ public class LoginApi implements Callback {
 
 		if (plat.isAuthValid()) {
 			plat.removeAccount(true);
-			return;
+//			return;
 		}
 
 		//使用SSO授权，通过客户单授权
@@ -63,7 +64,8 @@ public class LoginApi implements Callback {
 					Message msg = new Message();
 					msg.what = MSG_AUTH_COMPLETE;
 					msg.arg2 = action;
-					msg.obj =  new Object[] {plat.getName(), res};
+//					msg.obj =  new Object[] {plat.getName(), res};
+					msg.obj =  plat;
 					handler.sendMessage(msg);
 				}
 			}
@@ -108,18 +110,24 @@ public class LoginApi implements Callback {
 			} break;
 			case MSG_AUTH_COMPLETE: {
 				// 成功
-				Object[] objs = (Object[]) msg.obj;
-				String plat = (String) objs[0];
-				@SuppressWarnings("unchecked")
-				HashMap<String, Object> res = (HashMap<String, Object>) objs[1];
-				if (loginListener!= null && loginListener.onLogin(plat, res)) {
-					RegisterActivity.setOnLoginListener(loginListener);
-					RegisterActivity.setPlatform(plat);
-					Intent intent=new Intent(context, RegisterActivity.class);
-					intent.putExtra("isThridRegister", true);
-					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					context.startActivity(intent);
-				}
+//				Object[] objs = (Object[]) msg.obj;
+//				String plat = (String) objs[0];
+				Platform platform = (Platform) msg.obj;
+				IsThirdBindPhoneInterface bindInterface = (IsThirdBindPhoneInterface) context;
+				bindInterface.isBind(platform);
+//				HashMap<String, Object> res = (HashMap<String, Object>) objs[1];
+//				if (loginListener!= null && loginListener.onLogin(plat, res)) {
+//
+//					IsThirdBindPhoneInterface bindInterface = (IsThirdBindPhoneInterface) context;
+//					bindInterface.isBind(plat);
+//
+////					RegisterActivity.setOnLoginListener(loginListener);
+////					RegisterActivity.setPlatform(plat);
+////					Intent intent=new Intent(context, RegisterActivity.class);
+////					intent.putExtra("isThridRegister", true);
+////					intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+////					context.startActivity(intent);
+//				}
 			} break;
 		}
 		return false;

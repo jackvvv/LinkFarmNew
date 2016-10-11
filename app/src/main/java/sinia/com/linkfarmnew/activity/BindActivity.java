@@ -113,12 +113,13 @@ public class BindActivity extends BaseActivity {
                         } else if ("2".equals(bean.getCheakStatus())) {
                             startActivityForNoIntent(CheckingActivity.class);
                         } else if ("3".equals(bean.getCheakStatus())) {
-                            showToast("审核失败，请重新注册并提交审核");
+                            showToast(bean.getReturnResult());
                         }
                     } else if (0 == state && 1 == isSuccessful) {
-                        showToast("第一次登陆，请先第三方通过后，进行手机号和密码登录");
+                        showToast(bean.getReturnResult());
                     } else {
-                        showToast("手机号或密码输入有误");
+//                        showToast("手机号或密码输入有误");
+                        showToast(bean.getReturnResult());
                     }
                 }
             }
