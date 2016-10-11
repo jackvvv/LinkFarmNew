@@ -182,7 +182,6 @@ public class LoginActivity extends BaseActivity implements IsThirdBindPhoneInter
         params.put("choose", platType);//第三方平台类型
         params.put("type", "1");
         Log.i("tag", platform.getDb().getUserId());
-        showToast("-------" + platform.getDb().getUserId());
         Log.i("tag", Constants.BASE_URL + "login&" + params);
         client.post(Constants.BASE_URL + "login", params, new AsyncHttpResponseHandler() {
             @Override

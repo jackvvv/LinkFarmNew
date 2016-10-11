@@ -26,6 +26,7 @@ import com.amap.api.location.LocationManagerProxy;
 import com.amap.api.location.LocationProviderProxy;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
+import com.bigkoo.convenientbanner.listener.OnItemClickListener;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.loopj.android.http.AsyncHttpClient;
@@ -57,6 +58,8 @@ import sinia.com.linkfarmnew.utils.MyApplication;
 import sinia.com.linkfarmnew.utils.StringUtil;
 import sinia.com.linkfarmnew.view.MyGridView;
 import sinia.com.linkfarmnew.view.NetworkImageHolderView;
+
+import static com.amap.api.mapcore2d.v.i;
 
 /**
  * Created by 忧郁的眼神 on 2016/8/4.
@@ -117,6 +120,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
     private List<HomePageBean.RecarrayItemsBean> recommendList = new ArrayList<>();
     private List<HomePageBean.UpActItemsBean> floorList = new ArrayList<>();
     private String img1 = "", img2 = "", img3 = "", img4 = "", img5 = "", img6 = "";
+    private String link1 = "", link2 = "", link3 = "", link4 = "", link5 = "", link6 = "";
 
     @Nullable
     @Override
@@ -224,7 +228,7 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
 
     }
 
-    private void setData(HomePageBean bean) {
+    private void setData(final HomePageBean bean) {
         if (bean != null) {
             if (bean.getBanitems() != null) {
                 picList = new ArrayList<>();
@@ -238,6 +242,16 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                     }
                 }, picList).setPageIndicator(new int[]{R.drawable.carousel_point, R.drawable
                         .carousel_point_select}).startTurning(3000);
+                convenientBanner.setOnItemClickListener(new OnItemClickListener() {
+                    @Override
+                    public void onItemClick(int position) {
+                        String link = bean.getBanitems().get(position).getLink();
+                        Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                        intent.putExtra("link", link);
+                        intent.putExtra("title", "链接详情");
+                        startActivity(intent);
+                    }
+                });
             }
             if (bean.getRecarrayitems() != null) {
                 recommendList.clear();
@@ -270,26 +284,29 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
             int position = list.get(i).getLocationType();
             int floorType = list.get(i).getType();
             String imgUrl = list.get(i).getImage();
+            String link = list.get(i).getLink();
             String id = list.get(i).getUpactId();
-            link = list.get(i).getLink();
             if (1 == floorType) {
                 if (position == 1) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgLeftBig);
                     imgLeftBig.setLayoutParams(lpB);
                     img1 = imgUrl;
+                    link1 = link;
                 }
                 if (position == 2) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgRightTop);
                     imgRightTop.setLayoutParams(lpS);
                     img2 = imgUrl;
+                    link2 = link;
                 }
                 if (position == 3) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgRightBottom);
                     imgRightBottom.setLayoutParams(lpS);
                     img3 = imgUrl;
+                    link3 = link;
                 }
             }
             if (2 == floorType) {
@@ -298,18 +315,21 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                             (imgLeftTop);
                     imgLeftTop.setLayoutParams(lpS);
                     img4 = imgUrl;
+                    link4 = link;
                 }
                 if (position == 2) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgLeftBottom);
                     imgLeftBottom.setLayoutParams(lpS);
                     img5 = imgUrl;
+                    link5 = link;
                 }
                 if (position == 3) {
                     Glide.with(getActivity()).load(imgUrl).placeholder(R.drawable.load_failed_right).into
                             (imgRightBig);
                     imgRightBig.setLayoutParams(lpB);
                     img6 = imgUrl;
+                    link6 = link;
                 }
             }
         }
@@ -392,37 +412,37 @@ public class HomeFragment extends BaseFragment implements AMapLocationListener {
                 break;
             case R.id.img_left_big:
                 intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("link", img1);
+                intent.putExtra("link", link1);
                 intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_right_top:
                 intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("link", img2);
+                intent.putExtra("link", link2);
                 intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_right_bottom:
                 intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("link", img3);
+                intent.putExtra("link", link3);
                 intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_right_big:
                 intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("link", img6);
+                intent.putExtra("link", link6);
                 intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_left_top:
                 intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("link", img4);
+                intent.putExtra("link", link4);
                 intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;
             case R.id.img_left_bottom:
                 intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("link", img5);
+                intent.putExtra("link", link5);
                 intent.putExtra("title", "链接详情");
                 startActivity(intent);
                 break;

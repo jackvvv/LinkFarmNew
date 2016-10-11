@@ -1,6 +1,7 @@
 package sinia.com.linkfarmnew.activity;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 
 import butterknife.Bind;
@@ -41,6 +42,15 @@ public class WebViewActivity extends BaseActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+            webView.goBack();// 返回前一个页面
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
