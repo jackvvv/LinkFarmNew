@@ -95,17 +95,17 @@ public class MainActivity extends BaseActivity {
 //        }
     }
 
-//    @Override
-//    protected void onNewIntent(Intent intent) {
-//        super.onNewIntent(intent);
-//        setIntent(intent);
-//        flag = getIntent().getStringExtra("flag");
-//        if ("1".equals(flag)) {
-//            cartClicked();
-//        } else {
-//            homeClicked();
-//        }
-//    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        flag = getIntent().getStringExtra("flag");
+        if ("1".equals(flag)) {
+            cartClicked();
+        } else {
+            homeClicked();
+        }
+    }
 
     private void homeClicked() {
         FragmentTransaction fragmentTransaction = this

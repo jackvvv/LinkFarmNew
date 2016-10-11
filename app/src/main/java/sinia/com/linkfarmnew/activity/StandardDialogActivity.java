@@ -338,6 +338,13 @@ public class StandardDialogActivity extends Activity implements SetPriceDataInte
                         MyApplication.getInstance().setStringValue("buy_normId", null);
                         //加入购物车商品id，如果相等则显示已加入状态
                         MyApplication.getInstance().setStringValue("addcart_goodid", goodsBean.getId());
+
+                        Intent intent = new Intent();
+                        intent.putExtra("type", selectType);
+                        intent.putExtra("normId", normId);
+                        intent.putExtra("weight", etWeight.getEditableText().toString().trim());
+                        intent.putExtra("price", tvMoney.getText().toString().trim());
+                        setResult(RESULT_OK, intent);
                         finish();
                     } else if (0 == state && 1 == isSuccessful) {
                         Toast.makeText(StandardDialogActivity.this, "请求失败", Toast.LENGTH_SHORT).show();
