@@ -40,7 +40,6 @@ public class MyApplication extends Application {
         instance = this;
         Bugly.init(getApplicationContext(), "f40e2555ac", false);
         Beta.checkUpgrade(false, false);
-        initShareKey();
         initUMPush();
     }
 
@@ -142,12 +141,6 @@ public class MyApplication extends Application {
         //参考http://bbs.umeng.com/thread-11112-1-1.html
         //CustomNotificationHandler notificationClickHandler = new CustomNotificationHandler();
         mPushAgent.setNotificationClickHandler(notificationClickHandler);
-    }
-
-    private void initShareKey() {
-//        PlatformConfig.setWeixin("wx72646ac912a1a65a", "df5d7fc9d7f6664038b26ff95b3423b0");
-//        PlatformConfig.setQQZone("1105256171", "6xAwTDWTtz08qQFs");
-//        PlatformConfig.setSinaWeibo("1382880293", "d165e356f5a75c6c09f46bf8999cebe8");
     }
 
     public static synchronized MyApplication getInstance() {

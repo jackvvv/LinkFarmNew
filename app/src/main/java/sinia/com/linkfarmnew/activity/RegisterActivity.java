@@ -288,6 +288,7 @@ public class RegisterActivity extends BaseActivity implements AMapLocationListen
 //                ActivityManager.getInstance().finishCurrentActivity();
                 break;
             case R.id.tv_protecol:
+                startActivityForNoIntent(ProtecolActivity.class);
                 break;
         }
     }
